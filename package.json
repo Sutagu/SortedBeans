@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.6",
+    "tailwindcss": "^4.1.6"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.342",
+    "@iconify/tailwind4": "^1.0.6"
+  }
+}
