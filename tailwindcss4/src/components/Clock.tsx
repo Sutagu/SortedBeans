@@ -9,6 +9,6 @@ const Clock: React.FC = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-  return <p>{currentTime}</p>
+  return <p id='clock-time'>{currentTime}</p>
 };
 export default Clock;

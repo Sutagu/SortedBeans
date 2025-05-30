@@ -16,7 +16,7 @@ function App() {
         <BsFillGearFill className="ml-auto text-xm self-start" />
 
         <img src={portrait} alt="Portrait" className="portrait bg-[#B85C38] h-[100%] rounded-2xl shadow-inner"/>
-        <div className="bg-blue-400">
+        <div className="items-center">
           <Clock />
           <WeatherTemp/>
         </div>
