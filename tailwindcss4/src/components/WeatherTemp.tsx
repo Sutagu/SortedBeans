@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-
+import weatherIcons from '../assets/images/weather/weatherIcons';
 const apiKey = 'ffcc4752fb2881576286105573cc295c';
 
 const WeatherTemp : React.FC = () =>{
     const[temperature, setTemperature] = useState <number | null>(null);
-    const[iconUrl, setIconUrl] = useState <string>('');
+    const[iconPath, setIconPath] = useState <string>(weatherIcons['clear.png']);
     type WeatherData = {
         weather: {
         description: string;
@@ -22,18 +22,20 @@ const WeatherTemp : React.FC = () =>{
         fetch(wurl)
             .then((res) => res.json())
             .then((data) => {
-                //console.log(data);
+                console.log(data);
                 if(data.main && typeof data.main.temp === 'number'){
                     setTemperature(data.main.temp);
                 }
                 const weather = (data : WeatherData) =>{
-                    setIconUrl(`https://openweathermap.org/img/wn/${data.weather[0]?.icon??'02d'}@2x.png`);
-
+                    const name = (data.weather[0]?.main??'clear').toLowerCase();
+                    setIconPath(weatherIcons[`./${name}.png`]);
+                    console.log(iconPath);
                 }
                 weather(data);
             })
             .catch((err) => console.error('Failed to fetch temperature', err));
     };
+
 
    
     useEffect(() =>{
@@ -62,8 +64,8 @@ const WeatherTemp : React.FC = () =>{
         <div>
             {temperature !== null ? (
                 <div id='weather-container'>
-                    <img id='weather-png' src={iconUrl}/>
                     <p id='weather-temperature'> {temperature.toFixed()}°C</p>
+                    <img id='weather-png' src={iconPath} alt='Weather icon'/>
                 </div>
             ) : (
                 <p>Loading temperature...</p>

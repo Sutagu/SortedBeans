@@ -31,14 +31,21 @@
 }
 
 #weather-temperature{
-
+  position:absolute;
+  right:5%;
+  font-size:1.8vmin;
+  font-weight:500;
 }
 #weather-png{
-
+  width:40%;
 }
 #weather-container{
-
+  justify-items: center;
+  position: relative;
+  
 }
 #clock-time{
-  
+  font-size:2vmin;
+  font-weight:500;
+  margin-bottom:10%;
 }

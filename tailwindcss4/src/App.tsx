@@ -1,3 +1,4 @@
+
 import { BsFillGearFill } from "react-icons/bs"; 
 import './App.css'
 import portrait from './assets/images/portraits/standardguy1.png';
@@ -16,7 +17,7 @@ function App() {
         <BsFillGearFill className="ml-auto text-xm self-start" />
 
         <img src={portrait} alt="Portrait" className="portrait bg-[#B85C38] h-[100%] rounded-2xl shadow-inner"/>
-        <div className="items-center">
+        <div className="flex flex-col justify-center vertical-align">
           <Clock />
           <WeatherTemp/>
         </div>
