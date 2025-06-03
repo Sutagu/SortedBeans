@@ -5,6 +5,7 @@ const apiKey = 'ffcc4752fb2881576286105573cc295c';
 const WeatherTemp : React.FC = () =>{
     const[temperature, setTemperature] = useState <number | null>(null);
     const[iconPath, setIconPath] = useState <string>(weatherIcons['clear.png']);
+    const[description, setDescription] = useState <string>("loading");
     type WeatherData = {
         weather: {
         description: string;
@@ -29,6 +30,7 @@ const WeatherTemp : React.FC = () =>{
                 const weather = (data : WeatherData) =>{
                     const name = (data.weather[0]?.main??'clear').toLowerCase();
                     setIconPath(weatherIcons[`./${name}.png`]);
+                    setDescription(name);
                     console.log(iconPath);
                 }
                 weather(data);
@@ -64,8 +66,11 @@ const WeatherTemp : React.FC = () =>{
         <div>
             {temperature !== null ? (
                 <div id='weather-container'>
-                    <p id='weather-temperature'> {temperature.toFixed()}°C</p>
                     <img id='weather-png' src={iconPath} alt='Weather icon'/>
+                    <div>
+                    <p id='weather-temperature'> {temperature.toFixed()}°C</p>
+                    <p id='weather-temperature-desc'> {description.toUpperCase()}</p>
+                    </div>
                 </div>
             ) : (
                 <p>Loading temperature...</p>

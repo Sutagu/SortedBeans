@@ -4,14 +4,14 @@ import './App.css'
 import portrait from './assets/images/portraits/standardguy1.png';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
-
+import GitHubCalendar from "react-github-calendar";
 
 
 function App() {
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       
-      <div className='outerContainer flex flex-col gap-[5%]<BsFillGearFill />'>
+      <div className='outerContainer flex flex-col gap-[5%] <BsFillGearFill />'>
         <div className='innerContainer h-[50%] mt-[10%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]'>
         <div className="text-left text-xm self-start">SORTED BEANS</div>
         <BsFillGearFill className="ml-auto text-xm self-start" />
@@ -22,9 +22,20 @@ function App() {
           <WeatherTemp/>
         </div>
 
-        <div className="bg-green-300 col-span-2">Row 3 (merged)</div>
+        <div className="flex col-span-2 gap-[1%] text-lg font-semibold"> 
+          <div className="record-string text-[#B85C38]">25 </div>
+          <div className="record-string">Days Consistent 🔥</div>
+        </div>
 
-        <div className="bg-yellow-300 col-span-2">Row 4 (merged)</div>
+        <div className="col-span-2 bg-[#87462C] p-[5%] rounded-xl shadow-xl">
+          <GitHubCalendar 
+          username="Sutagu"
+          theme={{
+              light : ['#5C3D2E', '#c6e48b', '#E0C097', '#b39a79', '#9d866a']
+          }}
+          colorScheme="light"
+          />
+        </div>
         </div>
         <div className='innerContainer h-[30%]'></div>
       </div>
