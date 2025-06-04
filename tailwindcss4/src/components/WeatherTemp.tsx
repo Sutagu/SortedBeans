@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import weatherIcons from '../assets/images/weather/weatherIcons';
-const apiKey = 'ffcc4752fb2881576286105573cc295c';
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 const WeatherTemp : React.FC = () =>{
     const[temperature, setTemperature] = useState <number | null>(null);
