@@ -10,6 +10,7 @@ import GitHubCalendar from "react-github-calendar";
 
 //Bottom left
 import logo from './assets/images/logo/logoTpLarge.png';
+import Quotes from './components/Quotes';
 
 function App() {
   return (
@@ -43,10 +44,7 @@ function App() {
         </div>
         <div className='innerContainer h-[30%] bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative'>
           <img src={logo} alt="logo" className="w-[10%] absolute left-5 bottom-5" />
-          <div className='absolute text-[#87462C] text-m text-center top-15 right-10'>
-            <p className='max-w-60'>The most effective way to do it, is to do it</p>
-            <p className='text-xs mt-2'>- Amelia Earhart</p>
-          </div>
+          <Quotes />
         </div>
       </div>
       <div className='outerContainer'>
