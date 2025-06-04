@@ -1,11 +1,15 @@
 
-import { BsFillGearFill } from "react-icons/bs"; 
 import './App.css'
+
+//Top left
+import { BsFillGearFill } from "react-icons/bs"; 
 import portrait from './assets/images/portraits/standardguy1.png';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
 import GitHubCalendar from "react-github-calendar";
 
+//Bottom left
+import logo from './assets/images/logo/logoTpLarge.png';
 
 function App() {
   return (
@@ -37,10 +41,16 @@ function App() {
           />
         </div>
         </div>
-        <div className='innerContainer h-[30%]'></div>
+        <div className='innerContainer h-[30%] bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative'>
+          <img src={logo} alt="logo" className="w-[10%] absolute left-5 bottom-5" />
+          <div className='absolute text-[#87462C] text-m text-center top-15 right-10'>
+            <p className='max-w-60'>The most effective way to do it, is to do it</p>
+            <p className='text-xs mt-2'>- Amelia Earhart</p>
+          </div>
+        </div>
       </div>
       <div className='outerContainer'>
-        <div className="innerContainer h-[85%] w-[100%]! mt-[10%]"></div>
+        <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!"></div>
       </div>
       <div className='outerContainer'>
         <div className="innerContainer h-[85%] mt-[10%]"></div>
