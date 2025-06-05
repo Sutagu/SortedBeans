@@ -1,6 +1,6 @@
 
 import './App.css'
-
+import React, {useState} from 'react'
 //Top left
 import { BsFillGearFill } from "react-icons/bs"; 
 import portrait from './assets/images/portraits/standardguy1.png';
@@ -12,7 +12,13 @@ import GitHubCalendar from "react-github-calendar";
 import logo from './assets/images/logo/logoTpLarge.png';
 import Quotes from './components/Quotes';
 
+
+//right
+import TaskCategorySelector from './components/taskCategorySelector';
+import TaskList from './components/TaskList';
+
 function App() {
+  const [category, setCategory] = useState<string>('Tasks');
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       
@@ -51,7 +57,11 @@ function App() {
         <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!"></div>
       </div>
       <div className='outerContainer'>
-        <div className="innerContainer h-[85%] mt-[10%]"></div>
+        <div className="innerContainer h-[85%] mt-[10%] text-[#FFF0DC] bg-[#4c352b]!">
+          <p className="text-left bg-[#894931] rounded-t-xl p-[2%] max-h-[5%] h-[5%] text-sm">Create Drag Drop your Tasks!</p>
+          <TaskCategorySelector selected={category} onChange={setCategory} />
+          <TaskList category={category}/>
+        </div>
       </div>
       
     </div>
