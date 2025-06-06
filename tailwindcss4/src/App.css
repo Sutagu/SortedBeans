@@ -60,3 +60,7 @@
 .react-activity-calendar__footer{
   display:none !important;
 }
+.taskListContainer{
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1E1E1E ;
+}

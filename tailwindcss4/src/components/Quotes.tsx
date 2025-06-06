@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 const apiKey = import.meta.env.VITE_QUOTE_API_KEY;
 
 const Quotes : React.FC = () => {
+    const hasRun = useRef(false);
     const[quoteDescription, setQuoteDescription] = useState <string>("The most effective way to do it, is to do it");
     const[quoteAuthor, setQuoteAuthor] = useState <string>("Amelia Earhart");
 
@@ -33,7 +34,10 @@ const Quotes : React.FC = () => {
     }
 
     useEffect (() =>{
-        fetchQuote();
+        if(!hasRun.current){
+            fetchQuote();
+            hasRun.current= true;
+        }
     },);
     return(
         <div className='text-[#87462C] w-[100%] text-sm text-center mt-15'>
