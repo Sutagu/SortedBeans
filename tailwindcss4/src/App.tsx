@@ -1,4 +1,5 @@
 
+
 import './App.css'
 import React, {useState} from 'react'
 //Top left
@@ -12,6 +13,8 @@ import GitHubCalendar from "react-github-calendar";
 import logo from './assets/images/logo/logoTpLarge.png';
 import Quotes from './components/Quotes';
 
+//Middle
+import DayPlan from './components/DayPlan';
 
 //right
 import TaskCategorySelector from './components/taskCategorySelector';
@@ -19,6 +22,9 @@ import TaskList from './components/TaskList';
 
 function App() {
   const [category, setCategory] = useState<string>('Tasks');
+  const [currentDayIndex, setCurrentDayIndex] = useState<number>(new Date().getDate());  
+  
+  
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       
@@ -54,7 +60,12 @@ function App() {
         </div>
       </div>
       <div className='outerContainer'>
-        <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!"></div>
+        <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!">
+            <DayPlan 
+            currentDayIndex={currentDayIndex}
+            setCurrentDayIndex={setCurrentDayIndex}
+            />
+        </div>
       </div>
       <div className='outerContainer'>
         <div className="innerContainer h-[85%] mt-[10%] text-[#FFF0DC] bg-[#4c352b]!">
