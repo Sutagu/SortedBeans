@@ -29,7 +29,7 @@ function App() {
     <div className="w-screen h-screen grid grid-cols-3">
       
       <div className='outerContainer flex flex-col gap-[5%] <BsFillGearFill />'>
-        <div className='innerContainer h-[50%] mt-[10%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]'>
+        <div className='innerContainer bg-[#4c352b]! h-[50%] mt-[10%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]'>
         <div className="text-left text-xm self-start">SORTED BEANS</div>
         <BsFillGearFill className="ml-auto text-xm self-start" />
 
