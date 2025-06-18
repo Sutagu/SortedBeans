@@ -1,0 +1,14 @@
+[
+  {
+    "dayIndex": 0,
+    "tasks": ["Rest", "Call mum"]
+  },
+  {
+    "dayIndex": 1,
+    "tasks": ["Team meeting", "Project work"]
+  },
+  {
+    "dayIndex": 2,
+    "tasks": ["Gym", "Groceries"]
+  }
+]

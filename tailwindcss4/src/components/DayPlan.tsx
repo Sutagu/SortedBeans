@@ -1,6 +1,7 @@
 import { AiOutlineRight } from "react-icons/ai"; 
 import { AiOutlineLeft } from "react-icons/ai"; 
 import React, { useEffect , useState} from "react";
+
 interface DayPlanProps{
     currentDayIndex : number;
     setCurrentDayIndex : React.Dispatch<React.SetStateAction<number>>;
@@ -13,7 +14,7 @@ const DayPlan: React.FC<DayPlanProps> = ({currentDayIndex, setCurrentDayIndex}) 
     const handlePrevDay = () => {
         setCurrentDayIndex((prevDay) => (prevDay - 1 + daysOfWeek.length) % daysOfWeek.length);
         setCurrentDate(prevDate => prevDate - 1);
-
+        
     }
     
     const handleNextDay = () => {
@@ -40,6 +41,7 @@ const DayPlan: React.FC<DayPlanProps> = ({currentDayIndex, setCurrentDayIndex}) 
             </div>
             </div>
             <AiOutlineRight onClick={handleNextDay} />
+            <DayTasks currentDateIndex ={new Date().getLocale}/>
         </div>
     )
 }
