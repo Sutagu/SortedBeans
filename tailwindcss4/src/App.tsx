@@ -22,7 +22,7 @@ import TaskList from './components/TaskList';
 
 function App() {
   const [category, setCategory] = useState<string>('Tasks');
-  const [currentDayIndex, setCurrentDayIndex] = useState<number>(new Date().getDate());  
+  const [currentDate, setCurrentDate] = useState(new Date());  
   
   
   return (
@@ -62,8 +62,8 @@ function App() {
       <div className='outerContainer'>
         <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!">
             <DayPlan 
-            currentDayIndex={currentDayIndex}
-            setCurrentDayIndex={setCurrentDayIndex}
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
             />
         </div>
       </div>
