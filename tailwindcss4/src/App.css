@@ -14,7 +14,7 @@
 .outerContainer{
   justify-items: center;
   align-items: center;
- 
+  overflow: hidden;
 }
 .innerContainer{
   border:1px solid #E0C097;
