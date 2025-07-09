@@ -1,3 +1,4 @@
+import { FaEllipsisH } from "react-icons/fa"; 
 import { useEffect, useState } from 'react';
 import { RxHamburgerMenu } from "react-icons/rx"; 
 interface Task {
@@ -5,6 +6,7 @@ interface Task {
   title: string;
   completed: boolean;
   created_at: string;
+  est_time: number;
   category_id: number;
 }
 
@@ -34,9 +36,13 @@ const TaskList = ({categoryId} : Prop) => {
       {tasks
       .filter(task => task.category_id === categoryId)
       .map((task, index) => (
-        <li key={index} className="text-left h-[10%] pl-2 border-t-1 border-b-1 hover:bg-[#2d2424] flex items-center gap-2 transition">
-          <RxHamburgerMenu className="rotate-90"/>
-          {task.title}
+        <li key={index} className="text-left h-[10%] py-10 border-[#FFF0DC] border-t-1 hover:bg-[#2d2424] flex items-center transition">
+          <RxHamburgerMenu className="rotate-90 w-1/12"/>
+          <div className="w-10/12">
+            <p className='text-lg'>{task.title}</p>
+            <p className='text-[#E0C097]'>{task.est_time} Min</p>
+          </div>
+          <FaEllipsisH />
           </li>
       ))}
     </ul>

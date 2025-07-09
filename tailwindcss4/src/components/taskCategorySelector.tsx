@@ -35,7 +35,7 @@ const TaskCategorySelector = ({ selected, onChange} : Props) =>{
       });
     }, []);
     return(
-        <div className="w-full h-[7.5%] flex items-center justify-between">
+        <div className="px-2 w-full h-[7.5%] flex items-center justify-between text-lg">
         <select
             value = {selected.name}
             onChange ={e => onChange(HandleCategoryChange(e.target.value))}
