@@ -9,14 +9,17 @@ interface DayPlanProps{
 }
 
 const DayPlan: React.FC<DayPlanProps> = ({currentDate, setCurrentDate}) => {
+    function formatDate(date: Date): string {
+        const year: number = date.getFullYear();
+        const month: string = String(date.getMonth() + 1).padStart(2, '0');
+        const day: string = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+        
+
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const options : Intl.DateTimeFormatOptions = { 
-        month: '2-digit',  // keeps leading zero: 06
-        day: '2-digit',    // keeps leading zero: 19
-        year: 'numeric'    // full year: 2025
-    };
-    
+
     const[currentDayIndex, setCurrentDayIndex] = useState<number>(currentDate.getDate());
     // const[currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
     // const[currentYear, setCurrentYear] = useState(currentDate.getFullYear());
@@ -55,7 +58,7 @@ const DayPlan: React.FC<DayPlanProps> = ({currentDate, setCurrentDate}) => {
             </div>
             <AiOutlineRight onClick={handleNextDay} />
         </div>
-            <DayTasks currentDateIndex ={currentDate.toLocaleDateString('en-US', options)}/>
+            <DayTasks currentDateIndex ={formatDate(currentDate)}/>
 
             
         </div>

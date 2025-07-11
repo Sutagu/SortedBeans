@@ -8,6 +8,7 @@ interface Task {
   created_at: string;
   est_time: number;
   category_id: number;
+  assigned_date: string | null;
 }
 
 type Prop = {
