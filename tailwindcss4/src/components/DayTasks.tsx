@@ -12,7 +12,7 @@ interface Task {
   category_id: number;
   assigned_date: string | null;
 }
-
+//test to see if it updates the commit after merge
 const DayTasks : React.FC<{currentDateIndex: string}> = ({currentDateIndex}) =>{
     console.log("Current date index:",currentDateIndex);
     const [tasks, setTasks] = useState<Task[]>([]);
