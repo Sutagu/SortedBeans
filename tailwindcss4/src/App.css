@@ -64,3 +64,6 @@
   scrollbar-width: thin;
   scrollbar-color: #555 #1E1E1E ;
 }
+.noScrollBar{
+  scrollbar-width: none;
+}

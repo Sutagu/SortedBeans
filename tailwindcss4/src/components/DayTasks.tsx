@@ -31,22 +31,23 @@ const DayTasks : React.FC<{currentDateIndex: string}> = ({currentDateIndex}) =>{
     console.log("TasksTest assigned: ", taskTest);
 
     const colours = ["#2196A8", "#D6453D", "#F5A623", "#3FA34D"];
-    return (
-        <div>
-            
-            <ul className="flex flex-col p-[5%] gap-10 text-[#F7F7F7] items-center ">
+    return (   
+            <ul className="p-5 text-[#F7F7F7] h-[70%] max-h-[70%] overflow-y-auto noScrollBar">
                 {tasks
                 .filter(task => task.assigned_date && task.assigned_date.slice(0,10) === currentDateIndex)
                 .map((task, idx)=> 
-                <li className="w-full text-left font-medium flex gap-6 items-center"  key={idx}>
+                <li className="w-full text-left font-medium flex gap-6 items-center py-4"  key={idx}>
                     <img className="h-3" src={Line}/>
-                    <div className = "w-[75%] p-[5%] rounded-xl text-xl" style={{backgroundColor : colours[idx % colours.length]}}>
-                    {task.title}
+                    <div className = "w-[75%] p-[5%] rounded-xl " style={{backgroundColor : colours[idx % colours.length]}}>
+                      <div className="flex justify-between">
+                        <span className="text-xl">{task.title}</span><span>{task.est_time}</span>
+                      </div>
+                      <div></div>
+                    
                     </div>
                     </li>)}
             </ul>
-        </div>
     );
-};
+}; 
 
 export default DayTasks;

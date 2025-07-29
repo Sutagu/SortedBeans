@@ -43,7 +43,7 @@ const DayPlan: React.FC<DayPlanProps> = ({currentDate, setCurrentDate}) => {
         setCurrentDayIndex((today%daysOfWeek.length)-1);
     },[])
     return(
-        <div>
+        <div className="h-full">
         <div className="flex shadow-2xl justify-between items-center mt-[5%] mb-[5%] p-[5%] border-t-1 border-b-1">
             <AiOutlineLeft onClick={handlePrevDay}/>
             <div>

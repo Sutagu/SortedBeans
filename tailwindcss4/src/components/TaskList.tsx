@@ -33,11 +33,11 @@ const TaskList = ({categoryId} : Prop) => {
 }, []);
 
   return (
-      <ul className="taskListContainer bg-[#3C2A21] h-[80%] max-h-[80%] overflow-y-auto p-5">
+      <ul className="taskListContainer bg-[#3C2A21] h-[80%] max-h-[80%] overflow-y-scroll p-5">
       {tasks
-      .filter(task => task.category_id === categoryId)
+      .filter(task => task.category_id === categoryId && task.assigned_date == null)
       .map((task, index) => (
-        <li key={index} className="text-left h-[10%] py-10 border-[#FFF0DC] border-t-1 hover:bg-[#2d2424] flex items-center transition">
+        <li key={index} className="text-left h-[10%] py-10 border-[#FFF0DC] border-t hover:bg-[#2d2424] flex items-center transition">
           <RxHamburgerMenu className="rotate-90 w-1/12"/>
           <div className="w-10/12">
             <p className='text-lg'>{task.title}</p>
