@@ -58,7 +58,7 @@ const DayPlan: React.FC<DayPlanProps> = ({currentDate, setCurrentDate}) => {
             </div>
             <AiOutlineRight onClick={handleNextDay} />
         </div>
-            <DayTasks currentDateIndex ={formatDate(currentDate)}/>
+            <DayTasks currentDate ={formatDate(currentDate)}/>
 
             
         </div>

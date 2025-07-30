@@ -1,3 +1,5 @@
+import { AiOutlineCheckCircle } from "react-icons/ai"; 
+import { BiCircle } from "react-icons/bi"; 
 import React from "react";
 import { useState, useEffect } from "react";
 import Line from "../assets/images/bg/line.png";
@@ -11,38 +13,47 @@ interface Task {
   est_time: number;
   category_id: number;
   assigned_date: string | null;
+  description: string | null;
 }
 //test to see if it updates the commit after merge
-const DayTasks : React.FC<{currentDateIndex: string}> = ({currentDateIndex}) =>{
-    console.log("Current date index:",currentDateIndex);
+const DayTasks : React.FC<{currentDate: string}> = ({currentDate}) =>{
+    console.log("Current date:",currentDate);
     const [tasks, setTasks] = useState<Task[]>([]);
-      useEffect(() => {
-  const fetchTasks = async () => {
-    const res = await fetch('http://localhost:5000/api/tasks');
-    const data = await res.json();
-    setTasks(data);
-  };
+    const [categories, setCategories] = useState<string[]>([]);
 
-  fetchTasks();
-}, [currentDateIndex]);
-    const task58 = (tasks.find(task => task.id === 104));
-    const taskTest = (tasks.find(task => task.assigned_date && task.assigned_date.slice(0,10) === '2025-07-12'));
-    console.log("Tasks assigned: ",task58);
-    console.log("TasksTest assigned: ", taskTest);
+    useEffect(() => {
+
+      const fetchData = async () => {
+        const [taskRes, categoryRes] = await Promise.all([
+          fetch('http://localhost:5000/api/tasks'),
+          fetch('http://localhost:5000/api/task_categories')
+        ]);
+        const taskData = await taskRes.json();
+        const categoryData: { name : string}[] = await categoryRes.json();
+
+        setTasks(taskData);
+        setCategories(categoryData.map(c=> c.name));
+      }
+
+      fetchData();
+}, [currentDate]);
 
     const colours = ["#2196A8", "#D6453D", "#F5A623", "#3FA34D"];
     return (   
             <ul className="p-5 text-[#F7F7F7] h-[70%] max-h-[70%] overflow-y-auto noScrollBar">
                 {tasks
-                .filter(task => task.assigned_date && task.assigned_date.slice(0,10) === currentDateIndex)
+                .filter(task => task.assigned_date?.slice(0,10) === currentDate)
                 .map((task, idx)=> 
-                <li className="w-full text-left font-medium flex gap-6 items-center py-4"  key={idx}>
+                <li className="w-full text-left font-medium flex gap-6 items-center py-4"  key={task.id}>
                     <img className="h-3" src={Line}/>
                     <div className = "w-[75%] p-[5%] rounded-xl " style={{backgroundColor : colours[idx % colours.length]}}>
                       <div className="flex justify-between">
-                        <span className="text-xl">{task.title}</span><span>{task.est_time}</span>
+                        <span className="text-xl font-san tracking-wide">{task.title}</span><span className="bg-black/20 w-2/10 text-center rounded-md">{task.est_time} Min</span>
                       </div>
-                      <div></div>
+                      <div className="flex justify-between pt-2"> 
+                        <span className="font-light max-w-9/10 self-baseline-last">{categories[task.category_id-1]} : {task.description || ''}</span><span className="cursor-pointer text-xl self-baseline-last">{task.completed ? <AiOutlineCheckCircle />:<BiCircle />}</span>
+                        
+                      </div>
                     
                     </div>
                     </li>)}
