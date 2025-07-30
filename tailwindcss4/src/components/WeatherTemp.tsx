@@ -1,82 +1,91 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import weatherIcons from '../assets/images/weather/weatherIcons';
 const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
-const WeatherTemp : React.FC = () =>{
-    const[temperature, setTemperature] = useState <number | null>(null);
-    const[iconPath, setIconPath] = useState <string>(weatherIcons['clear.png']);
-    const[description, setDescription] = useState <string>("loading");
-    type WeatherData = {
-        weather: {
-        description: string;
-        icon: string;
-        main: string;
-        id: number;
-        }[];
-        main: {
-            temp: number;
+const WeatherTemp: React.FC = () => {
+  const [temperature, setTemperature] = useState<number | null>(null);
+  const [iconPath, setIconPath] = useState<string>(weatherIcons['clear.png']);
+  const [description, setDescription] = useState<string>('loading');
+  type WeatherData = {
+    weather: {
+      description: string;
+      icon: string;
+      main: string;
+      id: number;
+    }[];
+    main: {
+      temp: number;
+    };
+  };
+
+  const fetchTemp = (lat: number, lon: number) => {
+    const wurl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+    fetch(wurl)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.main && typeof data.main.temp === 'number') {
+          setTemperature(data.main.temp);
+        }
+        const weather = (data: WeatherData) => {
+          const name = (data.weather[0]?.main ?? 'clear').toLowerCase();
+          setIconPath(
+            weatherIcons[`./${name}.png`] || weatherIcons['./clear.png']
+          );
+          setDescription(name);
         };
-    };
+        weather(data);
+      })
+      .catch((err) => console.error('Failed to fetch temperature', err));
+  };
 
-    const fetchTemp = (lat: number, lon: number) => {
-        const wurl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
-        fetch(wurl)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                if(data.main && typeof data.main.temp === 'number'){
-                    setTemperature(data.main.temp);
-                }
-                const weather = (data : WeatherData) =>{
-                    const name = (data.weather[0]?.main??'clear').toLowerCase();
-                    setIconPath(weatherIcons[`./${name}.png`]);
-                    setDescription(name);
-                    console.log(iconPath);
-                }
-                weather(data);
-            })
-            .catch((err) => console.error('Failed to fetch temperature', err));
-    };
+  useEffect(() => {
+    let usedFallback = false;
 
-
-   
-    useEffect(() =>{
-        if (navigator.geolocation) {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-        
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            console.log('Fetching temperature at user location');
-            fetchTemp(lat, lon); // fetch right after getting location
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          fetchTemp(lat, lon); // fetch right after getting location
+          console.log('location set temperature set');
         },
         (err) => {
           console.error(err);
         }
       );
-    }else{
-        console.error('Geo location not supported');
+    } else {
+      usedFallback = true;
+      fetchTemp(-34.9285, 138.6007);
+      console.error('Geo location not supported');
     }
+    const interval = setInterval(() => {
+      if (usedFallback) {
         fetchTemp(-34.9285, 138.6007);
-        const interval = setInterval(fetchTemp, 1800000);//default adelaide location
-        return () => clearInterval(interval);
-    }, []);
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => fetchTemp(pos.coords.latitude, pos.coords.longitude),
+          () => fetchTemp(-34.9285, 138.6007)
+        );
+      }
+    }, 1800000);
+    return () => clearInterval(interval);
+  }, []);
 
-    return(
-        <div>
-            {temperature !== null ? (
-                <div id='weather-container'>
-                    <img id='weather-png' src={iconPath} alt='Weather icon'/>
-                    <div>
-                    <p id='weather-temperature'> {temperature.toFixed()}°C</p>
-                    <p id='weather-temperature-desc'> {description.toUpperCase()}</p>
-                    </div>
-                </div>
-            ) : (
-                <p>Loading temperature...</p>
-            )}
+  return (
+    <div>
+      {temperature !== null ? (
+        <div id="weather-container">
+          <img id="weather-png" src={iconPath} alt="Weather icon" />
+          <div>
+            <p id="weather-temperature"> {temperature.toFixed()}°C</p>
+            <p id="weather-temperature-desc"> {description.toUpperCase()}</p>
+          </div>
         </div>
-    );
+      ) : (
+        <p>Loading temperature...</p>
+      )}
+    </div>
+  );
 };
 
 export default WeatherTemp;
