@@ -18,6 +18,29 @@ interface Task {
 const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const toggleCompleted = (id: number) => {
+    const currentTask = tasks.find((t) => t.id == id);
+    if (!currentTask) return;
+
+    const updateCompleted = !currentTask.completed;
+
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed: updateCompleted } : task
+      )
+    );
+    console.log('local update');
+    fetch(`http://localhost:5000/api/tasks/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ completed: updateCompleted }),
+    }).catch((err) => console.error('Failed to update task:', err));
+    setReloadTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,9 +56,10 @@ const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
     };
 
     fetchData();
-  }, [currentDate]);
+  }, [currentDate, reloadTrigger]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
+
   return (
     <ul className="p-5 text-[#F7F7F7] h-[70%] max-h-[70%] overflow-y-auto noScrollBar">
       {tasks
@@ -62,7 +86,10 @@ const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
                 <span className="font-light max-w-9/10 self-baseline-last">
                   {categories[task.category_id - 1]} : {task.description || ''}
                 </span>
-                <span className="cursor-pointer text-xl self-baseline-last">
+                <span
+                  className="cursor-pointer text-xl self-baseline-last"
+                  onClick={() => toggleCompleted(task.id)}
+                >
                   {task.completed ? <AiOutlineCheckCircle /> : <BiCircle />}
                 </span>
               </div>
