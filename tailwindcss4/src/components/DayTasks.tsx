@@ -1,9 +1,8 @@
+import { BsDot } from 'react-icons/bs';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiCircle } from 'react-icons/bi';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Line from '../assets/images/bg/line.png';
-
 interface Task {
   id: number;
   title: string;
@@ -19,6 +18,18 @@ const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const convertTime = (date: string, estTime: number) => {
+    const start = new Date(date);
+    const end = new Date(start.getTime() + estTime * 60000); // Convert minutes to milliseconds
+    return {
+      start: start.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      end: end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+  };
 
   const toggleCompleted = (id: number) => {
     const currentTask = tasks.find((t) => t.id == id);
@@ -42,6 +53,22 @@ const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
     setReloadTrigger((prev) => prev + 1);
   };
 
+  const handleEstTimeChange = (id: number, newEstTime: number) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, est_time: newEstTime } : task
+      )
+    );
+    fetch(`http://localhost:5000/api/tasks/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ est_time: newEstTime }),
+    }).catch((err) => console.error('Failed to update estimated time:', err));
+    setReloadTrigger((prev) => prev + 1);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const [taskRes, categoryRes] = await Promise.all([
@@ -61,41 +88,67 @@ const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
   return (
-    <ul className="p-5 text-[#F7F7F7] h-[70%] max-h-[70%] overflow-y-auto noScrollBar">
+    <ul className="p-5 text-[#F7F7F7] h-7/10 max-h-7/10 overflow-y-auto noScrollBar">
       {tasks
         .filter((task) => task.assigned_date?.slice(0, 10) === currentDate)
-        .map((task, idx) => (
-          <li
-            className="w-full text-left font-medium flex gap-6 items-center py-4"
-            key={task.id}
-          >
-            <img className="h-3" src={Line} />
-            <div
-              className="w-[75%] p-[5%] rounded-xl "
-              style={{ backgroundColor: colours[idx % colours.length] }}
+        .sort(
+          (a, b) =>
+            new Date(a.assigned_date!).getTime() -
+            new Date(b.assigned_date!).getTime()
+        )
+        .map((task, idx) => {
+          const { start, end } = convertTime(
+            task.assigned_date!,
+            task.est_time
+          );
+          return (
+            <li
+              className="w-full text-left font-medium flex gap-6 items-stretch py-4"
+              key={task.id}
             >
-              <div className="flex justify-between">
-                <span className="text-xl font-san tracking-wide">
-                  {task.title}
-                </span>
-                <span className="bg-black/20 w-2/10 text-center rounded-md">
-                  {task.est_time} Min
-                </span>
+              <div className="justify-between flex flex-col self-stretch items-center text-gray-300">
+                {start}
+                <BsDot />
+                {end}
               </div>
-              <div className="flex justify-between pt-2">
-                <span className="font-light max-w-9/10 self-baseline-last">
-                  {categories[task.category_id - 1]} : {task.description || ''}
-                </span>
-                <span
-                  className="cursor-pointer text-xl self-baseline-last"
-                  onClick={() => toggleCompleted(task.id)}
-                >
-                  {task.completed ? <AiOutlineCheckCircle /> : <BiCircle />}
-                </span>
+              <div
+                className={`w-[75%] p-[5%] rounded-xl transition-opacity ${
+                  task.completed ? 'opacity-60' : ''
+                }`}
+                style={{ backgroundColor: colours[idx % colours.length] }}
+              >
+                <div className="flex justify-between">
+                  <span className="text-xl font-san tracking-wide">
+                    {task.title}
+                  </span>
+                  <span className="bg-black/20 rounded-md self-start flex gap-1 p-1">
+                    <input
+                      type="number"
+                      value={task.est_time}
+                      onChange={(e) =>
+                        handleEstTimeChange(task.id, Number(e.target.value))
+                      }
+                      className="field-sizing-content hover:text-gray-300"
+                    />
+                    <p>Min</p>
+                  </span>
+                </div>
+                <div className="flex justify-between pt-2">
+                  <span className="font-light max-w-9/10 self-baseline-last">
+                    {categories[task.category_id - 1]} :{' '}
+                    {task.description || ''}
+                  </span>
+                  <span
+                    className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"
+                    onClick={() => toggleCompleted(task.id)}
+                  >
+                    {task.completed ? <AiOutlineCheckCircle /> : <BiCircle />}
+                  </span>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
     </ul>
   );
 };
