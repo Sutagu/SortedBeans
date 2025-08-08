@@ -50,4 +50,26 @@ router.patch('/:id', async (req: Request, res: Response): Promise<any> => {
   return res.status(400).json({ error: 'Invalid data' });
 });
 
+router.post('/', async (req: Request, res: Response): Promise<any> => {
+  const { title, est_time, category_id, assigned_date, description } = req.body;
+
+  if (!title)
+    return res
+      .status(400)
+      .json({ error: 'Title and assigned_date are required' });
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO tasks (title, completed, est_time, category_id, assigned_date, description)
+      VALUES($1, $2, $3, $4, $5, $6)
+      RETURNING *`,
+      [title, false, est_time, category_id, assigned_date, description]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database Error' });
+  }
+});
+
 export default router;

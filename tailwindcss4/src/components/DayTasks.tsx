@@ -7,7 +7,6 @@ interface Task {
   id: number;
   title: string;
   completed: boolean;
-  created_at: string;
   est_time: number;
   category_id: number;
   assigned_date: string | null;
