@@ -78,6 +78,7 @@ textarea {
 input:focus,
 textarea:focus,
 select:focus {
+  background: none;
   outline: none;
   color: #bebebe;
 }

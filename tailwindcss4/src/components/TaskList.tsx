@@ -30,7 +30,7 @@ const TaskList = ({ categoryId }: Prop) => {
   }, [categoryId]);
 
   return (
-    <ul className="taskListContainer bg-[#3C2A21] h-[80%] max-h-[80%] overflow-y-scroll p-5">
+    <ul className="taskListContainer bg-[#3C2A21] overflow-y-scroll shrink p-5">
       {tasks
         .filter(
           (task) =>

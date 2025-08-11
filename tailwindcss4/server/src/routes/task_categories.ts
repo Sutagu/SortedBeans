@@ -8,9 +8,26 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM task_categories');
     res.json(result.rows);
-    console.log("Server loaded in task_categories");
+    console.log('Server loaded in task_categories');
   } catch (error) {
     res.status(500).json({ error: 'Database error' });
+  }
+});
+
+router.post('/', async (req: Request, res: Response): Promise<any> => {
+  const { name } = req.body;
+  if (name == '')
+    return res.status(400).json({ error: 'Category name required' });
+  try {
+    const result = await pool.query(
+      `INSERT INTO task_categories (name)
+      VALUES($1)
+      RETURNING *`,
+      [name]
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database Error' });
   }
 });
 
