@@ -13,10 +13,14 @@ interface Task {
   description: string | null;
 }
 
-const DayTasks: React.FC<{ currentDate: string }> = ({ currentDate }) => {
+interface Prop {
+  currentDate: string;
+  reloadTrigger: number;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
+}
+const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
 
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);

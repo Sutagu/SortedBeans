@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 type Props = {
   selected: { id: number; name: string };
   onChange: (category: { id: number; name: string }) => void;
+  reloadTrigger: number;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
 };
 
 interface Categ {
@@ -18,13 +20,16 @@ interface TaskFormData {
   description: string;
 }
 
-const TaskCategorySelector = ({ selected, onChange }: Props) => {
+const TaskCategorySelector = ({
+  selected,
+  onChange,
+  reloadTrigger,
+  setReloadTrigger,
+}: Props) => {
   const [categ, setCateg] = useState<Categ[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [categoryVisbible, setCategoryVisible] = useState(false);
+  const [categoryVisible, setCategoryVisible] = useState(false);
   const [input, setInput] = useState('');
-
-  const [refresh, setRefresh] = useState(1);
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -65,7 +70,8 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
     } catch (err) {
       console.error(err);
     }
-    setRefresh((prev) => prev + 1);
+    setIsVisible(false);
+    setReloadTrigger((prev) => prev + 1);
   };
   const addTaskCategory = async (name: string) => {
     const payload = { name };
@@ -82,7 +88,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
       console.error(err);
     }
     setCategoryVisible(false);
-    setRefresh((prev) => prev + 1);
+    setReloadTrigger((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -94,7 +100,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
       .catch((err) => {
         console.error('Error fetching categories', err);
       });
-  }, [refresh]);
+  }, [reloadTrigger]);
   return (
     <div className="flex-col flex justify-center">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -116,7 +122,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
         <div className="w-2/10 flex justify-end-safe">
           <CgAdd
             className={`w-max text-xl pr-2 cursor-pointer hover:text-[#B85C38] transition-colors ${
-              categoryVisbible ? 'text-[#B85C38]' : ''
+              categoryVisible ? 'text-[#B85C38]' : ''
             }`}
             onClick={() => {
               setCategoryVisible((prev) => !prev);
@@ -136,7 +142,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
       </div>
       <span
         className={`p-5 transition-all bg-white/10 gap-4  ${
-          categoryVisbible ? 'flex' : 'hidden'
+          categoryVisible ? 'flex' : 'hidden'
         }`}
       >
         <input

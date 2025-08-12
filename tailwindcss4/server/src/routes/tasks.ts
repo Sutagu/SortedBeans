@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import pool from '../db';
+import { error } from 'console';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.patch('/:id', async (req: Request, res: Response): Promise<any> => {
-  const { completed, est_time } = req.body;
+  const { completed, est_time, assigned_date, del } = req.body;
   const { id } = req.params;
 
   if (typeof completed === 'boolean') {
@@ -38,6 +39,32 @@ router.patch('/:id', async (req: Request, res: Response): Promise<any> => {
         'UPDATE tasks SET est_time = $1 WHERE id = $2 RETURNING *',
         [est_time, id]
       );
+      if (result.rowCount === 0)
+        return res.status(404).json({ error: 'Task not found' });
+      return res.json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+  }
+
+  if (typeof assigned_date === 'string') {
+    try {
+      const result = await pool.query(
+        'UPDATE tasks SET assigned_date = $1 WHERE id =$2 RETURNING *',
+        [assigned_date, id]
+      );
+      if (result.rowCount === 0)
+        return res.status(404).json({ error: 'Task not found' });
+      return res.json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+  }
+  if (typeof del === 'boolean') {
+    try {
+      const result = await pool.query('DELETE FROM tasks WHERE id=$1', [id]);
       if (result.rowCount === 0)
         return res.status(404).json({ error: 'Task not found' });
       return res.json(result.rows[0]);

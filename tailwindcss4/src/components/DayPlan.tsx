@@ -6,9 +6,16 @@ import DayTasks from './DayTasks';
 interface DayPlanProps {
   currentDate: Date;
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
+  mainReloadTrigger: number;
+  setMainReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const DayPlan: React.FC<DayPlanProps> = ({ currentDate, setCurrentDate }) => {
+const DayPlan: React.FC<DayPlanProps> = ({
+  currentDate,
+  setCurrentDate,
+  mainReloadTrigger,
+  setMainReloadTrigger,
+}) => {
   function formatDate(date: Date): string {
     const year: number = date.getFullYear();
     const month: string = String(date.getMonth() + 1).padStart(2, '0');
@@ -57,7 +64,7 @@ const DayPlan: React.FC<DayPlanProps> = ({ currentDate, setCurrentDate }) => {
   };
   useEffect(() => {
     setCurrentDayIndex(currentDate.getDay());
-  }, [currentDate]);
+  }, [currentDate, mainReloadTrigger]);
   return (
     <div className="h-full">
       <div className="flex shadow-2xl justify-between items-center my-[5%] p-[5%] border-t-1 border-b-1">
@@ -79,7 +86,11 @@ const DayPlan: React.FC<DayPlanProps> = ({ currentDate, setCurrentDate }) => {
           className="cursor-pointer hover:text-[#B85C38] transition-colors"
         />
       </div>
-      <DayTasks currentDate={formatDate(currentDate)} />
+      <DayTasks
+        currentDate={formatDate(currentDate)}
+        reloadTrigger={mainReloadTrigger}
+        setReloadTrigger={setMainReloadTrigger}
+      />
     </div>
   );
 };

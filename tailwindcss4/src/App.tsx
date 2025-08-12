@@ -24,6 +24,7 @@ function App() {
     name: 'DEFAULT',
   });
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
 
   return (
     <div className="w-screen h-screen grid grid-cols-3">
@@ -68,7 +69,12 @@ function App() {
       </div>
       <div className="outerContainer">
         <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!">
-          <DayPlan currentDate={currentDate} setCurrentDate={setCurrentDate} />
+          <DayPlan
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            mainReloadTrigger={mainReloadTrigger}
+            setMainReloadTrigger={setMainReloadTrigger}
+          />
         </div>
       </div>
       <div className="outerContainer">
@@ -76,8 +82,17 @@ function App() {
           <p className="text-left bg-[#894931] rounded-t-xl p-[2%] max-h-[5%] h-[5%] text-sm">
             Create Drag Drop your Tasks!
           </p>
-          <TaskCategorySelector selected={category} onChange={setCategory} />
-          <TaskList categoryId={category.id} />
+          <TaskCategorySelector
+            selected={category}
+            onChange={setCategory}
+            reloadTrigger={mainReloadTrigger}
+            setReloadTrigger={setMainReloadTrigger}
+          />
+          <TaskList
+            categoryId={category.id}
+            reloadTrigger={mainReloadTrigger}
+            setReloadTrigger={setMainReloadTrigger}
+          />
         </div>
       </div>
     </div>
