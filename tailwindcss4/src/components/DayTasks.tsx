@@ -152,6 +152,9 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
             </li>
           );
         })}
+      <div className="w-2/12 h-4/12 absolute inset-5/12 z-999 secondary border-2 border-[#e0c097] rounded-lg text-2xl">
+        Floating div
+      </div>
     </ul>
   );
 };

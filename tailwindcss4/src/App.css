@@ -10,6 +10,25 @@
   color: #e0c097;
 }
 
+.dark {
+  background-color: #2d2424;
+}
+.primary {
+  background-color: #5c3d2e;
+}
+.secondary {
+  background-color: #3c2a21;
+}
+.accent {
+  background-color: #b85c38;
+}
+.accent-dark {
+  background-color: #894931;
+}
+.text {
+  background-color: #e0c097;
+}
+
 .outerContainer {
   justify-items: center;
   align-items: center;

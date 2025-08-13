@@ -10,6 +10,7 @@ interface Task {
   est_time: number;
   category_id: number;
   assigned_date: string | null;
+  description: string;
 }
 
 type Prop = {
@@ -58,7 +59,7 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
   }, [categoryId, reloadTrigger]);
 
   return (
-    <ul className="taskListContainer h-8/10 bg-[#3C2A21] overflow-y-scroll shrink p-5">
+    <ul className="taskListContainer h-8/10 secondary overflow-y-scroll shrink p-5">
       {tasks
         .filter(
           (task) =>
@@ -85,10 +86,13 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
               />
             </span>
             <span
-              className={`items-center justify-around pb-4 ${
-                shownIndex == task.id ? 'flex' : 'hidden'
+              className={`items-center justify-between pb-4 px-2 ${
+                shownIndex == task.id ? 'flex flex-wrap' : 'hidden'
               }`}
             >
+              <p className="w-full pb-2 text-gray-300">
+                Description: {task.description}
+              </p>
               <input
                 type="datetime-local"
                 name="assigned_date"

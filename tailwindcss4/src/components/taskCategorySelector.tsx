@@ -72,6 +72,13 @@ const TaskCategorySelector = ({
     }
     setIsVisible(false);
     setReloadTrigger((prev) => prev + 1);
+    setFormData({
+      title: '',
+      est_time: 0,
+      category_id: 1,
+      assigned_date: '',
+      description: '',
+    });
   };
   const addTaskCategory = async (name: string) => {
     const payload = { name };
@@ -89,6 +96,7 @@ const TaskCategorySelector = ({
     }
     setCategoryVisible(false);
     setReloadTrigger((prev) => prev + 1);
+    setInput('');
   };
 
   useEffect(() => {
@@ -114,7 +122,7 @@ const TaskCategorySelector = ({
           className="w-7/10 h-full p-2 "
         >
           {categ.map((cat) => (
-            <option key={cat.id} value={cat.id} className="p-2 bg-[#894931]">
+            <option key={cat.id} value={cat.id} className="p-2 accent-dark">
               {cat.name}
             </option>
           ))}
@@ -155,7 +163,7 @@ const TaskCategorySelector = ({
           onChange={(e) => setInput(e.target.value)}
         />
         <button
-          className="w-3/10 font-light text-sm bg-[#894931] rounded-md py-2 hover:font-semibold hover:cursor-pointer transition-colors "
+          className="w-3/10 font-light text-sm accent rounded-md py-2 hover:font-semibold hover:cursor-pointer transition-colors "
           onClick={() => addTaskCategory(input)}
         >
           Add Category
@@ -220,7 +228,7 @@ const TaskCategorySelector = ({
         </select>
         <button
           type="submit"
-          className="transition-colors bg-[#894931] rounded-md py-2 hover:font-semibold hover:cursor-pointer "
+          className="transition-colors accent rounded-md py-2 hover:font-semibold hover:cursor-pointer "
         >
           Add Task
         </button>
