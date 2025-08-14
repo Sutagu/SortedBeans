@@ -14,8 +14,21 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/:id', async (req: Request, res: Response): Promise<any> => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM tasks WHERE id=$1', [id]);
+    if (result.rowCount === 0)
+      return res.status(404).json({ error: 'Task not found' });
+    return res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
 router.patch('/:id', async (req: Request, res: Response): Promise<any> => {
-  const { completed, est_time, assigned_date, del } = req.body;
+  const { completed, est_time, assigned_date } = req.body;
   const { id } = req.params;
 
   if (typeof completed === 'boolean') {
@@ -62,28 +75,40 @@ router.patch('/:id', async (req: Request, res: Response): Promise<any> => {
       return res.status(500).json({ error: 'Database error' });
     }
   }
-  if (typeof del === 'boolean') {
+  return res.status(400).json({ error: 'Invalid data' });
+});
+
+router.patch(
+  '/update/:id',
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const { title, est_time, category_id, assigned_date, description } =
+      req.body;
+    if (!title) return res.status(400).json({ error: 'Title is required' });
     try {
-      const result = await pool.query('DELETE FROM tasks WHERE id=$1', [id]);
-      if (result.rowCount === 0)
-        return res.status(404).json({ error: 'Task not found' });
+      const result = await pool.query(
+        `UPDATE TASKS 
+        SET title = $1,
+           est_time = $2,
+           category_id = $3,
+           assigned_date = $4,
+           description = $5
+        WHERE id=$6
+        RETURNING *`,
+        [title, est_time, category_id, assigned_date, description, id]
+      );
       return res.json(result.rows[0]);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Database error' });
+      res.status(500).json({ error: 'Database Error' });
     }
   }
-
-  return res.status(400).json({ error: 'Invalid data' });
-});
+);
 
 router.post('/', async (req: Request, res: Response): Promise<any> => {
   const { title, est_time, category_id, assigned_date, description } = req.body;
 
-  if (!title)
-    return res
-      .status(400)
-      .json({ error: 'Title and assigned_date are required' });
+  if (!title) return res.status(400).json({ error: 'Title is required' });
 
   try {
     const result = await pool.query(

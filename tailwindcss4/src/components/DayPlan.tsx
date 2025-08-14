@@ -8,13 +8,23 @@ interface DayPlanProps {
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
   mainReloadTrigger: number;
   setMainReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
+  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
+  setEnablePatch: React.Dispatch<React.SetStateAction<number>>;
 }
-
+interface TaskFormData {
+  title: string;
+  est_time: number;
+  category_id: number;
+  assigned_date: string | null;
+  description: string;
+}
 const DayPlan: React.FC<DayPlanProps> = ({
   currentDate,
   setCurrentDate,
   mainReloadTrigger,
   setMainReloadTrigger,
+  setFormData,
+  setEnablePatch,
 }) => {
   function formatDate(date: Date): string {
     const year: number = date.getFullYear();
@@ -90,6 +100,8 @@ const DayPlan: React.FC<DayPlanProps> = ({
         currentDate={formatDate(currentDate)}
         reloadTrigger={mainReloadTrigger}
         setReloadTrigger={setMainReloadTrigger}
+        setFormData={setFormData}
+        setEnablePatch={setEnablePatch}
       />
     </div>
   );

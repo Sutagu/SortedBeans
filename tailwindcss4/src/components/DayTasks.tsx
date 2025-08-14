@@ -12,19 +12,32 @@ interface Task {
   assigned_date: string | null;
   description: string | null;
 }
-
+interface TaskFormData {
+  title: string;
+  est_time: number;
+  category_id: number;
+  assigned_date: string | null;
+  description: string;
+}
 interface Prop {
   currentDate: string;
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
+  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
+  setEnablePatch: React.Dispatch<React.SetStateAction<number>>;
 }
-const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
+const DayTasks = ({
+  currentDate,
+  reloadTrigger,
+  setReloadTrigger,
+  setFormData,
+  setEnablePatch,
+}: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
-    const end = new Date(start.getTime() + estTime * 60000); // Convert minutes to milliseconds
+    const end = new Date(start.getTime() + estTime * 60000);
     return {
       start: start.toLocaleTimeString([], {
         hour: '2-digit',
@@ -111,7 +124,18 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
             >
               <div className="justify-between flex flex-col self-stretch items-center text-gray-300">
                 {start}
-                <BsDot />
+                <BsDot
+                  onClick={() => {
+                    setEnablePatch(task.id);
+                    setFormData({
+                      title: task.title,
+                      est_time: task.est_time,
+                      category_id: task.category_id,
+                      assigned_date: task.assigned_date,
+                      description: task.description || '',
+                    });
+                  }}
+                />
                 {end}
               </div>
               <div
@@ -152,9 +176,6 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
             </li>
           );
         })}
-      <div className="w-2/12 h-4/12 absolute inset-5/12 z-999 secondary border-2 border-[#e0c097] rounded-lg text-2xl">
-        Floating div
-      </div>
     </ul>
   );
 };

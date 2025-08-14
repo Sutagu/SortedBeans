@@ -8,7 +8,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'sortedBeans_local',
-  password: '',
+  password: 'SutaguDb',
   port: 5432,
 });
 

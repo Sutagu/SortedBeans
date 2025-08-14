@@ -35,16 +35,25 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
       setReloadTrigger((prev) => prev + 1);
     }
   };
-  const deleteTask = (id: number) => {
-    const del = true;
-    fetch(`http://localhost:5000/api/tasks/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ del }),
-    }).catch((err) => console.error('Failed to delete:', err));
-    setReloadTrigger((prev) => prev + 1);
+  const deleteTask = async (id: number) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        console.error('Failed to delete:', error.error || res.statusText);
+        return;
+      }
+
+      setReloadTrigger((prev) => prev + 1);
+    } catch (err) {
+      console.error('Failed to delete:', err);
+    }
   };
 
   useEffect(() => {

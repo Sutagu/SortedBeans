@@ -19,13 +19,30 @@ import TaskCategorySelector from './components/taskCategorySelector';
 import TaskList from './components/TaskList';
 
 function App() {
-  const [category, setCategory] = useState<{ id: number; name: string }>({
-    id: 1,
+  const [category, setCategory] = useState<{
+    category_id: number;
+    name: string;
+  }>({
+    category_id: 1,
     name: 'DEFAULT',
   });
+  interface TaskFormData {
+    title: string;
+    est_time: number;
+    category_id: number;
+    assigned_date: string | null;
+    description: string;
+  }
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
-
+  const [enablePatch, setEnablePatch] = useState(0);
+  const [formData, setFormData] = useState<TaskFormData>({
+    title: '',
+    est_time: 0,
+    category_id: 1,
+    assigned_date: '',
+    description: '',
+  });
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       <div className="outerContainer flex flex-col gap-[5%] <BsFillGearFill />">
@@ -74,6 +91,8 @@ function App() {
             setCurrentDate={setCurrentDate}
             mainReloadTrigger={mainReloadTrigger}
             setMainReloadTrigger={setMainReloadTrigger}
+            setFormData={setFormData}
+            setEnablePatch={setEnablePatch}
           />
         </div>
       </div>
@@ -87,9 +106,13 @@ function App() {
             onChange={setCategory}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
+            formData={formData}
+            setFormData={setFormData}
+            enablePatch={enablePatch}
+            setEnablePatch={setEnablePatch}
           />
           <TaskList
-            categoryId={category.id}
+            categoryId={category.category_id}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
           />

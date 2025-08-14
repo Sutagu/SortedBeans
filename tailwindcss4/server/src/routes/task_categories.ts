@@ -14,6 +14,25 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.delete(
+  '/:category_id',
+  async (req: Request, res: Response): Promise<any> => {
+    const { category_id } = req.params;
+    try {
+      const result = await pool.query(
+        `DELETE FROM task_categories WHERE category_id=$1 RETURNING *`,
+        [category_id]
+      );
+      if (result.rowCount === 0)
+        return res.status(404).json({ error: 'Task not found' });
+
+      return res.json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 router.post('/', async (req: Request, res: Response): Promise<any> => {
   const { name } = req.body;
   if (name == '')
@@ -25,6 +44,7 @@ router.post('/', async (req: Request, res: Response): Promise<any> => {
       RETURNING *`,
       [name]
     );
+    return res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Database Error' });
