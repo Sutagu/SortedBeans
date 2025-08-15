@@ -3,6 +3,7 @@ import { CgAdd } from 'react-icons/cg';
 import { BiEdit } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { MdDelete } from 'react-icons/md';
+import { ComponentMode } from './componentMode';
 type Props = {
   selected: { category_id: number; name: string };
   onChange: (category: { category_id: number; name: string }) => void;
@@ -10,8 +11,8 @@ type Props = {
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   formData: TaskFormData;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  enablePatch: number;
-  setEnablePatch: React.Dispatch<React.SetStateAction<number>>;
+  patchId: number;
+  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 };
 interface TaskFormData {
   title: string;
@@ -32,12 +33,11 @@ const TaskCategorySelector = ({
   setReloadTrigger,
   formData,
   setFormData,
-  enablePatch,
-  setEnablePatch,
+  patchId,
+  setPatchId,
 }: Props) => {
-  const [categ, setCateg] = useState<Categ[]>([]);
-  const [isVisible, setIsVisible] = useState(false);
-  const [categoryVisible, setCategoryVisible] = useState(false);
+  const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
+  const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
   const [input, setInput] = useState('');
 
   const handleChange = (
@@ -69,19 +69,19 @@ const TaskCategorySelector = ({
       assigned_date: '',
       description: '',
     });
+    setMode(ComponentMode.DEFAULT);
+    setPatchId(0);
     setInput('');
-    setIsVisible(false);
-    setCategoryVisible(false);
-    setEnablePatch(0);
   };
   const addTask = async (e: React.FormEvent) => {
+    console.log(mode);
     e.preventDefault();
     const payload = {
       ...formData,
       assigned_date:
         formData.assigned_date != '' ? formData.assigned_date : null,
     };
-    if (isVisible) {
+    if (mode == ComponentMode.ADD_TASK) {
       try {
         const res = await fetch('http://localhost:5000/api/tasks', {
           method: 'POST',
@@ -97,7 +97,7 @@ const TaskCategorySelector = ({
     } else {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/tasks/update/${enablePatch}`,
+          `http://localhost:5000/api/tasks/update/${patchId}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,8 @@ const TaskCategorySelector = ({
       .catch((err) => {
         console.error('Error fetching categories', err);
       });
-  }, [reloadTrigger]);
+    if (patchId != 0) setMode(ComponentMode.EDIT_TASK);
+  }, [reloadTrigger, patchId]);
   return (
     <div className="flex-col flex justify-center">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -201,7 +202,7 @@ const TaskCategorySelector = ({
             );
             if (category) onChange(category);
           }}
-          className="w-7/10 h-full p-2 "
+          className="w-7/10 h-full shrink p-2 "
         >
           {categ.map((cat) => (
             <option
@@ -213,35 +214,49 @@ const TaskCategorySelector = ({
             </option>
           ))}
         </select>
-        <div className="w-2/10 flex justify-end-safe gap-1">
+        <div className=" text-xl flex items-center justify-end-safe gap-1">
+          <p
+            className={`text-xs text-nowrap hover:text-red-400 cursor-pointer ${
+              mode == ComponentMode.DELETE_CATEGORY ? 'block' : 'hidden'
+            }`}
+            onClick={() => deleteCategory(selected.category_id)}
+          >
+            Delete {selected.name} ?
+          </p>
           <AiOutlineMinusCircle
             title="Delete Current Category"
-            className="text-xl cursor-pointer hover:text-[#B85C38] transition-colors"
-            onClick={() => deleteCategory(selected.category_id)}
+            className="cursor-pointer hover:text-[#B85C38] transition-colors"
+            onClick={() =>
+              mode != ComponentMode.DELETE_CATEGORY
+                ? setMode(ComponentMode.DELETE_CATEGORY)
+                : setMode(ComponentMode.DEFAULT)
+            }
           />
           <CgAdd
-            className={`text-xl cursor-pointer hover:text-[#B85C38] transition-colors ${
-              categoryVisible && enablePatch == 0 ? 'text-[#B85C38]' : ''
+            className={`cursor-pointer hover:text-[#B85C38] transition-colors ${
+              mode == ComponentMode.ADD_CATEGORY ? 'text-[#B85C38]' : ''
             }`}
-            onClick={() => {
-              resetFormData();
-              setCategoryVisible((prev) => !prev);
-            }}
+            onClick={() =>
+              mode != ComponentMode.ADD_CATEGORY
+                ? setMode(ComponentMode.ADD_CATEGORY)
+                : setMode(ComponentMode.DEFAULT)
+            }
           />
           <BiEdit
-            className={`text-xl cursor-pointer hover:text-[#B85C38] transition-colors ${
-              isVisible && enablePatch == 0 ? 'text-[#B85C38]' : ''
+            className={`cursor-pointer hover:text-[#B85C38] transition-colors ${
+              mode == ComponentMode.ADD_TASK ? 'text-[#B85C38]' : ''
             }`}
-            onClick={() => {
-              resetFormData();
-              setIsVisible((prev) => !prev);
-            }}
+            onClick={() =>
+              mode != ComponentMode.ADD_TASK
+                ? setMode(ComponentMode.ADD_TASK)
+                : setMode(ComponentMode.DEFAULT)
+            }
           />
         </div>
       </div>
       <span
         className={`p-5 transition-all bg-white/10 gap-4  
-          ${categoryVisible && enablePatch == 0 ? 'flex' : 'hidden'} `}
+          ${mode == ComponentMode.ADD_CATEGORY ? 'flex' : 'hidden'} `}
       >
         <input
           type="text"
@@ -269,7 +284,9 @@ const TaskCategorySelector = ({
       <form
         onSubmit={addTask}
         className={`p-5 transition-all bg-white/10 gap-4 ${
-          isVisible || enablePatch != 0 ? 'flex flex-col' : 'hidden'
+          mode == ComponentMode.ADD_TASK || mode == ComponentMode.EDIT_TASK
+            ? 'flex flex-col'
+            : 'hidden'
         }`}
       >
         <input
@@ -295,7 +312,7 @@ const TaskCategorySelector = ({
           />
           <p className="w-6/10">Estimated Time (Minutes):</p>
           <input
-            type="text"
+            type="number"
             name="est_time"
             value={formData.est_time}
             onChange={handleChange}
@@ -330,7 +347,7 @@ const TaskCategorySelector = ({
           <button
             type="submit"
             className={`transition-colors accent rounded-md py-2 hover:font-semibold hover:cursor-pointer ${
-              isVisible && enablePatch == 0 ? 'grow' : 'hidden'
+              mode == ComponentMode.ADD_TASK ? 'grow' : 'hidden'
             }`}
           >
             Add Task
@@ -338,7 +355,7 @@ const TaskCategorySelector = ({
           <button
             type="submit"
             className={`transition-colors accent rounded-md py-2 hover:font-semibold hover:cursor-pointer ${
-              enablePatch != 0 ? 'grow' : 'hidden'
+              mode == ComponentMode.EDIT_TASK ? 'grow' : 'hidden'
             }`}
           >
             Edit Task
@@ -346,9 +363,9 @@ const TaskCategorySelector = ({
           <MdDelete
             title="Delete task"
             className={`p-2 h-full w-auto secondary rounded-lg text-xl hover:bg-red-600! transition-colors ${
-              enablePatch != 0 ? 'block' : 'hidden'
+              mode == ComponentMode.EDIT_TASK ? 'block' : 'hidden'
             }`}
-            onClick={() => deleteTask(enablePatch)}
+            onClick={() => deleteTask(patchId)}
           />
           <button
             className="transition-colors secondary rounded-md p-2 hover:bg-red-600! hover:cursor-pointer"

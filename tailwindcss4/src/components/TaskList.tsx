@@ -1,3 +1,4 @@
+import { AiOutlineEdit } from 'react-icons/ai';
 import { MdDelete } from 'react-icons/md';
 import { FaEllipsisH } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
@@ -17,9 +18,23 @@ type Prop = {
   categoryId: number;
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
+  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
+  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 };
-
-const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
+interface TaskFormData {
+  title: string;
+  est_time: number;
+  category_id: number;
+  assigned_date: string | null;
+  description: string;
+}
+const TaskList = ({
+  categoryId,
+  reloadTrigger,
+  setReloadTrigger,
+  setFormData,
+  setPatchId,
+}: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
@@ -113,8 +128,21 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
                 onClick={() => assignTaskDate(task.id, input)}
                 className="bg-white/20 rounded-lg p-2 hover:bg-[#76b6ce] transition-colors flex-none"
               >
-                Save Changes
+                Confirm
               </button>
+              <AiOutlineEdit
+                className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-[#b85c38] transition-colors flex-none"
+                onClick={() => {
+                  setPatchId(task.id);
+                  setFormData({
+                    title: task.title,
+                    est_time: task.est_time,
+                    category_id: task.category_id,
+                    assigned_date: task.assigned_date,
+                    description: task.description || '',
+                  });
+                }}
+              />
               <MdDelete
                 title="Delete task"
                 className="p-2 bg-white/20 rounded-lg text-4xl hover:bg-red-600 transition-colors"

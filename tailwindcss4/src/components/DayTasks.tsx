@@ -1,4 +1,4 @@
-import { BsDot } from 'react-icons/bs';
+import { AiOutlineEdit } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiCircle } from 'react-icons/bi';
 import React from 'react';
@@ -24,14 +24,14 @@ interface Prop {
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  setEnablePatch: React.Dispatch<React.SetStateAction<number>>;
+  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 }
 const DayTasks = ({
   currentDate,
   reloadTrigger,
   setReloadTrigger,
   setFormData,
-  setEnablePatch,
+  setPatchId,
 }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -124,9 +124,10 @@ const DayTasks = ({
             >
               <div className="justify-between flex flex-col self-stretch items-center text-gray-300">
                 {start}
-                <BsDot
+                <AiOutlineEdit
+                  className="hover:text-[#b85c38] text-xl"
                   onClick={() => {
-                    setEnablePatch(task.id);
+                    setPatchId(task.id);
                     setFormData({
                       title: task.title,
                       est_time: task.est_time,
@@ -136,6 +137,7 @@ const DayTasks = ({
                     });
                   }}
                 />
+
                 {end}
               </div>
               <div
@@ -162,8 +164,7 @@ const DayTasks = ({
                 </div>
                 <div className="flex justify-between pt-2">
                   <span className="font-light max-w-9/10 self-baseline-last">
-                    {categories[task.category_id - 1]} :{' '}
-                    {task.description || ''}
+                    {categories[task.category_id]} : {task.description || ''}
                   </span>
                   <span
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"

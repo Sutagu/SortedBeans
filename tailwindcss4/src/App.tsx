@@ -35,7 +35,7 @@ function App() {
   }
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
-  const [enablePatch, setEnablePatch] = useState(0);
+  const [patchId, setPatchId] = useState(0);
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -92,7 +92,7 @@ function App() {
             mainReloadTrigger={mainReloadTrigger}
             setMainReloadTrigger={setMainReloadTrigger}
             setFormData={setFormData}
-            setEnablePatch={setEnablePatch}
+            setPatchId={setPatchId}
           />
         </div>
       </div>
@@ -108,13 +108,15 @@ function App() {
             setReloadTrigger={setMainReloadTrigger}
             formData={formData}
             setFormData={setFormData}
-            enablePatch={enablePatch}
-            setEnablePatch={setEnablePatch}
+            patchId={patchId}
+            setPatchId={setPatchId}
           />
           <TaskList
             categoryId={category.category_id}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
+            setFormData={setFormData}
+            setPatchId={setPatchId}
           />
         </div>
       </div>
