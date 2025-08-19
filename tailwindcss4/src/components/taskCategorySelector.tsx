@@ -1,7 +1,7 @@
 import { AiOutlineMinusCircle } from 'react-icons/ai';
 import { CgAdd } from 'react-icons/cg';
 import { BiEdit } from 'react-icons/bi';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { ComponentMode } from './componentMode';
 type Props = {
@@ -39,7 +39,7 @@ const TaskCategorySelector = ({
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
   const [input, setInput] = useState('');
-
+  const selectRef = useRef<HTMLSelectElement>(null);
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -194,6 +194,7 @@ const TaskCategorySelector = ({
     <div className="flex-col flex justify-center">
       <div className="p-2 w-full flex items-center justify-between text-lg">
         <select
+          ref={selectRef}
           value={selected.category_id}
           onChange={(e) => {
             const selectedId = parseInt(e.target.value);
@@ -204,6 +205,9 @@ const TaskCategorySelector = ({
           }}
           className="w-7/10 h-full shrink p-2 "
         >
+          <option value="" hidden>
+            Choose a Task...
+          </option>
           {categ.map((cat) => (
             <option
               key={cat.category_id}

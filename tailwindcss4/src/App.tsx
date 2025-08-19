@@ -23,8 +23,8 @@ function App() {
     category_id: number;
     name: string;
   }>({
-    category_id: 1,
-    name: 'DEFAULT',
+    category_id: 0,
+    name: 'NULL',
   });
   interface TaskFormData {
     title: string;
@@ -45,8 +45,8 @@ function App() {
   });
   return (
     <div className="w-screen h-screen grid grid-cols-3">
-      <div className="outerContainer flex flex-col gap-[5%] <BsFillGearFill />">
-        <div className="innerContainer bg-[#4c352b]! h-[50%] mt-[10%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]">
+      <div className="outerContainer flex flex-col gap-[5%]">
+        <div className="innerContainer bg-[#4c352b]! h-[50%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]">
           <div className="text-left text-xm self-start">SORTED BEANS</div>
           <BsFillGearFill className="ml-auto text-xm self-start" />
 
@@ -85,7 +85,7 @@ function App() {
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] w-[100%]! mt-[10%] rounded-none!">
+        <div className="innerContainer h-[85%] w-[100%]! rounded-none!">
           <DayPlan
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
@@ -97,9 +97,9 @@ function App() {
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden mt-[10%] pb-[10%] text-[#FFF] bg-[#4c352b]!">
+        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-[#FFF] bg-[#4c352b]!">
           <p className="text-left bg-[#894931] rounded-t-xl p-[2%] max-h-[5%] h-[5%] text-sm">
-            Create Drag Drop your Tasks!
+            Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector
             selected={category}

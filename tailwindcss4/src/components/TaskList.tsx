@@ -38,6 +38,7 @@ const TaskList = ({
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
+  console.log('Categoryid:', categoryId);
   const assignTaskDate = (id: number, assigned_date: string | null) => {
     if (assigned_date != null || assigned_date != '') {
       fetch(`http://localhost:5000/api/tasks/${id}`, {

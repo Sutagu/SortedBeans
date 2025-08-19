@@ -19,6 +19,11 @@ interface TaskFormData {
   assigned_date: string | null;
   description: string;
 }
+
+interface categoriesData {
+  category_id: number;
+  name: string;
+}
 interface Prop {
   currentDate: string;
   reloadTrigger: number;
@@ -34,7 +39,7 @@ const DayTasks = ({
   setPatchId,
 }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<categoriesData[]>([]);
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
     const end = new Date(start.getTime() + estTime * 60000);
@@ -92,10 +97,9 @@ const DayTasks = ({
         fetch('http://localhost:5000/api/task_categories'),
       ]);
       const taskData = await taskRes.json();
-      const categoryData: { name: string }[] = await categoryRes.json();
-
+      const categoryData: categoriesData[] = await categoryRes.json();
       setTasks(taskData);
-      setCategories(categoryData.map((c) => c.name));
+      setCategories(categoryData);
     };
 
     fetchData();
@@ -164,7 +168,10 @@ const DayTasks = ({
                 </div>
                 <div className="flex justify-between pt-2">
                   <span className="font-light max-w-9/10 self-baseline-last">
-                    {categories[task.category_id]} : {task.description || ''}
+                    {categories.find(
+                      (cat) => cat.category_id == task.category_id
+                    )?.name || 'Unassigned category'}{' '}
+                    : {task.description || '...'}
                   </span>
                   <span
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"

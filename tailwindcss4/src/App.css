@@ -30,9 +30,10 @@
 }
 
 .outerContainer {
-  justify-items: center;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
+  display: flex;
 }
 .innerContainer {
   border: 1px solid #e0c097;
