@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 const envDirectory = '/gitHubRepositories/sorted-beans-repo-2/tailwindcss4/';
 
 console.log(
-  'DOTENV ERROR IS: ',
+  'DOTENV IS: ',
   require('dotenv').config({
     path: envDirectory + '.env',
   })

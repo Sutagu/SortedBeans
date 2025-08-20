@@ -108,7 +108,7 @@ const DayTasks = ({
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
   return (
-    <ul className="p-5 text-[#F7F7F7] h-7/10 max-h-7/10 overflow-y-auto noScrollBar">
+    <ul className="p-5 text-white max-h-7/10 overflow-y-auto noScrollBar">
       {tasks
         .filter((task) => task.assigned_date?.slice(0, 10) === currentDate)
         .sort(
@@ -123,13 +123,13 @@ const DayTasks = ({
           );
           return (
             <li
-              className="w-full text-left font-medium flex gap-6 items-stretch py-4"
+              className="w-full text-left font-medium flex gap-6 py-4"
               key={task.id}
             >
-              <div className="justify-between flex flex-col self-stretch items-center text-gray-300">
+              <div className="justify-between flex flex-col items-center text-gray-light">
                 {start}
                 <AiOutlineEdit
-                  className="hover:text-[#b85c38] text-xl"
+                  className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
                     setPatchId(task.id);
                     setFormData({
@@ -145,7 +145,7 @@ const DayTasks = ({
                 {end}
               </div>
               <div
-                className={`w-[75%] p-[5%] rounded-xl transition-opacity ${
+                className={`w-8/10 p-[5%] rounded-xl transition-opacity ${
                   task.completed ? 'opacity-60' : ''
                 }`}
                 style={{ backgroundColor: colours[idx % colours.length] }}
@@ -161,7 +161,7 @@ const DayTasks = ({
                       onChange={(e) =>
                         handleEstTimeChange(task.id, Number(e.target.value))
                       }
-                      className="field-sizing-content hover:text-gray-300"
+                      className="field-sizing-content hover:text-gray-light"
                     />
                     <p>Min</p>
                   </span>

@@ -212,7 +212,7 @@ const TaskCategorySelector = ({
             <option
               key={cat.category_id}
               value={cat.category_id}
-              className="p-2 accent-dark"
+              className="p-2 bg-accent-dark"
             >
               {cat.name}
             </option>
@@ -229,7 +229,7 @@ const TaskCategorySelector = ({
           </p>
           <AiOutlineMinusCircle
             title="Delete Current Category"
-            className="cursor-pointer hover:text-[#B85C38] transition-colors"
+            className="cursor-pointer hover:text-accent transition-colors"
             onClick={() =>
               mode != ComponentMode.DELETE_CATEGORY
                 ? setMode(ComponentMode.DELETE_CATEGORY)
@@ -237,8 +237,8 @@ const TaskCategorySelector = ({
             }
           />
           <CgAdd
-            className={`cursor-pointer hover:text-[#B85C38] transition-colors ${
-              mode == ComponentMode.ADD_CATEGORY ? 'text-[#B85C38]' : ''
+            className={`cursor-pointer hover:text-accent transition-colors ${
+              mode == ComponentMode.ADD_CATEGORY ? 'text-accent' : ''
             }`}
             onClick={() =>
               mode != ComponentMode.ADD_CATEGORY
@@ -247,8 +247,8 @@ const TaskCategorySelector = ({
             }
           />
           <BiEdit
-            className={`cursor-pointer hover:text-[#B85C38] transition-colors ${
-              mode == ComponentMode.ADD_TASK ? 'text-[#B85C38]' : ''
+            className={`cursor-pointer hover:text-accent transition-colors ${
+              mode == ComponentMode.ADD_TASK ? 'text-accent' : ''
             }`}
             onClick={() =>
               mode != ComponentMode.ADD_TASK
@@ -259,7 +259,7 @@ const TaskCategorySelector = ({
         </div>
       </div>
       <span
-        className={`p-5 transition-all bg-white/10 gap-4  
+        className={`p-5 transition-all bg-white/10 gap-4 
           ${mode == ComponentMode.ADD_CATEGORY ? 'flex' : 'hidden'} `}
       >
         <input
@@ -312,7 +312,7 @@ const TaskCategorySelector = ({
                 : ''
             }
             onChange={handleChange}
-            className="bg-black/20 w-4/10 rounded-lg p-2 text-gray-300"
+            className="bg-black/20 w-4/10 rounded-lg p-2 text-gray-light"
           />
           <p className="w-6/10">Estimated Time (Minutes):</p>
           <input
@@ -320,7 +320,7 @@ const TaskCategorySelector = ({
             name="est_time"
             value={formData.est_time}
             onChange={handleChange}
-            className="w-1/10 text-gray-300"
+            className="w-1/10 text-gray-light"
           />
         </span>
         <textarea
@@ -329,7 +329,7 @@ const TaskCategorySelector = ({
           value={formData.description}
           onChange={handleChange}
           maxLength={100}
-          className="h-full text-gray-300"
+          className="h-full text-gray-light"
         ></textarea>
         <select
           name="category_id"
@@ -350,7 +350,7 @@ const TaskCategorySelector = ({
         <div className="flex gap-4">
           <button
             type="submit"
-            className={`transition-colors accent rounded-md py-2 hover:font-semibold hover:cursor-pointer ${
+            className={`cursor-pointer transition-colors bg-accent rounded-md py-2 hover:bg-accent-dark ${
               mode == ComponentMode.ADD_TASK ? 'grow' : 'hidden'
             }`}
           >
@@ -358,7 +358,7 @@ const TaskCategorySelector = ({
           </button>
           <button
             type="submit"
-            className={`transition-colors accent rounded-md py-2 hover:font-semibold hover:cursor-pointer ${
+            className={`transition-colors bg-accent rounded-md py-2 cursor-pointer hover:bg-accent-dark ${
               mode == ComponentMode.EDIT_TASK ? 'grow' : 'hidden'
             }`}
           >

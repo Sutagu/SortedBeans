@@ -34,9 +34,9 @@ const Quotes: React.FC = () => {
     }
   });
   return (
-    <div className="text-[#87462C] w-[100%] text-sm text-center mt-15">
-      <p className="max-w-[90%] m-auto">{quoteDescription}</p>
-      <p className="text-xs mt-2">- {quoteAuthor}</p>
+    <div className="text-dark text-sm text-center mt-15">
+      <p className="max-w-8/10 m-auto pb-2">{quoteDescription}</p>
+      <p className="text-xs">- {quoteAuthor}</p>
     </div>
   );
 };

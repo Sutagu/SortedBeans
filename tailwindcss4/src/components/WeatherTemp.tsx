@@ -74,11 +74,11 @@ const WeatherTemp: React.FC = () => {
   return (
     <div>
       {temperature !== null ? (
-        <div id="weather-container">
-          <img id="weather-png" src={iconPath} alt="Weather icon" />
+        <div className="text-sm font-semibold text-left flex items-center gap-4">
+          <img className="w-4/12" src={iconPath} alt="Weather icon" />
           <div>
-            <p id="weather-temperature"> {temperature.toFixed()}°C</p>
-            <p id="weather-temperature-desc"> {description.toUpperCase()}</p>
+            <p> {temperature.toFixed()}°C</p>
+            <p> {description.toUpperCase()}</p>
           </div>
         </div>
       ) : (

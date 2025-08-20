@@ -46,26 +46,26 @@ function App() {
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       <div className="outerContainer flex flex-col gap-[5%]">
-        <div className="innerContainer bg-[#4c352b]! h-[50%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]">
+        <div className="innerContainer bg-primary/70! h-[50%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]">
           <div className="text-left text-xm self-start">SORTED BEANS</div>
           <BsFillGearFill className="ml-auto text-xm self-start" />
 
           <img
             src={portrait}
             alt="Portrait"
-            className="portrait bg-[#B85C38] h-[100%] rounded-2xl shadow-inner"
+            className="box-shadow bg-accent h-full rounded-2xl"
           />
           <div className="flex flex-col justify-center vertical-align">
             <Clock />
             <WeatherTemp />
           </div>
 
-          <div className="flex col-span-2 gap-[1%] text-lg font-semibold">
-            <div className="record-string text-[#B85C38]">25 </div>
+          <div className="flex items-center col-span-2 gap-2 text-lg font-semibold">
+            <div className="record-string text-accent">25 </div>
             <div className="record-string">Days Consistent 🔥</div>
           </div>
 
-          <div className="col-span-2 bg-[#87462C] p-[5%] rounded-xl shadow-xl">
+          <div className="col-span-2 bg-accent-dark p-4 rounded-xl shadow-xl">
             <GitHubCalendar
               username="Sutagu"
               theme={{
@@ -75,17 +75,17 @@ function App() {
             />
           </div>
         </div>
-        <div className="innerContainer h-[30%] bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative">
+        <div className="innerContainer h-3/10 bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative">
           <img
             src={logo}
             alt="logo"
-            className="w-[10%] absolute left-5 bottom-5"
+            className="w-1/10 absolute z-99 left-5 bottom-5"
           />
           <Quotes />
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] w-[100%]! rounded-none!">
+        <div className="innerContainer h-[85%] w-full! rounded-none!">
           <DayPlan
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
@@ -97,8 +97,8 @@ function App() {
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-[#FFF] bg-[#4c352b]!">
-          <p className="text-left bg-[#894931] rounded-t-xl p-[2%] max-h-[5%] h-[5%] text-sm">
+        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary!">
+          <p className="text-left bg-accent rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector

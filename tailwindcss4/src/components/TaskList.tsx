@@ -38,7 +38,6 @@ const TaskList = ({
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
-  console.log('Categoryid:', categoryId);
   const assignTaskDate = (id: number, assigned_date: string | null) => {
     if (assigned_date != null || assigned_date != '') {
       fetch(`http://localhost:5000/api/tasks/${id}`, {
@@ -84,7 +83,7 @@ const TaskList = ({
   }, [categoryId, reloadTrigger]);
 
   return (
-    <ul className="taskListContainer h-8/10 secondary overflow-y-scroll shrink p-5">
+    <ul className="taskListContainer h-9/10 bg-secondary overflow-y-scroll shrink p-5">
       {tasks
         .filter(
           (task) =>
@@ -93,13 +92,13 @@ const TaskList = ({
         .map((task) => (
           <li
             key={task.id}
-            className="text-left  border-[#FFF0DC] border-t hover:bg-[#2d2424]  transition"
+            className="text-left  border-white border-t hover:bg-dark  transition"
           >
             <span className="py-4 flex items-center">
               <RxHamburgerMenu className="rotate-90 w-1/12" />
               <div className="w-10/12">
                 <p className="text-lg">{task.title}</p>
-                <p className="text-[#E0C097]">{task.est_time} Min</p>
+                <p className="text-text">{task.est_time} Min</p>
               </div>
               <FaEllipsisH
                 className="cursor-pointer"
@@ -115,7 +114,7 @@ const TaskList = ({
                 shownIndex == task.id ? 'flex flex-wrap' : 'hidden'
               }`}
             >
-              <p className="w-full pb-2 text-gray-300">
+              <p className="w-full pb-2 text-gray-light">
                 Description: {task.description}
               </p>
               <input
@@ -132,7 +131,7 @@ const TaskList = ({
                 Confirm
               </button>
               <AiOutlineEdit
-                className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-[#b85c38] transition-colors flex-none"
+                className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
                   setPatchId(task.id);
                   setFormData({
