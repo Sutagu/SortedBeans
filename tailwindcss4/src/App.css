@@ -43,7 +43,16 @@
   overflow: hidden !important;
   display: flex;
   justify-content: end;
+  height: inherit;
 }
+
+.react-activity-calendar {
+  height: 100%;
+}
+.react-activity-calendar__calendar {
+  height: 95%;
+}
+
 .react-activity-calendar__footer {
   display: none !important;
 }

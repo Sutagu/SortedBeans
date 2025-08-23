@@ -46,26 +46,29 @@ function App() {
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       <div className="outerContainer flex flex-col gap-[5%]">
-        <div className="innerContainer bg-primary/70! h-[50%] grid grid-cols-2 grid-rows-[10%_40%_10%_40%] p-[5%]">
-          <div className="text-left text-xm self-start">SORTED BEANS</div>
-          <BsFillGearFill className="ml-auto text-xm self-start" />
+        <div className="innerContainer bg-primary/70! h-[50%] flex flex-col overflow-none gap-2 p-[5%]">
+          <span className="flex justify-between items-center shrink-0">
+            <div className="text-left text-xm">SORTED BEANS</div>
+            <BsFillGearFill className="text-xm" />
+          </span>
+          <span className="flex h-4/10 shrink">
+            <img
+              src={portrait}
+              alt="Portrait"
+              className="box-shadow bg-accent rounded-2xl"
+            />
+            <div className="flex flex-col scale-75 justify-center vertical-align">
+              <Clock />
+              <WeatherTemp />
+            </div>
+          </span>
 
-          <img
-            src={portrait}
-            alt="Portrait"
-            className="box-shadow bg-accent h-full rounded-2xl"
-          />
-          <div className="flex flex-col justify-center vertical-align">
-            <Clock />
-            <WeatherTemp />
-          </div>
+          <span className="flex items-center gap-2 text-lg font-semibold h-1/10 shrink-0">
+            <div className="text-accent">25 </div>
+            <div className="">Days Consistent 🔥</div>
+          </span>
 
-          <div className="flex items-center col-span-2 gap-2 text-lg font-semibold">
-            <div className="record-string text-accent">25 </div>
-            <div className="record-string">Days Consistent 🔥</div>
-          </div>
-
-          <div className="col-span-2 bg-accent-dark p-4 rounded-xl shadow-xl">
+          <span className="bg-accent-dark p-2 rounded-xl shadow-xl ">
             <GitHubCalendar
               username="Sutagu"
               theme={{
@@ -73,7 +76,7 @@ function App() {
               }}
               colorScheme="light"
             />
-          </div>
+          </span>
         </div>
         <div className="innerContainer h-3/10 bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative">
           <img

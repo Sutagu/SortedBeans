@@ -1,0 +1,25 @@
+install node.js onto local storage
+node -v
+npm -v
+npm install react react-dom
+npm install -g typescript
+npm i --save-dev @types/react
+npm install react-icons --save
+npm install react-github-calendar
+npm install dotenv
+npm install axios
+
+postgres table:
+CREATE TABLE task_categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL
+);
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(30) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    est_time INT DEFAULT 0,
+    category_id INT REFERENCES task_categories(category_id),
+    assigned_date DATE DEFAULT NULL,
+    description VARCHAR(100)
+);

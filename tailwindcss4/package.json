@@ -20,6 +20,7 @@
     "tailwindcss": "^4.1.6"
   },
   "devDependencies": {
+    "@babel/types": "^7.28.2",
     "@eslint/js": "^9.25.0",
     "@iconify/json": "^2.2.342",
     "@iconify/tailwind4": "^1.0.6",

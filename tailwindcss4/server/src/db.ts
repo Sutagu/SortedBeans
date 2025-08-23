@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-const envDirectory = '/gitHubRepositories/sorted-beans-repo-2/tailwindcss4/';
+const envDirectory = '../';
 
 console.log(
   'DOTENV IS: ',
