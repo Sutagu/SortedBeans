@@ -8,6 +8,7 @@ npm install react-icons --save
 npm install react-github-calendar
 npm install dotenv
 npm install axios
+npm i @types/webpack-env -D
 
 postgres table:
 CREATE TABLE task_categories (

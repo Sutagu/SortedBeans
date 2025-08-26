@@ -1,11 +1,12 @@
 import './App.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 //Top left
 import { BsFillGearFill } from 'react-icons/bs';
 import portrait from './assets/images/portraits/standardguy1.png';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
 import GitHubCalendar from 'react-github-calendar';
+import PortraitMap from './components/UserPortraits';
 
 //Bottom left
 import logo from './assets/images/logo/logoTpLarge.png';
@@ -36,6 +37,7 @@ function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
   const [patchId, setPatchId] = useState(0);
+  const [settings, setSettings] = useState(false);
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -43,32 +45,51 @@ function App() {
     assigned_date: '',
     description: '',
   });
+
   return (
     <div className="w-screen h-screen grid grid-cols-3">
       <div className="outerContainer flex flex-col gap-[5%]">
-        <div className="innerContainer bg-primary/70! h-[50%] flex flex-col overflow-none gap-2 p-[5%]">
+        <div className="innerContainer h-1/2 bg-primary/70! flex flex-col overflow-none p-[5%]">
           <span className="flex justify-between items-center shrink-0">
             <div className="text-left text-xm">SORTED BEANS</div>
-            <BsFillGearFill className="text-xm" />
+            <BsFillGearFill
+              className="text-xm hover:cursor-pointer hover:text-accent"
+              onClick={() => setSettings((prev) => !prev)}
+            />
           </span>
-          <span className="flex h-4/10 shrink">
+          <span className="flex h-4/12 shrink">
             <img
               src={portrait}
               alt="Portrait"
-              className="box-shadow bg-accent rounded-2xl"
+              className="inset-shadow-sm/40 bg-accent rounded-2xl"
             />
-            <div className="flex flex-col scale-75 justify-center vertical-align">
+            <div
+              className={`flex-col scale-75 justify-center vertical-align ${
+                settings ? 'hidden' : 'flex'
+              }`}
+            >
               <Clock />
               <WeatherTemp />
             </div>
+            <span className={`${settings ? 'flex' : 'hidden'} border-2`}>
+              <PortraitMap />
+            </span>
           </span>
 
-          <span className="flex items-center gap-2 text-lg font-semibold h-1/10 shrink-0">
+          <span
+            className={`items-center gap-2 text-lg font-semibold h-1/10 shrink-0 ${
+              settings ? 'hidden' : 'flex'
+            }`}
+          >
             <div className="text-accent">25 </div>
             <div className="">Days Consistent 🔥</div>
           </span>
 
-          <span className="bg-accent-dark p-2 rounded-xl shadow-xl ">
+          <span
+            className={`bg-accent-dark grow p-2 rounded-xl shadow-xl ${
+              settings ? 'hidden' : 'flex'
+            }`}
+          >
             <GitHubCalendar
               username="Sutagu"
               theme={{
