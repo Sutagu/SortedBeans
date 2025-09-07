@@ -2,7 +2,7 @@ import './App.css';
 import { useState } from 'react';
 //Top left
 import { BsFillGearFill } from 'react-icons/bs';
-import portrait from './assets/images/portraits/standardguy1.png';
+import portrait from './assets/images/portraits/defaultGuy.png';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
 import GitHubCalendar from 'react-github-calendar';
@@ -71,7 +71,7 @@ function App() {
               <Clock />
               <WeatherTemp />
             </div>
-            <span className={`${settings ? 'flex' : 'hidden'} border-2`}>
+            <span className={`${settings ? 'flex' : 'hidden'}`}>
               <PortraitMap />
             </span>
           </span>

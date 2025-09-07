@@ -1,56 +1,32 @@
-import { useState, useEffect } from 'react';
+import defaultGuy from '../assets/images/portraits/defaultGuy.png';
+import defaultBoy from '../assets/images/portraits/defaultBoy.webp';
+import defaultGirl from '../assets/images/portraits/defaultGirl.png';
+import defaultLady from '../assets/images/portraits/defaultLady.png';
 
 const UserPortraits = () => {
-  const [portraitMap, setPortraitMap] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/portraits_getter/`
-        );
-
-        // Check if the response is OK (status 200-299)
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Server response:', data);
-        setPortraitMap(data);
-      } catch (error) {
-        console.error('Fetch error: ', error);
-        setError('Failed to load portraits');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
-    <div>
-      {portraitMap.length === 0 ? (
-        <div>No portraits found</div>
-      ) : (
-        portraitMap.map((portrait, index) => (
-          <img
-            key={index}
-            src={`http://localhost:5000/assets/images/portraits${portrait}`}
-            alt={`Portrait ${portrait}`}
-            style={{ width: '100px', height: '100px', margin: '5px' }}
-            onError={(e) => {
-              console.error(`Failed to load image: ${portrait}`, e);
-            }}
-          />
-        ))
-      )}
-    </div>
+    <span className="flex overflow-x-scroll noScrollBar rounded-2xl relative px-4">
+      <img
+        className="hover:scale-90 scale-75 transition-all"
+        src={defaultGuy}
+        alt="defaultGuy"
+      />
+      <img
+        className="hover:scale-90 scale-75 transition-all"
+        src={defaultBoy}
+        alt="defaultBoy"
+      />
+      <img
+        className="hover:scale-90 scale-75 transition-all"
+        src={defaultGirl}
+        alt="defaultGirl"
+      />
+      <img
+        className="hover:scale-90 scale-75 transition-all"
+        src={defaultLady}
+        alt="defaultLady"
+      />
+    </span>
   );
 };
 
