@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 //Top left
 import { BsFillGearFill } from 'react-icons/bs';
 import portrait from './assets/images/portraits/defaultGuy.png';
@@ -7,6 +7,7 @@ import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
 import GitHubCalendar from 'react-github-calendar';
 import PortraitMap from './components/UserPortraits';
+import ThemePallete from './components/ThemePalette';
 
 //Bottom left
 import logo from './assets/images/logo/logoTpLarge.png';
@@ -38,6 +39,7 @@ function App() {
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
   const [patchId, setPatchId] = useState(0);
   const [settings, setSettings] = useState(false);
+  const [theme, setTheme] = useState('funk');
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -46,8 +48,11 @@ function App() {
     description: '',
   });
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
   return (
-    <div className="w-screen h-screen grid grid-cols-3">
+    <div className="w-screen h-screen grid grid-cols-3 bg-dark">
       <div className="outerContainer flex flex-col gap-[5%]">
         <div className="innerContainer h-1/2 bg-primary/70! flex flex-col overflow-none p-[5%]">
           <span className="flex justify-between items-center shrink-0">
@@ -73,6 +78,9 @@ function App() {
             </div>
             <span className={`${settings ? 'flex' : 'hidden'}`}>
               <PortraitMap />
+            </span>
+            <span className={`${settings ? 'flex' : 'hidden'}`}>
+              <ThemePallete setTheme={setTheme} />
             </span>
           </span>
 
@@ -109,7 +117,7 @@ function App() {
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] w-full! rounded-none!">
+        <div className="innerContainer h-[85%] w-full! rounded-none! bg-secondary">
           <DayPlan
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
@@ -121,8 +129,8 @@ function App() {
         </div>
       </div>
       <div className="outerContainer">
-        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary!">
-          <p className="text-left bg-accent rounded-t-xl p-2 h-1/20 text-sm">
+        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary/70!">
+          <p className="text-left bg-accent-dark rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector

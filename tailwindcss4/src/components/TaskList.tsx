@@ -83,7 +83,7 @@ const TaskList = ({
   }, [categoryId, reloadTrigger]);
 
   return (
-    <ul className="taskListContainer h-9/10 bg-secondary overflow-y-scroll shrink p-5">
+    <ul className="taskListContainer h-9/10 bg-primary overflow-y-scroll shrink p-5">
       {tasks
         .filter(
           (task) =>
@@ -122,7 +122,7 @@ const TaskList = ({
                 name="assigned_date"
                 value={input || ''}
                 onChange={(e) => setInput(e.target.value)}
-                className="bg-[#76b6ce] shrink rounded-lg p-2 text-black invert"
+                className="bg-accent-dark shrink w-1/2  rounded-lg p-2 text-black"
               />
               <button
                 onClick={() => assignTaskDate(task.id, input)}
