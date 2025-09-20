@@ -2,12 +2,12 @@ import './App.css';
 import { useEffect, useState } from 'react';
 //Top left
 import { BsFillGearFill } from 'react-icons/bs';
-import portrait from './assets/images/portraits/defaultGuy.png';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
 import GitHubCalendar from 'react-github-calendar';
 import PortraitMap from './components/UserPortraits';
 import ThemePallete from './components/ThemePalette';
+import portraits from './assets/images/portraits/portraits';
 
 //Bottom left
 import logo from './assets/images/logo/logoTpLarge.png';
@@ -41,6 +41,9 @@ function App() {
   const [settings, setSettings] = useState(false);
   const [theme, setTheme] = useState('default');
   const [calendarTheme, setCalendarTheme] = useState('dark');
+  const [portraitPath, setPortraitPath] = useState<string>(
+    portraits['./defaultGuy.png']
+  );
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -51,7 +54,7 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+  }, [theme, portraitPath]);
   return (
     <div className="w-screen h-screen grid grid-cols-3 bg-dark transition-colors">
       <div className="outerContainer flex flex-col gap-[5%]">
@@ -65,7 +68,7 @@ function App() {
           </span>
           <span className="flex h-4/12 shrink">
             <img
-              src={portrait}
+              src={portraits[portraitPath] || portraits['./defaultGuy.png']}
               alt="Portrait"
               className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl"
             />
@@ -78,7 +81,7 @@ function App() {
               <WeatherTemp />
             </div>
             <span className={`${settings ? 'flex' : 'hidden'}`}>
-              <PortraitMap />
+              <PortraitMap setPortraitPath={setPortraitPath} />
             </span>
           </span>
 
