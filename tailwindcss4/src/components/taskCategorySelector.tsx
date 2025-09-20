@@ -191,7 +191,7 @@ const TaskCategorySelector = ({
     if (patchId != 0) setMode(ComponentMode.EDIT_TASK);
   }, [reloadTrigger, patchId]);
   return (
-    <div className="flex-col flex justify-center">
+    <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">
         <select
           ref={selectRef}

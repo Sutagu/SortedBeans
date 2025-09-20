@@ -77,7 +77,7 @@ const DayPlan: React.FC<DayPlanProps> = ({
   }, [currentDate, mainReloadTrigger]);
   return (
     <div className="h-full">
-      <div className="flex shadow-2xl justify-between items-center my-[5%] p-[5%] border-y-1">
+      <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center my-[5%] p-[5%] border-y-1">
         <AiOutlineLeft
           onClick={handlePrevDay}
           className="cursor-pointer hover:text-accent transition-colors"
@@ -85,9 +85,9 @@ const DayPlan: React.FC<DayPlanProps> = ({
         <div>
           <div className="flex text-2xl font-bold gap-2">
             <div>{daysOfWeek[currentDayIndex]},</div>
-            <div className="text-accent">{currentDate.getDate()}</div>
+            <div>{currentDate.getDate()}</div>
           </div>
-          <div className="text-left text-xl font-semibold text-gray">
+          <div className="text-left text-xl font-semibold text-blend">
             {months[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
         </div>

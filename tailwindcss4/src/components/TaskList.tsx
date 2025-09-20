@@ -92,16 +92,16 @@ const TaskList = ({
         .map((task) => (
           <li
             key={task.id}
-            className="text-left  border-white border-t hover:bg-dark  transition"
+            className="text-left  border-blend border-t hover:bg-dark text-text transition"
           >
             <span className="py-4 flex items-center">
               <RxHamburgerMenu className="rotate-90 w-1/12" />
               <div className="w-10/12">
-                <p className="text-lg">{task.title}</p>
-                <p className="text-text">{task.est_time} Min</p>
+                <p className="text-text text-lg">{task.title}</p>
+                <p className="text-blend">{task.est_time} Min</p>
               </div>
               <FaEllipsisH
-                className="cursor-pointer"
+                className="cursor-pointer text-text"
                 role="button"
                 aria-label="Task Options"
                 onClick={() =>
@@ -110,11 +110,11 @@ const TaskList = ({
               />
             </span>
             <span
-              className={`items-center justify-between pb-4 px-2 ${
+              className={`items-center justify-between pb-4 px-2 text-text ${
                 shownIndex == task.id ? 'flex flex-wrap' : 'hidden'
               }`}
             >
-              <p className="w-full pb-2 text-gray-light">
+              <p className="w-full pb-2 text-blend">
                 Description: {task.description}
               </p>
               <input
@@ -122,7 +122,7 @@ const TaskList = ({
                 name="assigned_date"
                 value={input || ''}
                 onChange={(e) => setInput(e.target.value)}
-                className="bg-accent-dark shrink w-1/2  rounded-lg p-2 text-black"
+                className="bg-accent-dark shrink w-1/2  rounded-lg p-2"
               />
               <button
                 onClick={() => assignTaskDate(task.id, input)}

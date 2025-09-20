@@ -7,7 +7,8 @@
   --color-secondary: #3c2a21;
   --color-accent: #b85c38;
   --color-accent-dark: #894931;
-  --color-text: #e0c097;
+  --color-text: #e6e6e6;
+  --color-blend: #e0c097;
   --color-gray: #bfbfbfa6;
   --color-gray-light: #cccccc;
 }
@@ -17,7 +18,8 @@
   --color-secondary: #3c2a21;
   --color-accent: #e5e5cb;
   --color-accent-dark: #6b6752;
-  --color-text: #d5cea3;
+  --color-text: #d1d1d1;
+  --color-blend: #d5cea3;
   --color-gray: #bfbfbfa6;
   --color-gray-light: #cccccc;
 }
@@ -27,9 +29,64 @@
   --color-secondary: #854836;
   --color-accent: #ffb22c;
   --color-accent-dark: #805916;
-  --color-text: #f7f7f7;
+  --color-text: #f1f1f1;
   --color-gray: #bfbfbfa6;
   --color-gray-light: #cccccc;
+}
+[data-theme='pastel-sky'] {
+  --color-dark: #4dd0e1;
+  --color-primary: #b2ebf2;
+  --color-secondary: #e0f7fa;
+  --color-accent: #ffffff;
+  --color-accent-dark: #0097a7;
+  --color-text: #37474f;
+  --color-blend: #879195;
+  --color-gray: #cfd8dc;
+  --color-gray-light: #eceff1;
+}
+[data-theme='deep-ocean'] {
+  --color-dark: #0d1b2a;
+  --color-primary: #1b263b;
+  --color-secondary: #2a3f5f;
+  --color-accent: #778da9;
+  --color-accent-dark: #415a77;
+  --color-text: #e0e1dd;
+  --color-blend: #9aa0a6;
+  --color-gray: #9aa0a6;
+  --color-gray-light: #d3d3d3;
+}
+[data-theme='sunset-clay'] {
+  --color-dark: #3b2f2f;
+  --color-primary: #5a3e36;
+  --color-secondary: #7a5241;
+  --color-accent: #f2a65a;
+  --color-accent-dark: #d4883d;
+  --color-text: #fef6e4; 
+  --color-blend: #b08b75; 
+  --color-gray: #bfbfbf;
+  --color-gray-light: #e6e6e6;
+}
+[data-theme='blossom-pink'] {
+  --color-dark: #f8c8d8;
+  --color-secondary: #ffd6e0;
+  --color-primary: #ffeef5;
+  --color-accent: #ff8fab;
+  --color-accent-dark: #e85a78;
+  --color-text: #4a2c35; 
+  --color-blend: #b36b7c 
+  --color-gray: #d8cfd2;
+  --color-gray-light: #f5f5f5;
+}
+[data-theme='mint-latte'] {
+  --color-dark: #c0e3d0;
+  --color-secondary: #d6f0e0;
+  --color-primary: #eefaf3;
+  --color-accent: #a1e3b5;
+  --color-accent-dark: #79c292;
+  --color-text: #355443; 
+  --color-blend: #6b8b77;
+  --color-gray: #d0d8d2;
+  --color-gray-light: #f3f6f4;
 }
 
 #root {
@@ -37,7 +94,7 @@
   max-height: 100%;
   text-align: center;
   font-family: 'Noto Sans', 'sans-serif';
-  color: #e0c097;
+  color: var(--color-text);
 }
 
 .outerContainer {
@@ -47,7 +104,7 @@
   display: flex;
 }
 .innerContainer {
-  border: 1px solid #e0c097;
+  border: 1px solid var(--color-accent);
   border-radius: 12px;
   width: 80%;
   max-height: 85%;
@@ -76,7 +133,7 @@
 }
 .taskListContainer {
   scrollbar-width: thin;
-  scrollbar-color: #555 #1e1e1e;
+  scrollbar-color: var(--color-accent-dark) var(--color-accent);
 }
 .noScrollBar {
   scrollbar-width: none;
@@ -95,5 +152,5 @@ textarea:focus,
 select:focus {
   background: none;
   outline: none;
-  color: #bebebe;
+  color: var(--color-blend);
 }

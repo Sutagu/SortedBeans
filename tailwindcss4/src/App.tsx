@@ -39,7 +39,8 @@ function App() {
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
   const [patchId, setPatchId] = useState(0);
   const [settings, setSettings] = useState(false);
-  const [theme, setTheme] = useState('funk');
+  const [theme, setTheme] = useState('default');
+  const [calendarTheme, setCalendarTheme] = useState('dark');
   const [formData, setFormData] = useState<TaskFormData>({
     title: '',
     est_time: 0,
@@ -52,9 +53,9 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   return (
-    <div className="w-screen h-screen grid grid-cols-3 bg-dark">
+    <div className="w-screen h-screen grid grid-cols-3 bg-dark transition-colors">
       <div className="outerContainer flex flex-col gap-[5%]">
-        <div className="innerContainer h-1/2 bg-primary/70! flex flex-col overflow-none p-[5%]">
+        <div className="innerContainer h-1/2 bg-primary/70! flex flex-col justify-between overflow-none p-[5%]">
           <span className="flex justify-between items-center shrink-0">
             <div className="text-left text-xm">SORTED BEANS</div>
             <BsFillGearFill
@@ -66,7 +67,7 @@ function App() {
             <img
               src={portrait}
               alt="Portrait"
-              className="inset-shadow-sm/40 bg-accent rounded-2xl"
+              className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl"
             />
             <div
               className={`flex-col scale-75 justify-center vertical-align ${
@@ -79,11 +80,14 @@ function App() {
             <span className={`${settings ? 'flex' : 'hidden'}`}>
               <PortraitMap />
             </span>
-            <span className={`${settings ? 'flex' : 'hidden'}`}>
-              <ThemePallete setTheme={setTheme} />
-            </span>
           </span>
 
+          <span className={`${settings ? 'block text-left' : 'hidden'}`}>
+            <ThemePallete
+              setTheme={setTheme}
+              setCalendarTheme={setCalendarTheme}
+            />
+          </span>
           <span
             className={`items-center gap-2 text-lg font-semibold h-1/10 shrink-0 ${
               settings ? 'hidden' : 'flex'
@@ -94,20 +98,33 @@ function App() {
           </span>
 
           <span
-            className={`bg-accent-dark grow p-2 rounded-xl shadow-xl ${
+            className={`bg-accent-dark text-text grow p-2 rounded-xl shadow-xl ${
               settings ? 'hidden' : 'flex'
             }`}
           >
             <GitHubCalendar
               username="Sutagu"
               theme={{
-                light: ['#5C3D2E', '#c6e48b', '#E0C097', '#b39a79', '#9d866a'],
+                dark: [
+                  'var(--color-primary)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                ],
+                light: [
+                  'var(--color-blend)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                ],
               }}
-              colorScheme="light"
+              colorScheme={calendarTheme as 'dark' | 'light' | undefined}
             />
           </span>
         </div>
-        <div className="innerContainer h-3/10 bg-[url(assets/images/bg/dessert.jpg)] bg-cover relative">
+        <div className="innerContainer h-3/10 bg-linear-to-tr from-primary to-secondary bg-cover relative">
           <img
             src={logo}
             alt="logo"

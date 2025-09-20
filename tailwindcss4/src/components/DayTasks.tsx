@@ -126,7 +126,7 @@ const DayTasks = ({
               className="w-full text-left font-medium flex gap-6 py-4"
               key={task.id}
             >
-              <div className="justify-between flex flex-col items-center text-gray-light">
+              <div className="justify-between flex flex-col items-center text-blend">
                 {start}
                 <AiOutlineEdit
                   className="hover:text-accent hover:cursor-pointer text-xl"
