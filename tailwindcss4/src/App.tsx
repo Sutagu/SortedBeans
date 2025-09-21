@@ -57,7 +57,7 @@ function App() {
   }, [theme, portraitPath]);
   return (
     <div className="w-screen h-screen grid grid-cols-3 bg-dark transition-colors">
-      <div className="outerContainer flex flex-col gap-[5%]">
+      <div className="outerContainer flex flex-col gap-[5%] select-none">
         <div className="innerContainer h-1/2 bg-primary/70! flex flex-col justify-between overflow-none p-[5%]">
           <span className="flex justify-between items-center shrink-0">
             <div className="text-left text-xm">SORTED BEANS</div>
@@ -96,8 +96,8 @@ function App() {
               settings ? 'hidden' : 'flex'
             }`}
           >
-            <div className="text-accent">25 </div>
-            <div className="">Days Consistent 🔥</div>
+            <div className="">Keep the</div>
+            <div className="text-accent">Consistency 🔥</div>
           </span>
 
           <span

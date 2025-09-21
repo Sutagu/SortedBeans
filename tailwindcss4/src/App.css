@@ -62,7 +62,7 @@
   --color-accent: #f2a65a;
   --color-accent-dark: #d4883d;
   --color-text: #fef6e4; 
-  --color-blend: #b08b75; 
+  --color-blend: #bfbfbf; 
   --color-gray: #bfbfbf;
   --color-gray-light: #e6e6e6;
 }
@@ -95,6 +95,8 @@
   text-align: center;
   font-family: 'Noto Sans', 'sans-serif';
   color: var(--color-text);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent-dark) var(--color-accent);
 }
 
 .outerContainer {
@@ -130,10 +132,6 @@
 
 .react-activity-calendar__footer {
   display: none !important;
-}
-.taskListContainer {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-accent-dark) var(--color-accent);
 }
 .noScrollBar {
   scrollbar-width: none;

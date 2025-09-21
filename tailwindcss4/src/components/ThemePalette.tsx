@@ -77,7 +77,7 @@ const ThemePallete = ({ setTheme, setCalendarTheme }: Prop) => {
     setCalendarTheme(calendar);
   };
   return (
-    <span className="flex overflow-x-scroll gap-8 noScrollBar rounded-2xl relative px-4 bg-secondary">
+    <span className="flex overflow-x-scroll gap-8 rounded-2xl relative px-4 bg-secondary">
       {colours.map((c) => (
         <span
           className="flex flex-col rounded-md ring-4 shadow-xl my-4 h-fit hover:cursor-pointer"
