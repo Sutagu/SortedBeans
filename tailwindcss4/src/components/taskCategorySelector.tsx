@@ -267,6 +267,7 @@ const TaskCategorySelector = ({
           name="name"
           placeholder="Add category name"
           autoComplete="off"
+          maxLength={30}
           className="w-7/10 border-b-1"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -297,6 +298,7 @@ const TaskCategorySelector = ({
           type="text"
           name="title"
           placeholder="Add Title"
+          maxLength={30}
           value={formData.title}
           onChange={handleChange}
           className="border-b-1 py-2"

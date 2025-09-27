@@ -56,11 +56,11 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme, portraitPath]);
   return (
-    <div className="w-screen h-screen grid grid-cols-3 bg-dark transition-colors">
-      <div className="outerContainer flex flex-col gap-[5%] select-none">
-        <div className="innerContainer h-1/2 bg-primary/70! flex flex-col justify-between overflow-none p-[5%]">
+    <div className="w-screen h-screen flex md:grid md:grid-cols-3 transition-colors">
+      <div className="responsive-container flex-col md:justify-between! select-none">
+        <div className="innerContainer max-md:bg-dark! h-7/12!  bg-primary/70! flex flex-col justify-between overflow-none p-[5%]">
           <span className="flex justify-between items-center shrink-0">
-            <div className="text-left text-xm">SORTED BEANS</div>
+            <div className="responsive-text">SORTED BEANS</div>
             <BsFillGearFill
               className="text-xm hover:cursor-pointer hover:text-accent"
               onClick={() => setSettings((prev) => !prev)}
@@ -127,7 +127,7 @@ function App() {
             />
           </span>
         </div>
-        <div className="innerContainer h-3/10 bg-linear-to-tr from-primary to-secondary bg-cover relative">
+        <div className="innerContainer h-4/12! max-md:w-7/10! max-md:rounded-2xl! bg-linear-to-tr from-primary to-secondary bg-cover relative">
           <img
             src={logo}
             alt="logo"
@@ -136,8 +136,8 @@ function App() {
           <Quotes />
         </div>
       </div>
-      <div className="outerContainer">
-        <div className="innerContainer h-[85%] w-full! rounded-none! bg-secondary">
+      <div className="responsive-container">
+        <div className="innerContainer w-full! rounded-none! bg-secondary">
           <DayPlan
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
@@ -148,8 +148,8 @@ function App() {
           />
         </div>
       </div>
-      <div className="outerContainer">
-        <div className="innerContainer h-[85%] max-h-[85%] flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary/70!">
+      <div className="responsive-container">
+        <div className="innerContainer flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary/70!">
           <p className="text-left bg-accent-dark rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
