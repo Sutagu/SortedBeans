@@ -97,6 +97,7 @@
   color: var(--color-text);
   height:100%;
   width:100%;
+  justify-content: start;
   scrollbar-width: thin;
   scrollbar-color: var(--color-accent-dark) var(--color-accent);
   background-color: var(--color-dark);
@@ -105,15 +106,17 @@
   @apply text-xs sm:text-sm md:text-base lg:text-lg xl:text-2xl 2xl:text-3xl;
 }
 .responsive-container{
-  @apply h-full w-full max-h-full md:h-[85%] md:max-h-[85%];
-  justify-content: center;
+  @apply h-8/10 max-lg:self-start! max-lg:w-screen max-h-full lg:h-[85%] lg:max-h-[85%];
+  justify-content: start;
   align-items: center;
   align-self: center;
   display: flex;
 }
-
+.footer-icon{
+  @apply text-4xl text-text;
+}
 .innerContainer {
-  @apply border-0 md:border-2 border-accent w-8/10 rounded-none md:rounded-xl;
+  @apply border-0 w-8/12 lg:border-2 border-accent lg:w-8/10 rounded-none lg:rounded-xl;
   height:100%;
 }
 
