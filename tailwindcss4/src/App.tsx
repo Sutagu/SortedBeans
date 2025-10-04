@@ -55,13 +55,21 @@ function App() {
     description: '',
   });
 
+  const [footerState, setFooterState] = useState('calendar');
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme, portraitPath]);
   return (
-    <div className="w-screen h-screen flex md:grid md:grid-cols-3 transition-colors">
-      <div className="responsive-container flex-col lg:justify-between! select-none ">
-        <div className="innerContainer max-lg:bg-dark! h-7/12!  lg:bg-primary/70! flex flex-col justify-between overflow-none p-[5%]">
+    <div className="w-screen h-screen max-h-screen flex lg:grid lg:grid-cols-3 transition-colors">
+      <div
+        className={`responsive-container flex flex-col items-center lg:justify-between! select-none ${
+          footerState == 'profile'
+            ? 'max-lg:flex! max-lg:py-[8%] mx-auto'
+            : 'max-lg:hidden'
+        }`}
+      >
+        <div className="innerContainer h-7/12! lg:p-[5%]  lg:bg-primary/70!">
           <span className="flex justify-between items-center shrink-0">
             <div className="responsive-text">SORTED BEANS</div>
             <BsFillGearFill
@@ -130,7 +138,7 @@ function App() {
             />
           </span>
         </div>
-        <div className="innerContainer h-3/12! max-lg:w-7/12! max-lg:rounded-2xl! bg-linear-to-tr from-primary to-secondary bg-cover relative">
+        <div className="innerContainer max-lg:rounded-2xl! h-4/12! bg-linear-to-tr from-primary to-secondary relative">
           <img
             src={logo}
             alt="logo"
@@ -139,7 +147,13 @@ function App() {
           <Quotes />
         </div>
       </div>
-      <div className="responsive-container hidden!">
+      <div
+        className={`responsive-container ${
+          footerState == 'calendar'
+            ? 'max-lg:block w-full! max-lg:self-start!'
+            : 'max-lg:hidden'
+        }`}
+      >
         <div className="innerContainer w-full! rounded-none! bg-secondary">
           <DayPlan
             currentDate={currentDate}
@@ -151,9 +165,15 @@ function App() {
           />
         </div>
       </div>
-      <div className="responsive-container hidden!">
-        <div className="innerContainer flex  flex-col overflow-hidden  pb-[10%] text-white bg-primary/70!">
-          <p className="text-left bg-accent-dark rounded-t-xl p-2 h-1/20 text-sm">
+      <div
+        className={`responsive-container ${
+          footerState == 'tasks'
+            ? 'max-lg:block max-lg:w-screen'
+            : 'max-lg:hidden'
+        }`}
+      >
+        <div className="innerContainer flex flex-col max-lg:w-full! pb-[10%] lg:bg-primary/70!">
+          <p className="max-lg:hidden text-left bg-accent-dark lg:rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector
@@ -176,9 +196,18 @@ function App() {
         </div>
       </div>
       <footer className="lg:hidden! fixed bottom-0 w-screen bg-accent border-t-2 border-blend flex justify-around py-4 z-999">
-        <BiHomeAlt2 className="footer-icon" />
-        <CgProfile className="footer-icon " />
-        <GiHamburgerMenu className="footer-icon" />
+        <CgProfile
+          className="footer-icon"
+          onClick={() => setFooterState('profile')}
+        />
+        <BiHomeAlt2
+          className="footer-icon"
+          onClick={() => setFooterState('calendar')}
+        />
+        <GiHamburgerMenu
+          className="footer-icon"
+          onClick={() => setFooterState('tasks')}
+        />
       </footer>
     </div>
   );

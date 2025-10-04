@@ -77,7 +77,7 @@ const DayPlan: React.FC<DayPlanProps> = ({
   }, [currentDate, mainReloadTrigger]);
   return (
     <div className="h-full">
-      <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center my-[5%] p-[5%] border-y-1">
+      <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1">
         <AiOutlineLeft
           onClick={handlePrevDay}
           className="cursor-pointer hover:text-accent transition-colors"

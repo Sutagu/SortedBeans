@@ -83,7 +83,7 @@ const TaskList = ({
   }, [categoryId, reloadTrigger]);
 
   return (
-    <ul className="taskListContainer h-9/10 bg-primary overflow-y-scroll shrink p-5">
+    <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">
       {tasks
         .filter(
           (task) =>
