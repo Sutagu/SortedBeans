@@ -101,7 +101,7 @@
   background-color: var(--color-dark);
 }
 .responsive-text{
-  @apply text-xs sm:text-sm md:text-base lg:text-lg xl:text-2xl 2xl:text-3xl;
+  @apply text-sm md:text-base 2xl:text-lg;
 }
 .responsive-container{
   @apply max-lg:h-full lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center self-center;
@@ -120,11 +120,8 @@
   height: inherit;
 }
 
-.react-activity-calendar {
-  height: 100%;
-}
-.react-activity-calendar__calendar {
-  height: 95%;
+.react-activity-calendar__legend-month{
+  @apply text-xs sm:max-lg:text-sm;
 }
 
 .react-activity-calendar__footer {

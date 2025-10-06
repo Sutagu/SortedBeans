@@ -18,7 +18,7 @@ const Clock: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
   return (
-    <p className="text-left text-3xl shadow-2xl border-b-2 pb-2">
+    <p className="text-xl self-center w-3/4  lg:text-xl max-sm:border-b-2 lg:border-b-2 pb-2 sm:max-lg:border-r-2">
       {currentTime}
     </p>
   );

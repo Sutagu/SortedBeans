@@ -65,7 +65,7 @@ function App() {
       <div
         className={`responsive-container flex flex-col items-center lg:justify-between! select-none ${
           footerState == 'profile'
-            ? 'max-lg:flex! max-lg:py-[8%] mx-auto'
+            ? 'max-lg:flex! max-lg:py-[8%] max-lg:mx-auto'
             : 'max-lg:hidden'
         }`}
       >
@@ -81,10 +81,10 @@ function App() {
             <img
               src={portraits[portraitPath] || portraits['./defaultGuy.png']}
               alt="Portrait"
-              className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl"
+              className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl h-auto my-[2%]"
             />
             <div
-              className={`flex-col scale-75 justify-center vertical-align ${
+              className={`flex-col sm:max-lg:flex-row w-1/2 sm:w-3/4 lg:w-full h-fit self-center ${
                 settings ? 'hidden' : 'flex'
               }`}
             >
@@ -96,7 +96,7 @@ function App() {
             </span>
           </span>
 
-          <span className={`${settings ? 'block text-left' : 'hidden'}`}>
+          <span className={`${settings ? 'block text-left' : 'hidden'} mt-2`}>
             <ThemePallete
               setTheme={setTheme}
               setCalendarTheme={setCalendarTheme}
@@ -107,8 +107,8 @@ function App() {
               settings ? 'hidden' : 'flex'
             }`}
           >
-            <div className="">Keep the</div>
-            <div className="text-accent">Consistency 🔥</div>
+            <div className="responsive-text">Keep the</div>
+            <div className="text-accent responsive-text">Consistency 🔥</div>
           </span>
 
           <span
