@@ -95,6 +95,7 @@
   color: var(--color-text);
   height:100vh;
   width:100%;
+  
   justify-content: start;
   scrollbar-width: thin;
   scrollbar-color: var(--color-accent-dark) var(--color-accent);
@@ -104,7 +105,7 @@
   @apply text-sm md:text-base 2xl:text-lg;
 }
 .responsive-container{
-  @apply max-lg:h-full lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center self-center;
+  @apply max-lg:h-8/10 lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center lg:self-center;
 }
 .footer-icon{
   @apply text-4xl text-text hover:text-blend hover:cursor-pointer;

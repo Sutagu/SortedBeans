@@ -61,15 +61,13 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme, portraitPath]);
   return (
-    <div className="w-screen h-screen max-h-screen flex lg:grid lg:grid-cols-3 transition-colors">
+    <div className="w-screen h-screen flex flex-col justify-evenly lg:grid lg:grid-cols-3 transition-colors">
       <div
-        className={`responsive-container flex flex-col items-center lg:justify-between! select-none ${
-          footerState == 'profile'
-            ? 'max-lg:flex! max-lg:py-[8%] max-lg:mx-auto'
-            : 'max-lg:hidden'
+        className={`responsive-container flex flex-col  lg:justify-between! select-none ${
+          footerState == 'profile' ? 'items-center' : 'max-lg:hidden'
         }`}
       >
-        <div className="innerContainer h-7/12! lg:p-[5%]  lg:bg-primary/70!">
+        <div className="innerContainer h-7/12! lg:p-[5%] lg:bg-primary/70!">
           <span className="flex justify-between items-center shrink-0">
             <div className="responsive-text">SORTED BEANS</div>
             <BsFillGearFill
@@ -154,7 +152,7 @@ function App() {
             : 'max-lg:hidden'
         }`}
       >
-        <div className="innerContainer w-full! rounded-none! bg-secondary">
+        <div className="innerContainer w-full! rounded-none! lg:bg-secondary">
           <DayPlan
             currentDate={currentDate}
             setCurrentDate={setCurrentDate}
@@ -172,7 +170,7 @@ function App() {
             : 'max-lg:hidden'
         }`}
       >
-        <div className="innerContainer flex flex-col max-lg:w-full! pb-[10%] lg:bg-primary/70!">
+        <div className="innerContainer flex flex-col max-lg:w-full! lg:pb-[10%] lg:bg-primary/70!">
           <p className="max-lg:hidden text-left bg-accent-dark lg:rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
@@ -195,7 +193,7 @@ function App() {
           />
         </div>
       </div>
-      <footer className="lg:hidden! fixed bottom-0 w-screen bg-accent border-t-2 border-blend flex justify-around py-4 z-999">
+      <footer className="lg:hidden! self-center w-8/10 bg-secondary/30 rounded-2xl border-1 border-text flex justify-around py-4 z-auto">
         <CgProfile
           className="footer-icon"
           onClick={() => setFooterState('profile')}

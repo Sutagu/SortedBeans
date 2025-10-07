@@ -108,7 +108,7 @@ const DayTasks = ({
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
   return (
-    <ul className="p-5 text-white max-h-7/10 overflow-y-auto noScrollBar">
+    <ul className="p-5 text-white max-h-8/10 lg:max-h-7/10 overflow-y-auto noScrollBar">
       {tasks
         .filter((task) => task.assigned_date?.slice(0, 10) === currentDate)
         .sort(
@@ -122,10 +122,7 @@ const DayTasks = ({
             task.est_time
           );
           return (
-            <li
-              className="w-full text-left font-medium flex gap-6 py-4"
-              key={task.id}
-            >
+            <li className="text-left font-medium flex gap-6 py-4" key={task.id}>
               <div className="justify-between flex flex-col items-center text-blend">
                 {start}
                 <AiOutlineEdit
