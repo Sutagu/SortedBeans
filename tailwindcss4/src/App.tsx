@@ -31,13 +31,6 @@ function App() {
     category_id: 0,
     name: 'NULL',
   });
-  interface TaskFormData {
-    title: string;
-    est_time: number;
-    category_id: number;
-    assigned_date: string | null;
-    description: string;
-  }
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
   const [settings, setSettings] = useState(false);
   const [theme, setTheme] = useState('default');
@@ -45,13 +38,6 @@ function App() {
   const [portraitPath, setPortraitPath] = useState<string>(
     portraits['./defaultGuy.png']
   );
-  const [formData, setFormData] = useState<TaskFormData>({
-    title: '',
-    est_time: 0,
-    category_id: 1,
-    assigned_date: '',
-    description: '',
-  });
 
   const [footerState, setFooterState] = useState('calendar');
 
@@ -154,7 +140,6 @@ function App() {
           <DayPlan
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
-            setFormData={setFormData}
           />
         </div>
       </div>
@@ -174,14 +159,11 @@ function App() {
             onChange={setCategory}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
-            formData={formData}
-            setFormData={setFormData}
           />
           <TaskList
             categoryId={category.category_id}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
-            setFormData={setFormData}
           />
         </div>
       </div>

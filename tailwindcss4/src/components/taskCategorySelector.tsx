@@ -12,16 +12,7 @@ type Props = {
   onChange: (category: { category_id: number; name: string }) => void;
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
-  formData: TaskFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
 };
-interface TaskFormData {
-  title: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
-}
 interface Categ {
   category_id: number;
   name: string;
@@ -32,25 +23,29 @@ const TaskCategorySelector = ({
   onChange,
   reloadTrigger,
   setReloadTrigger,
-  formData,
-  setFormData,
 }: Props) => {
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
   const [input, setInput] = useState('');
   const selectRef = useRef<HTMLSelectElement>(null);
+
+  const resetData = useStateOrganiser((state) => state.reset);
+
+  const taskFormData = useStateOrganiser((state) => state.taskFormData);
+  const setTaskField = useStateOrganiser((state) => state.setTaskField);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === 'est_time' || name === 'category' ? Number(value) : value,
-    }));
+    const newValue =
+      name === 'est_time' || name === 'category_id' ? Number(value) : value;
+
+    setTaskField(name as keyof typeof taskFormData, newValue);
   };
+
   function toDatetimeLocalString(isoDate: string): string {
     const date = new Date(isoDate);
 
@@ -61,27 +56,19 @@ const TaskCategorySelector = ({
   }
 
   const EditId = useStateOrganiser((state) => state.editTask.id);
-  const SetEditId = useStateOrganiser((state) => state.setEditId);
 
   const resetFormData = () => {
-    setFormData({
-      title: '',
-      est_time: 0,
-      category_id: 1,
-      assigned_date: '',
-      description: '',
-    });
+    resetData();
     setMode(ComponentMode.DEFAULT);
-    SetEditId(0);
     setInput('');
   };
   const addTask = async (e: React.FormEvent) => {
     console.log(mode);
     e.preventDefault();
     const payload = {
-      ...formData,
+      ...taskFormData,
       assigned_date:
-        formData.assigned_date != '' ? formData.assigned_date : null,
+        taskFormData.assigned_date != '' ? taskFormData.assigned_date : null,
     };
     if (mode == ComponentMode.ADD_TASK) {
       try {
@@ -301,7 +288,7 @@ const TaskCategorySelector = ({
           name="title"
           placeholder="Add Title"
           maxLength={30}
-          value={formData.title}
+          value={taskFormData.title}
           onChange={handleChange}
           className="border-b-1 py-2"
           required
@@ -311,8 +298,8 @@ const TaskCategorySelector = ({
             type="datetime-local"
             name="assigned_date"
             value={
-              formData.assigned_date
-                ? toDatetimeLocalString(formData.assigned_date)
+              taskFormData.assigned_date
+                ? toDatetimeLocalString(taskFormData.assigned_date)
                 : ''
             }
             onChange={handleChange}
@@ -322,7 +309,7 @@ const TaskCategorySelector = ({
           <input
             type="number"
             name="est_time"
-            value={formData.est_time}
+            value={taskFormData.est_time}
             onChange={handleChange}
             className="w-1/10 text-gray-light"
           />
@@ -330,14 +317,14 @@ const TaskCategorySelector = ({
         <textarea
           name="description"
           placeholder="Description..."
-          value={formData.description}
+          value={taskFormData.description}
           onChange={handleChange}
           maxLength={100}
           className="h-full text-gray-light"
         ></textarea>
         <select
           name="category_id"
-          value={formData.category_id}
+          value={taskFormData.category_id}
           onChange={handleChange}
           className="w-7/10"
         >

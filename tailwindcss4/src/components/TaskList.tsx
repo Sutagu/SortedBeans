@@ -20,22 +20,10 @@ type Prop = {
   categoryId: number;
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
-  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
 };
-interface TaskFormData {
-  title: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
-}
-const TaskList = ({
-  categoryId,
-  reloadTrigger,
-  setReloadTrigger,
-  setFormData,
-}: Prop) => {
+const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
   const SetEditId = useStateOrganiser((state) => state.setEditId);
+  const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
@@ -136,7 +124,7 @@ const TaskList = ({
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
                   SetEditId(task.id);
-                  setFormData({
+                  setTaskFormData({
                     title: task.title,
                     est_time: task.est_time,
                     category_id: task.category_id,

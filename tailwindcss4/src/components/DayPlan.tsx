@@ -6,21 +6,9 @@ import DayTasks from './DayTasks';
 interface Props {
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
-  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-}
-interface TaskFormData {
-  title: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
 }
 
-const DayPlan: React.FC<Props> = ({
-  reloadTrigger,
-  setReloadTrigger,
-  setFormData,
-}) => {
+const DayPlan: React.FC<Props> = ({ reloadTrigger, setReloadTrigger }) => {
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -96,7 +84,6 @@ const DayPlan: React.FC<Props> = ({
         currentDate={formatDate(currentDate)}
         reloadTrigger={reloadTrigger}
         setReloadTrigger={setReloadTrigger}
-        setFormData={setFormData}
       />
     </div>
   );

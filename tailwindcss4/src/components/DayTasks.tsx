@@ -1,7 +1,6 @@
 import { AiOutlineEdit } from 'react-icons/ai';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiCircle } from 'react-icons/bi';
-import React from 'react';
 import { useState, useEffect } from 'react';
 
 import { useStateOrganiser } from '../useStateOrganiser';
@@ -14,13 +13,6 @@ interface Task {
   assigned_date: string | null;
   description: string | null;
 }
-interface TaskFormData {
-  title: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
-}
 
 interface categoriesData {
   category_id: number;
@@ -30,17 +22,12 @@ interface Prop {
   currentDate: string;
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
-  setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
 }
-const DayTasks = ({
-  currentDate,
-  reloadTrigger,
-  setReloadTrigger,
-  setFormData,
-}: Prop) => {
+const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<categoriesData[]>([]);
   const setEditId = useStateOrganiser((state) => state.setEditId);
+  const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
 
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
@@ -131,7 +118,7 @@ const DayTasks = ({
                   className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
                     setEditId(task.id);
-                    setFormData({
+                    setTaskFormData({
                       title: task.title,
                       est_time: task.est_time,
                       category_id: task.category_id,
