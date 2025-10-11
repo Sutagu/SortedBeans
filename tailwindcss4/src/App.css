@@ -105,7 +105,7 @@
   @apply text-sm md:text-base 2xl:text-lg;
 }
 .responsive-container{
-  @apply max-lg:h-8/10 lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center lg:self-center;
+  @apply max-lg:h-8/10 lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center lg:items-center lg:self-center;
 }
 .footer-icon{
   @apply text-4xl text-text hover:text-blend hover:cursor-pointer;

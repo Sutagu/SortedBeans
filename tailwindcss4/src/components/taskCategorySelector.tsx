@@ -4,6 +4,9 @@ import { BiEdit } from 'react-icons/bi';
 import { useEffect, useState, useRef } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { ComponentMode } from './componentMode';
+
+import { useStateOrganiser } from '../useStateOrganiser';
+
 type Props = {
   selected: { category_id: number; name: string };
   onChange: (category: { category_id: number; name: string }) => void;
@@ -11,8 +14,6 @@ type Props = {
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   formData: TaskFormData;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  patchId: number;
-  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 };
 interface TaskFormData {
   title: string;
@@ -33,8 +34,6 @@ const TaskCategorySelector = ({
   setReloadTrigger,
   formData,
   setFormData,
-  patchId,
-  setPatchId,
 }: Props) => {
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
@@ -61,6 +60,9 @@ const TaskCategorySelector = ({
     return offsetDate.toISOString().slice(0, 16);
   }
 
+  const EditId = useStateOrganiser((state) => state.editTask.id);
+  const SetEditId = useStateOrganiser((state) => state.setEditId);
+
   const resetFormData = () => {
     setFormData({
       title: '',
@@ -70,7 +72,7 @@ const TaskCategorySelector = ({
       description: '',
     });
     setMode(ComponentMode.DEFAULT);
-    setPatchId(0);
+    SetEditId(0);
     setInput('');
   };
   const addTask = async (e: React.FormEvent) => {
@@ -97,7 +99,7 @@ const TaskCategorySelector = ({
     } else {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/tasks/update/${patchId}`,
+          `http://localhost:5000/api/tasks/update/${EditId}`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -188,8 +190,8 @@ const TaskCategorySelector = ({
       .catch((err) => {
         console.error('Error fetching categories', err);
       });
-    if (patchId != 0) setMode(ComponentMode.EDIT_TASK);
-  }, [reloadTrigger, patchId]);
+    if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
+  }, [reloadTrigger, EditId]);
   return (
     <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -371,7 +373,7 @@ const TaskCategorySelector = ({
             className={`p-2 h-full w-auto secondary rounded-lg text-xl hover:bg-red-600! transition-colors ${
               mode == ComponentMode.EDIT_TASK ? 'block' : 'hidden'
             }`}
-            onClick={() => deleteTask(patchId)}
+            onClick={() => deleteTask(EditId)}
           />
           <button
             className="transition-colors secondary rounded-md p-2 hover:bg-red-600! hover:cursor-pointer"

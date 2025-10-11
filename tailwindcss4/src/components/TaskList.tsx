@@ -3,6 +3,8 @@ import { MdDelete } from 'react-icons/md';
 import { FaEllipsisH } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
+
+import { useStateOrganiser } from '../useStateOrganiser';
 interface Task {
   id: number;
   title: string;
@@ -19,7 +21,6 @@ type Prop = {
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 };
 interface TaskFormData {
   title: string;
@@ -33,8 +34,9 @@ const TaskList = ({
   reloadTrigger,
   setReloadTrigger,
   setFormData,
-  setPatchId,
 }: Prop) => {
+  const SetEditId = useStateOrganiser((state) => state.setEditId);
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
@@ -133,7 +135,7 @@ const TaskList = ({
               <AiOutlineEdit
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
-                  setPatchId(task.id);
+                  SetEditId(task.id);
                   setFormData({
                     title: task.title,
                     est_time: task.est_time,

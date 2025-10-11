@@ -3,13 +3,10 @@ import { AiOutlineLeft } from 'react-icons/ai';
 import React, { useEffect, useState } from 'react';
 import DayTasks from './DayTasks';
 
-interface DayPlanProps {
-  currentDate: Date;
-  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
-  mainReloadTrigger: number;
-  setMainReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
+interface Props {
+  reloadTrigger: number;
+  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 }
 interface TaskFormData {
   title: string;
@@ -18,21 +15,12 @@ interface TaskFormData {
   assigned_date: string | null;
   description: string;
 }
-const DayPlan: React.FC<DayPlanProps> = ({
-  currentDate,
-  setCurrentDate,
-  mainReloadTrigger,
-  setMainReloadTrigger,
-  setFormData,
-  setPatchId,
-}) => {
-  function formatDate(date: Date): string {
-    const year: number = date.getFullYear();
-    const month: string = String(date.getMonth() + 1).padStart(2, '0');
-    const day: string = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
 
+const DayPlan: React.FC<Props> = ({
+  reloadTrigger,
+  setReloadTrigger,
+  setFormData,
+}) => {
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -57,24 +45,32 @@ const DayPlan: React.FC<DayPlanProps> = ({
     'Dec',
   ];
 
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [currentDayIndex, setCurrentDayIndex] = useState<number>(
     currentDate.getDate()
   );
+
+  function formatDate(date: Date): string {
+    const year: number = date.getFullYear();
+    const month: string = String(date.getMonth() + 1).padStart(2, '0');
+    const day: string = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   const handlePrevDay = () => {
     const prevDate = new Date(currentDate);
     prevDate.setDate(currentDate.getDate() - 1);
     setCurrentDate(prevDate);
   };
-
   const handleNextDay = () => {
     const nextDate = new Date(currentDate);
     nextDate.setDate(currentDate.getDate() + 1);
     setCurrentDate(nextDate);
   };
+
   useEffect(() => {
     setCurrentDayIndex(currentDate.getDay());
-  }, [currentDate, mainReloadTrigger]);
+  }, [currentDate, reloadTrigger]);
   return (
     <div className="h-full">
       <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1">
@@ -98,10 +94,9 @@ const DayPlan: React.FC<DayPlanProps> = ({
       </div>
       <DayTasks
         currentDate={formatDate(currentDate)}
-        reloadTrigger={mainReloadTrigger}
-        setReloadTrigger={setMainReloadTrigger}
+        reloadTrigger={reloadTrigger}
+        setReloadTrigger={setReloadTrigger}
         setFormData={setFormData}
-        setPatchId={setPatchId}
       />
     </div>
   );

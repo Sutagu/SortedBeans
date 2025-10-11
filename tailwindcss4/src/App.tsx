@@ -38,9 +38,7 @@ function App() {
     assigned_date: string | null;
     description: string;
   }
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
-  const [patchId, setPatchId] = useState(0);
   const [settings, setSettings] = useState(false);
   const [theme, setTheme] = useState('default');
   const [calendarTheme, setCalendarTheme] = useState('dark');
@@ -154,12 +152,9 @@ function App() {
       >
         <div className="innerContainer w-full! rounded-none! lg:bg-secondary">
           <DayPlan
-            currentDate={currentDate}
-            setCurrentDate={setCurrentDate}
-            mainReloadTrigger={mainReloadTrigger}
-            setMainReloadTrigger={setMainReloadTrigger}
+            reloadTrigger={mainReloadTrigger}
+            setReloadTrigger={setMainReloadTrigger}
             setFormData={setFormData}
-            setPatchId={setPatchId}
           />
         </div>
       </div>
@@ -181,15 +176,12 @@ function App() {
             setReloadTrigger={setMainReloadTrigger}
             formData={formData}
             setFormData={setFormData}
-            patchId={patchId}
-            setPatchId={setPatchId}
           />
           <TaskList
             categoryId={category.category_id}
             reloadTrigger={mainReloadTrigger}
             setReloadTrigger={setMainReloadTrigger}
             setFormData={setFormData}
-            setPatchId={setPatchId}
           />
         </div>
       </div>

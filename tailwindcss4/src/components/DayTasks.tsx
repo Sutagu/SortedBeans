@@ -3,6 +3,8 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiCircle } from 'react-icons/bi';
 import React from 'react';
 import { useState, useEffect } from 'react';
+
+import { useStateOrganiser } from '../useStateOrganiser';
 interface Task {
   id: number;
   title: string;
@@ -29,17 +31,17 @@ interface Prop {
   reloadTrigger: number;
   setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
   setFormData: React.Dispatch<React.SetStateAction<TaskFormData>>;
-  setPatchId: React.Dispatch<React.SetStateAction<number>>;
 }
 const DayTasks = ({
   currentDate,
   reloadTrigger,
   setReloadTrigger,
   setFormData,
-  setPatchId,
 }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<categoriesData[]>([]);
+  const setEditId = useStateOrganiser((state) => state.setEditId);
+
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
     const end = new Date(start.getTime() + estTime * 60000);
@@ -128,7 +130,7 @@ const DayTasks = ({
                 <AiOutlineEdit
                   className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
-                    setPatchId(task.id);
+                    setEditId(task.id);
                     setFormData({
                       title: task.title,
                       est_time: task.est_time,
