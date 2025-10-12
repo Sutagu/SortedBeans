@@ -1,14 +1,9 @@
-import { AiOutlineRight } from 'react-icons/ai';
-import { AiOutlineLeft } from 'react-icons/ai';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { MdKeyboardArrowRight } from 'react-icons/md';
 import React, { useEffect, useState } from 'react';
 import DayTasks from './DayTasks';
 
-interface Props {
-  reloadTrigger: number;
-  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
-}
-
-const DayPlan: React.FC<Props> = ({ reloadTrigger, setReloadTrigger }) => {
+const DayPlan: React.FC = () => {
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -58,11 +53,11 @@ const DayPlan: React.FC<Props> = ({ reloadTrigger, setReloadTrigger }) => {
 
   useEffect(() => {
     setCurrentDayIndex(currentDate.getDay());
-  }, [currentDate, reloadTrigger]);
+  }, [currentDate]);
   return (
     <div className="h-full">
       <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1">
-        <AiOutlineLeft
+        <MdKeyboardArrowLeft
           onClick={handlePrevDay}
           className="cursor-pointer hover:text-accent transition-colors"
         />
@@ -75,16 +70,12 @@ const DayPlan: React.FC<Props> = ({ reloadTrigger, setReloadTrigger }) => {
             {months[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
         </div>
-        <AiOutlineRight
+        <MdKeyboardArrowRight
           onClick={handleNextDay}
           className="cursor-pointer hover:text-accent transition-colors"
         />
       </div>
-      <DayTasks
-        currentDate={formatDate(currentDate)}
-        reloadTrigger={reloadTrigger}
-        setReloadTrigger={setReloadTrigger}
-      />
+      <DayTasks currentDate={formatDate(currentDate)} />
     </div>
   );
 };

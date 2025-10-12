@@ -1,29 +1,23 @@
-import { AiOutlineMinusCircle } from 'react-icons/ai';
+//Icons
+import { CgRemove } from 'react-icons/cg';
 import { CgAdd } from 'react-icons/cg';
-import { BiEdit } from 'react-icons/bi';
-import { useEffect, useState, useRef } from 'react';
+import { MdEditSquare } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
-import { ComponentMode } from './componentMode';
 
+import { useEffect, useState, useRef } from 'react';
+import { ComponentMode } from './componentMode';
 import { useStateOrganiser } from '../useStateOrganiser';
 
 type Props = {
   selected: { category_id: number; name: string };
   onChange: (category: { category_id: number; name: string }) => void;
-  reloadTrigger: number;
-  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
 };
 interface Categ {
   category_id: number;
   name: string;
 }
 
-const TaskCategorySelector = ({
-  selected,
-  onChange,
-  reloadTrigger,
-  setReloadTrigger,
-}: Props) => {
+const TaskCategorySelector = ({ selected, onChange }: Props) => {
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
   const [input, setInput] = useState('');
@@ -33,6 +27,8 @@ const TaskCategorySelector = ({
 
   const taskFormData = useStateOrganiser((state) => state.taskFormData);
   const setTaskField = useStateOrganiser((state) => state.setTaskField);
+  const refreshPage = useStateOrganiser((state) => state.refreshPage);
+  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -102,7 +98,7 @@ const TaskCategorySelector = ({
     }
 
     resetFormData();
-    setReloadTrigger((prev) => prev + 1);
+    setPageRefresh();
   };
   const addTaskCategory = async (name: string) => {
     const payload = { name };
@@ -119,7 +115,7 @@ const TaskCategorySelector = ({
       console.error(err);
     }
     resetFormData();
-    setReloadTrigger((prev) => prev + 1);
+    setPageRefresh();
   };
   const deleteTask = async (id: number) => {
     try {
@@ -136,8 +132,8 @@ const TaskCategorySelector = ({
         return;
       }
 
-      setReloadTrigger((prev) => prev + 1);
       resetFormData();
+      setPageRefresh();
     } catch (err) {
       console.error('Failed to delete:', err);
     }
@@ -162,8 +158,8 @@ const TaskCategorySelector = ({
       }
       const category = categ[0];
       if (category) onChange(category);
-      setReloadTrigger((prev) => prev + 1);
       resetFormData();
+      setPageRefresh();
     } catch (err) {
       console.error('Failed to delete:', err);
     }
@@ -178,7 +174,7 @@ const TaskCategorySelector = ({
         console.error('Error fetching categories', err);
       });
     if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
-  }, [reloadTrigger, EditId]);
+  }, [refreshPage, EditId]);
   return (
     <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -216,7 +212,7 @@ const TaskCategorySelector = ({
           >
             Delete {selected.name} ?
           </p>
-          <AiOutlineMinusCircle
+          <CgRemove
             title="Delete Current Category"
             className="cursor-pointer hover:text-accent transition-colors"
             onClick={() =>
@@ -235,7 +231,7 @@ const TaskCategorySelector = ({
                 : setMode(ComponentMode.DEFAULT)
             }
           />
-          <BiEdit
+          <MdEditSquare
             className={`cursor-pointer hover:text-accent transition-colors ${
               mode == ComponentMode.ADD_TASK ? 'text-accent' : ''
             }`}

@@ -1,27 +1,29 @@
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { BiHomeAlt2 } from 'react-icons/bi';
-import { CgProfile } from 'react-icons/cg';
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 //Top left
-import { BsFillGearFill } from 'react-icons/bs';
+import { CgSupport } from 'react-icons/cg';
 import Clock from './components/Clock';
 import WeatherTemp from './components/WeatherTemp';
-import GitHubCalendar from 'react-github-calendar';
-import PortraitMap from './components/UserPortraits';
-import ThemePallete from './components/ThemePalette';
+const GitHubCalendar = lazy(() => import('react-github-calendar'));
+const PortraitMap = lazy(() => import('./components/UserPortraits'));
+const ThemePallete = lazy(() => import('./components/ThemePalette'));
 import portraits from './assets/images/portraits/portraits';
 
 //Bottom left
 import logo from './assets/images/logo/logoTpLarge.png';
-import Quotes from './components/Quotes';
+const Quotes = lazy(() => import('./components/Quotes'));
 
 //Middle
 import DayPlan from './components/DayPlan';
 
-//right
+//Right
 import TaskCategorySelector from './components/taskCategorySelector';
-import TaskList from './components/TaskList';
+const TaskList = lazy(() => import('./components/TaskList'));
+
+//Footer
+import { CgMenu } from 'react-icons/cg';
+import { CgHome } from 'react-icons/cg';
+import { CgProfile } from 'react-icons/cg';
 
 function App() {
   const [category, setCategory] = useState<{
@@ -31,7 +33,6 @@ function App() {
     category_id: 0,
     name: 'NULL',
   });
-  const [mainReloadTrigger, setMainReloadTrigger] = useState(0);
   const [settings, setSettings] = useState(false);
   const [theme, setTheme] = useState('default');
   const [calendarTheme, setCalendarTheme] = useState('dark');
@@ -54,7 +55,7 @@ function App() {
         <div className="innerContainer h-7/12! lg:p-[5%] lg:bg-primary/70!">
           <span className="flex justify-between items-center shrink-0">
             <div className="responsive-text">SORTED BEANS</div>
-            <BsFillGearFill
+            <CgSupport
               className="text-xm hover:cursor-pointer hover:text-accent"
               onClick={() => setSettings((prev) => !prev)}
             />
@@ -65,6 +66,9 @@ function App() {
               alt="Portrait"
               className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl h-auto my-[2%]"
             />
+            <span className={`${settings ? 'flex' : 'hidden'}`}>
+              <PortraitMap setPortraitPath={setPortraitPath} />
+            </span>
             <div
               className={`flex-col sm:max-lg:flex-row w-1/2 sm:w-3/4 lg:w-full h-fit self-center ${
                 settings ? 'hidden' : 'flex'
@@ -73,9 +77,6 @@ function App() {
               <Clock />
               <WeatherTemp />
             </div>
-            <span className={`${settings ? 'flex' : 'hidden'}`}>
-              <PortraitMap setPortraitPath={setPortraitPath} />
-            </span>
           </span>
 
           <span className={`${settings ? 'block text-left' : 'hidden'} mt-2`}>
@@ -98,26 +99,28 @@ function App() {
               settings ? 'hidden' : 'flex'
             }`}
           >
-            <GitHubCalendar
-              username="Sutagu"
-              theme={{
-                dark: [
-                  'var(--color-primary)',
-                  'var(--color-blend)',
-                  'var(--color-blend)',
-                  'var(--color-blend)',
-                  'var(--color-blend)',
-                ],
-                light: [
-                  'var(--color-blend)',
-                  'var(--color-accent)',
-                  'var(--color-accent)',
-                  'var(--color-accent)',
-                  'var(--color-accent)',
-                ],
-              }}
-              colorScheme={calendarTheme as 'dark' | 'light' | undefined}
-            />
+            <Suspense fallback={<div>Loading Git Contribution Graph...</div>}>
+              <GitHubCalendar
+                username="Sutagu"
+                theme={{
+                  dark: [
+                    'var(--color-primary)',
+                    'var(--color-blend)',
+                    'var(--color-blend)',
+                    'var(--color-blend)',
+                    'var(--color-blend)',
+                  ],
+                  light: [
+                    'var(--color-blend)',
+                    'var(--color-accent)',
+                    'var(--color-accent)',
+                    'var(--color-accent)',
+                    'var(--color-accent)',
+                  ],
+                }}
+                colorScheme={calendarTheme as 'dark' | 'light' | undefined}
+              />
+            </Suspense>
           </span>
         </div>
         <div className="innerContainer max-lg:rounded-2xl! h-4/12! bg-linear-to-tr from-primary to-secondary relative">
@@ -137,10 +140,7 @@ function App() {
         }`}
       >
         <div className="innerContainer w-full! rounded-none! lg:bg-secondary">
-          <DayPlan
-            reloadTrigger={mainReloadTrigger}
-            setReloadTrigger={setMainReloadTrigger}
-          />
+          <DayPlan />
         </div>
       </div>
       <div
@@ -154,17 +154,8 @@ function App() {
           <p className="max-lg:hidden text-left bg-accent-dark lg:rounded-t-xl p-2 h-1/20 text-sm">
             Create Delete Assign your Tasks!
           </p>
-          <TaskCategorySelector
-            selected={category}
-            onChange={setCategory}
-            reloadTrigger={mainReloadTrigger}
-            setReloadTrigger={setMainReloadTrigger}
-          />
-          <TaskList
-            categoryId={category.category_id}
-            reloadTrigger={mainReloadTrigger}
-            setReloadTrigger={setMainReloadTrigger}
-          />
+          <TaskCategorySelector selected={category} onChange={setCategory} />
+          <TaskList categoryId={category.category_id} />
         </div>
       </div>
       <footer className="lg:hidden! self-center w-8/10 bg-secondary/30 rounded-2xl border-1 border-text flex justify-around py-4 z-auto">
@@ -172,11 +163,11 @@ function App() {
           className="footer-icon"
           onClick={() => setFooterState('profile')}
         />
-        <BiHomeAlt2
+        <CgHome
           className="footer-icon"
           onClick={() => setFooterState('calendar')}
         />
-        <GiHamburgerMenu
+        <CgMenu
           className="footer-icon"
           onClick={() => setFooterState('tasks')}
         />

@@ -1,9 +1,10 @@
-import { AiOutlineEdit } from 'react-icons/ai';
+//Icons
+import { MdEditSquare } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
-import { FaEllipsisH } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import { RxHamburgerMenu } from 'react-icons/rx';
+import { MdMoreHoriz } from 'react-icons/md';
+import { CgMenu } from 'react-icons/cg';
 
+import { useEffect, useState } from 'react';
 import { useStateOrganiser } from '../useStateOrganiser';
 interface Task {
   id: number;
@@ -18,12 +19,12 @@ interface Task {
 
 type Prop = {
   categoryId: number;
-  reloadTrigger: number;
-  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
 };
-const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
+const TaskList = ({ categoryId }: Prop) => {
   const SetEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
+  const refreshPage = useStateOrganiser((state) => state.refreshPage);
+  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
@@ -37,7 +38,7 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
         },
         body: JSON.stringify({ assigned_date }),
       }).catch((err) => console.error('Failed to update assigned date:', err));
-      setReloadTrigger((prev) => prev + 1);
+      setPageRefresh();
     }
   };
   const deleteTask = async (id: number) => {
@@ -55,7 +56,7 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
         return;
       }
 
-      setReloadTrigger((prev) => prev + 1);
+      setPageRefresh();
     } catch (err) {
       console.error('Failed to delete:', err);
     }
@@ -70,7 +71,7 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
       .catch((err) => {
         console.error('Error fetching tasks:', err);
       });
-  }, [categoryId, reloadTrigger]);
+  }, [categoryId, refreshPage]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">
@@ -85,12 +86,12 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
             className="text-left  border-blend border-t hover:bg-dark text-text transition"
           >
             <span className="py-4 flex items-center">
-              <RxHamburgerMenu className="rotate-90 w-1/12" />
+              <CgMenu className="rotate-90 w-1/12" />
               <div className="w-10/12">
                 <p className="text-text text-lg">{task.title}</p>
                 <p className="text-blend">{task.est_time} Min</p>
               </div>
-              <FaEllipsisH
+              <MdMoreHoriz
                 className="cursor-pointer text-text"
                 role="button"
                 aria-label="Task Options"
@@ -120,7 +121,7 @@ const TaskList = ({ categoryId, reloadTrigger, setReloadTrigger }: Prop) => {
               >
                 Confirm
               </button>
-              <AiOutlineEdit
+              <MdEditSquare
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
                   SetEditId(task.id);

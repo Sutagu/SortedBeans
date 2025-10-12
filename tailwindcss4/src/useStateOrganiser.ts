@@ -19,10 +19,10 @@ interface TaskFormData {
 interface EditingTask {
   id: number;
 }
-
 interface AppState {
   taskFormData: TaskFormData;
   editTask: EditingTask;
+  refreshPage: number;
 
   //TaskFormData functons
   setTaskFormData: (data: TaskFormData) => void;
@@ -33,6 +33,9 @@ interface AppState {
   //editTask functions
   setEditId: (newId: number) => void;
   reset: () => void;
+
+  //Refresh functions
+  setPageRefresh: () => void;
 }
 
 export const useStateOrganiser = create<AppState>((set) => ({
@@ -40,6 +43,7 @@ export const useStateOrganiser = create<AppState>((set) => ({
   editTask: {
     id: 0,
   },
+  refreshPage: 0,
 
   //TaskFormData functions
   setTaskFormData: (data) => set({ taskFormData: data }),
@@ -59,4 +63,8 @@ export const useStateOrganiser = create<AppState>((set) => ({
     set({ taskFormData: defaultTaskFormData });
     set({ editTask: { id: 0 } });
   },
+
+  //setPageRefresh functions
+  setPageRefresh: () =>
+    set((state) => ({ refreshPage: state.refreshPage + 1 })),
 }));

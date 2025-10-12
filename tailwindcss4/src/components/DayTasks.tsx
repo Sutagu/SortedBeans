@@ -1,8 +1,9 @@
-import { AiOutlineEdit } from 'react-icons/ai';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { BiCircle } from 'react-icons/bi';
-import { useState, useEffect } from 'react';
+//Icons
+import { MdEditSquare } from 'react-icons/md';
+import { MdCheckCircle } from 'react-icons/md';
+import { MdOutlineRadioButtonUnchecked } from 'react-icons/md';
 
+import { useState, useEffect } from 'react';
 import { useStateOrganiser } from '../useStateOrganiser';
 interface Task {
   id: number;
@@ -20,14 +21,14 @@ interface categoriesData {
 }
 interface Prop {
   currentDate: string;
-  reloadTrigger: number;
-  setReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
 }
-const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
+const DayTasks = ({ currentDate }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<categoriesData[]>([]);
   const setEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
+  const refreshPage = useStateOrganiser((state) => state.refreshPage);
+  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
 
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
@@ -60,7 +61,7 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
       },
       body: JSON.stringify({ completed: updateCompleted }),
     }).catch((err) => console.error('Failed to update task:', err));
-    setReloadTrigger((prev) => prev + 1);
+    setPageRefresh();
   };
 
   const handleEstTimeChange = (id: number, newEstTime: number) => {
@@ -76,7 +77,7 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
       },
       body: JSON.stringify({ est_time: newEstTime }),
     }).catch((err) => console.error('Failed to update estimated time:', err));
-    setReloadTrigger((prev) => prev + 1);
+    setPageRefresh();
   };
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
     };
 
     fetchData();
-  }, [currentDate, reloadTrigger]);
+  }, [currentDate, refreshPage]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
@@ -114,7 +115,7 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
             <li className="text-left font-medium flex gap-6 py-4" key={task.id}>
               <div className="justify-between flex flex-col items-center text-blend">
                 {start}
-                <AiOutlineEdit
+                <MdEditSquare
                   className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
                     setEditId(task.id);
@@ -163,7 +164,11 @@ const DayTasks = ({ currentDate, reloadTrigger, setReloadTrigger }: Prop) => {
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"
                     onClick={() => toggleCompleted(task.id)}
                   >
-                    {task.completed ? <AiOutlineCheckCircle /> : <BiCircle />}
+                    {task.completed ? (
+                      <MdCheckCircle />
+                    ) : (
+                      <MdOutlineRadioButtonUnchecked />
+                    )}
                   </span>
                 </div>
               </div>
