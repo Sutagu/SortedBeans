@@ -1,8 +1,5 @@
 //Icons
-import { MdEditSquare } from 'react-icons/md';
-import { MdDelete } from 'react-icons/md';
-import { MdMoreHoriz } from 'react-icons/md';
-import { CgMenu } from 'react-icons/cg';
+import { CgMenu, CgPen, CgTrash, CgMore } from 'react-icons/cg';
 
 import { useEffect, useState } from 'react';
 import { useStateOrganiser } from '../useStateOrganiser';
@@ -17,14 +14,14 @@ interface Task {
   description: string;
 }
 
-type Prop = {
-  categoryId: number;
-};
-const TaskList = ({ categoryId }: Prop) => {
+const TaskList = () => {
   const SetEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
   const refreshPage = useStateOrganiser((state) => state.refreshPage);
   const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
+  const categoryId = useStateOrganiser(
+    (state) => state.categoryData.category_id
+  );
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
@@ -91,7 +88,7 @@ const TaskList = ({ categoryId }: Prop) => {
                 <p className="text-text text-lg">{task.title}</p>
                 <p className="text-blend">{task.est_time} Min</p>
               </div>
-              <MdMoreHoriz
+              <CgMore
                 className="cursor-pointer text-text"
                 role="button"
                 aria-label="Task Options"
@@ -121,7 +118,7 @@ const TaskList = ({ categoryId }: Prop) => {
               >
                 Confirm
               </button>
-              <MdEditSquare
+              <CgPen
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
                   SetEditId(task.id);
@@ -134,7 +131,7 @@ const TaskList = ({ categoryId }: Prop) => {
                   });
                 }}
               />
-              <MdDelete
+              <CgTrash
                 title="Delete task"
                 className="p-2 bg-white/20 rounded-lg text-4xl hover:bg-red-600 transition-colors"
                 onClick={() => deleteTask(task.id)}

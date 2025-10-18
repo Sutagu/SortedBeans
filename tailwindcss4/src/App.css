@@ -111,7 +111,7 @@
   @apply text-4xl text-text hover:text-blend hover:cursor-pointer;
 }
 .innerContainer {
-  @apply border-0 w-8/12 h-full max-h-full! lg:border-2 border-accent lg:w-8/10 rounded-none lg:rounded-xl;
+  @apply border-0 w-8/12 h-full max-h-full! lg:border-2 border-accent lg:w-8/10 rounded-xl;
 }
 
 .react-activity-calendar__scroll-container {

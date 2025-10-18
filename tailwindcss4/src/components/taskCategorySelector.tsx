@@ -1,25 +1,17 @@
 //Icons
-import { CgRemove } from 'react-icons/cg';
-import { CgAdd } from 'react-icons/cg';
-import { MdEditSquare } from 'react-icons/md';
-import { MdDelete } from 'react-icons/md';
+import { CgRemove, CgAdd, CgPen, CgTrash } from 'react-icons/cg';
 
 import { useEffect, useState, useRef } from 'react';
 import { ComponentMode } from './componentMode';
 import { useStateOrganiser } from '../useStateOrganiser';
-
-type Props = {
-  selected: { category_id: number; name: string };
-  onChange: (category: { category_id: number; name: string }) => void;
-};
 interface Categ {
   category_id: number;
   name: string;
 }
 
-const TaskCategorySelector = ({ selected, onChange }: Props) => {
+const TaskCategorySelector = () => {
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
-  const [categ, setCateg] = useState<Categ[]>([]); //Fetch categories
+  const [categ, setCateg] = useState<Categ[]>([]);
   const [input, setInput] = useState('');
   const selectRef = useRef<HTMLSelectElement>(null);
 
@@ -27,6 +19,10 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
 
   const taskFormData = useStateOrganiser((state) => state.taskFormData);
   const setTaskField = useStateOrganiser((state) => state.setTaskField);
+
+  const category = useStateOrganiser((state) => state.categoryData);
+  const setCategory = useStateOrganiser((state) => state.setCategoryData);
+
   const refreshPage = useStateOrganiser((state) => state.refreshPage);
   const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
 
@@ -157,7 +153,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
         return;
       }
       const category = categ[0];
-      if (category) onChange(category);
+      if (category) setCategory(category);
       resetFormData();
       setPageRefresh();
     } catch (err) {
@@ -180,13 +176,14 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
       <div className="p-2 w-full flex items-center justify-between text-lg">
         <select
           ref={selectRef}
-          value={selected.category_id}
+          value={category.category_id}
+          aria-label="category selector"
           onChange={(e) => {
             const selectedId = parseInt(e.target.value);
             const category = categ.find(
               (cat) => cat.category_id === selectedId
             );
-            if (category) onChange(category);
+            if (category) setCategory(category);
           }}
           className="w-7/10 h-full shrink p-2 "
         >
@@ -208,9 +205,9 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
             className={`text-xs text-nowrap hover:text-red-400 cursor-pointer ${
               mode == ComponentMode.DELETE_CATEGORY ? 'block' : 'hidden'
             }`}
-            onClick={() => deleteCategory(selected.category_id)}
+            onClick={() => deleteCategory(category.category_id)}
           >
-            Delete {selected.name} ?
+            Delete {category.name} ?
           </p>
           <CgRemove
             title="Delete Current Category"
@@ -231,7 +228,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
                 : setMode(ComponentMode.DEFAULT)
             }
           />
-          <MdEditSquare
+          <CgPen
             className={`cursor-pointer hover:text-accent transition-colors ${
               mode == ComponentMode.ADD_TASK ? 'text-accent' : ''
             }`}
@@ -351,7 +348,7 @@ const TaskCategorySelector = ({ selected, onChange }: Props) => {
           >
             Edit Task
           </button>
-          <MdDelete
+          <CgTrash
             title="Delete task"
             className={`p-2 h-full w-auto secondary rounded-lg text-xl hover:bg-red-600! transition-colors ${
               mode == ComponentMode.EDIT_TASK ? 'block' : 'hidden'

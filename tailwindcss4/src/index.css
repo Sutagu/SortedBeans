@@ -1,9 +1,5 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@plugin "@iconify/tailwind4" {
-  prefix: "iconify";
-  scale: 1.2;
-}
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;

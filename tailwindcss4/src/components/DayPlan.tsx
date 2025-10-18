@@ -1,5 +1,4 @@
-import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { MdKeyboardArrowRight } from 'react-icons/md';
+import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
 import React, { useEffect, useState } from 'react';
 import DayTasks from './DayTasks';
 
@@ -57,7 +56,7 @@ const DayPlan: React.FC = () => {
   return (
     <div className="h-full">
       <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1">
-        <MdKeyboardArrowLeft
+        <CgChevronLeft
           onClick={handlePrevDay}
           className="cursor-pointer hover:text-accent transition-colors"
         />
@@ -70,7 +69,7 @@ const DayPlan: React.FC = () => {
             {months[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
         </div>
-        <MdKeyboardArrowRight
+        <CgChevronRight
           onClick={handleNextDay}
           className="cursor-pointer hover:text-accent transition-colors"
         />

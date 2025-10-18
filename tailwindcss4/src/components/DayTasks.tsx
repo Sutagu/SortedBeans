@@ -1,7 +1,5 @@
 //Icons
-import { MdEditSquare } from 'react-icons/md';
-import { MdCheckCircle } from 'react-icons/md';
-import { MdOutlineRadioButtonUnchecked } from 'react-icons/md';
+import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
 
 import { useState, useEffect } from 'react';
 import { useStateOrganiser } from '../useStateOrganiser';
@@ -115,7 +113,7 @@ const DayTasks = ({ currentDate }: Prop) => {
             <li className="text-left font-medium flex gap-6 py-4" key={task.id}>
               <div className="justify-between flex flex-col items-center text-blend">
                 {start}
-                <MdEditSquare
+                <CgPen
                   className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
                     setEditId(task.id);
@@ -164,11 +162,7 @@ const DayTasks = ({ currentDate }: Prop) => {
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"
                     onClick={() => toggleCompleted(task.id)}
                   >
-                    {task.completed ? (
-                      <MdCheckCircle />
-                    ) : (
-                      <MdOutlineRadioButtonUnchecked />
-                    )}
+                    {task.completed ? <CgCheckO /> : <CgRadioCheck />}
                   </span>
                 </div>
               </div>

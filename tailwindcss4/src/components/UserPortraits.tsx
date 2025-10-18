@@ -1,9 +1,8 @@
-import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { MdKeyboardArrowRight } from 'react-icons/md';
-import defaultGuy from '../assets/images/portraits/defaultGuy.png';
-import defaultBoy from '../assets/images/portraits/defaultBoy.png';
-import defaultGirl from '../assets/images/portraits/defaultGirl.png';
-import defaultLady from '../assets/images/portraits/defaultLady.png';
+import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+import defaultGuy from '../assets/images/portraits/defaultGuy.webp';
+import defaultBoy from '../assets/images/portraits/defaultBoy.webp';
+import defaultGirl from '../assets/images/portraits/defaultGirl.webp';
+import defaultLady from '../assets/images/portraits/defaultLady.webp';
 import React, { useRef } from 'react';
 interface Prop {
   setPortraitPath: React.Dispatch<React.SetStateAction<string>>;
@@ -18,7 +17,7 @@ const UserPortraits = ({ setPortraitPath }: Prop) => {
   };
   return (
     <div className=" pl-4 flex w-fit h-full relative">
-      <MdKeyboardArrowLeft
+      <CgChevronLeft
         className="absolute z-99 h-full rounded-l-xl bg-accent-dark/20 text-text hover:bg-accent-dark/50 hover:cursor-pointer"
         onClick={() => {
           const container = sliderRef.current;
@@ -34,31 +33,31 @@ const UserPortraits = ({ setPortraitPath }: Prop) => {
           src={defaultGuy}
           loading="lazy"
           alt="defaultGuy"
-          onClick={() => handleChange('./defaultGuy.png')}
+          onClick={() => handleChange('./defaultGuy.webp')}
         />
         <img
           className="hover:scale-90 scale-75"
           src={defaultBoy}
           loading="lazy"
           alt="defaultBoy"
-          onClick={() => handleChange('./defaultBoy.png')}
+          onClick={() => handleChange('./defaultBoy.webp')}
         />
         <img
           className="hover:scale-90 scale-75 "
           src={defaultGirl}
           loading="lazy"
           alt="defaultGirl"
-          onClick={() => handleChange('./defaultGirl.png')}
+          onClick={() => handleChange('./defaultGirl.webp')}
         />
         <img
           className="hover:scale-90 scale-75 "
           src={defaultLady}
           loading="lazy"
           alt="defaultLady"
-          onClick={() => handleChange('./defaultLady.png')}
+          onClick={() => handleChange('./defaultLady.webp')}
         />
       </span>
-      <MdKeyboardArrowRight
+      <CgChevronRight
         className="absolute right-0 z-99 h-full rounded-r-xl bg-accent-dark/20 text-text hover:bg-accent-dark/50 hover:cursor-pointer"
         onClick={() => {
           const container = sliderRef.current;

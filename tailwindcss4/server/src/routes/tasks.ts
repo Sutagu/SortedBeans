@@ -1,7 +1,5 @@
 import express, { Request, Response } from 'express';
 import pool from '../db';
-import { error } from 'console';
-
 const router = express.Router();
 
 // GET /api/tasks
