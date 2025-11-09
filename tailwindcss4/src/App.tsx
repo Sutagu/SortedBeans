@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useState, lazy } from 'react';
 //States Tracker
-import { useStateOrganiser } from './useStateOrganiser';
+import { useStateOrganiser } from './utils/useStateOrganiser';
 //Top left
 const UserComponent = lazy(() => import('./components/UserComponent'));
 //Bottom left

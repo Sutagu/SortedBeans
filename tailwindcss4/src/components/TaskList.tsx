@@ -2,18 +2,9 @@
 import { CgMenu, CgPen, CgTrash, CgMore } from 'react-icons/cg';
 
 import { useEffect, useState } from 'react';
-import { useStateOrganiser } from '../useStateOrganiser';
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  created_at: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
-}
+import { useStateOrganiser } from '../utils/useStateOrganiser';
 
+import type { Task } from '../utils/types';
 const TaskList = () => {
   const SetEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);

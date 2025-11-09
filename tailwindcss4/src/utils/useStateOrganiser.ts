@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-
-//For editing and submiting tasks
+import type { TaskFormData, EditingTask, CategoryData } from './types';
+//Default values
 const defaultTaskFormData: TaskFormData = {
   title: '',
   est_time: 0,
@@ -8,33 +8,18 @@ const defaultTaskFormData: TaskFormData = {
   assigned_date: '',
   description: '',
 };
-interface TaskFormData {
-  title: string;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string;
-}
-interface EditingTask {
-  id: number;
-}
-
-//For selection of categories
 const defaultCategory: CategoryData = {
   category_id: 0,
   name: 'NULL',
 };
-interface CategoryData {
-  category_id: number;
-  name: string;
-}
 
 interface AppState {
+  //Interfaces
   taskFormData: TaskFormData;
   editTask: EditingTask;
+  categoryData: CategoryData;
   refreshPage: number;
   uiTheme: string;
-  categoryData: CategoryData;
 
   //TaskFormData functons
   setTaskFormData: (data: TaskFormData) => void;
@@ -58,9 +43,7 @@ interface AppState {
 
 export const useStateOrganiser = create<AppState>((set) => ({
   taskFormData: defaultTaskFormData,
-  editTask: {
-    id: 0,
-  },
+  editTask: { id: 0 },
   refreshPage: 0,
   uiTheme: 'default',
   categoryData: defaultCategory,
@@ -92,3 +75,29 @@ export const useStateOrganiser = create<AppState>((set) => ({
   //setUiTheme function
   setTheme: (newTheme) => set({ uiTheme: newTheme }),
 }));
+
+export const useSetTaskFormData = () =>
+  useStateOrganiser((state) => state.setTaskFormData);
+export const useGetTaskFormData = () =>
+  useStateOrganiser((state) => state.taskFormData);
+
+export const useSetTaskField = () =>
+  useStateOrganiser((state) => state.setTaskField);
+
+export const useGetEditId = () =>
+  useStateOrganiser((state) => state.editTask.id);
+export const useSetEditId = () => useStateOrganiser((state) => state.editTask);
+
+export const useReset = () => useStateOrganiser((state) => state.reset);
+
+export const useSetCategoryData = () =>
+  useStateOrganiser((state) => state.setCategoryData);
+export const useGetCategoryData = () =>
+  useStateOrganiser((state) => state.categoryData);
+
+export const useSetPageRefresh = () =>
+  useStateOrganiser((state) => state.setPageRefresh);
+export const useGetPageRefresh = () =>
+  useStateOrganiser((state) => state.refreshPage);
+
+export const useSetTheme = () => useStateOrganiser((state) => state.setTheme);

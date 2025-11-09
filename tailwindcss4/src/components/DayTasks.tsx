@@ -2,27 +2,14 @@
 import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
 
 import { useState, useEffect } from 'react';
-import { useStateOrganiser } from '../useStateOrganiser';
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-  est_time: number;
-  category_id: number;
-  assigned_date: string | null;
-  description: string | null;
-}
-
-interface categoriesData {
-  category_id: number;
-  name: string;
-}
+import { useStateOrganiser } from '../utils/useStateOrganiser';
+import type { Task, CategoryData } from '../utils/types';
 interface Prop {
   currentDate: string;
 }
 const DayTasks = ({ currentDate }: Prop) => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<categoriesData[]>([]);
+  const [categories, setCategories] = useState<CategoryData[]>([]);
   const setEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
   const refreshPage = useStateOrganiser((state) => state.refreshPage);
@@ -85,7 +72,7 @@ const DayTasks = ({ currentDate }: Prop) => {
         fetch('http://localhost:5000/api/task_categories'),
       ]);
       const taskData = await taskRes.json();
-      const categoryData: categoriesData[] = await categoryRes.json();
+      const categoryData: CategoryData[] = await categoryRes.json();
       setTasks(taskData);
       setCategories(categoryData);
     };
@@ -156,7 +143,7 @@ const DayTasks = ({ currentDate }: Prop) => {
                     {categories.find(
                       (cat) => cat.category_id == task.category_id
                     )?.name || 'Unassigned category'}{' '}
-                    : {task.description || '...'}
+                    : {task.description || 'no description'}
                   </span>
                   <span
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"

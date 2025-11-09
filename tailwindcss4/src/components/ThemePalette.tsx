@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStateOrganiser } from '../useStateOrganiser';
+import { useStateOrganiser } from '../utils/useStateOrganiser';
 interface Prop {
   setCalendarTheme: React.Dispatch<React.SetStateAction<string>>;
 }

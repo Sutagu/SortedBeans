@@ -1,62 +1,70 @@
-//Icons
+//React
 import { CgRemove, CgAdd, CgPen, CgTrash } from 'react-icons/cg';
-
 import { useEffect, useState, useRef } from 'react';
-import { ComponentMode } from './componentMode';
-import { useStateOrganiser } from '../useStateOrganiser';
-interface Categ {
-  category_id: number;
-  name: string;
-}
+//Hooks and utils
+import { ComponentMode } from '../utils/componentMode';
+import {
+  useReset,
+  useGetTaskFormData,
+  useSetTaskField,
+  useGetCategoryData,
+  useSetCategoryData,
+  useGetPageRefresh,
+  useSetPageRefresh,
+  useGetEditId,
+} from '../utils/useStateOrganiser';
+//Types
+import type { CategoryData } from '../utils/types';
 
 const TaskCategorySelector = () => {
+  //Private variables
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
-  const [categ, setCateg] = useState<Categ[]>([]);
+  const [categ, setCateg] = useState<CategoryData[]>([]);
   const [input, setInput] = useState('');
   const selectRef = useRef<HTMLSelectElement>(null);
+  //Public variables
+  const resetData = useReset();
+  const taskFormData = useGetTaskFormData();
+  const setTaskField = useSetTaskField();
+  const category = useGetCategoryData();
+  const setCategory = useSetCategoryData();
+  const refreshPage = useGetPageRefresh();
+  const setPageRefresh = useSetPageRefresh();
+  const EditId = useGetEditId();
 
-  const resetData = useStateOrganiser((state) => state.reset);
-
-  const taskFormData = useStateOrganiser((state) => state.taskFormData);
-  const setTaskField = useStateOrganiser((state) => state.setTaskField);
-
-  const category = useStateOrganiser((state) => state.categoryData);
-  const setCategory = useStateOrganiser((state) => state.setCategoryData);
-
-  const refreshPage = useStateOrganiser((state) => state.refreshPage);
-  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
-
+  //Helpers
+  function toDatetimeLocalString(isoDate: string): string {
+    const date = new Date(isoDate);
+    const offsetDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    return offsetDate.toISOString().slice(0, 16);
+  }
+  const toggleMode = (targetMode: ComponentMode) => {
+    setMode((prev) =>
+      prev == targetMode ? ComponentMode.DEFAULT : targetMode
+    );
+  };
+  const resetStateFields = () => {
+    resetData();
+    toggleMode(ComponentMode.DEFAULT);
+    setInput('');
+  };
+  //Handles change in form fields
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
     const { name, value } = e.target;
-    const newValue =
-      name === 'est_time' || name === 'category_id' ? Number(value) : value;
-
+    const numericFields = new Set(['est_time', 'category_id']);
+    const newValue = numericFields.has(name) ? Number(value) : value;
     setTaskField(name as keyof typeof taskFormData, newValue);
   };
 
-  function toDatetimeLocalString(isoDate: string): string {
-    const date = new Date(isoDate);
-
-    const offsetDate = new Date(
-      date.getTime() - date.getTimezoneOffset() * 60000
-    );
-    return offsetDate.toISOString().slice(0, 16);
-  }
-
-  const EditId = useStateOrganiser((state) => state.editTask.id);
-
-  const resetFormData = () => {
-    resetData();
-    setMode(ComponentMode.DEFAULT);
-    setInput('');
-  };
-  const addTask = async (e: React.FormEvent) => {
-    console.log(mode);
+  const addTaskFunction = async (e: React.FormEvent) => {
     e.preventDefault();
+    //Handles payload assigned or non-assigned Date and Time
     const payload = {
       ...taskFormData,
       assigned_date:
@@ -93,7 +101,7 @@ const TaskCategorySelector = () => {
       }
     }
 
-    resetFormData();
+    resetStateFields();
     setPageRefresh();
   };
   const addTaskCategory = async (name: string) => {
@@ -110,7 +118,7 @@ const TaskCategorySelector = () => {
     } catch (err) {
       console.error(err);
     }
-    resetFormData();
+    resetStateFields();
     setPageRefresh();
   };
   const deleteTask = async (id: number) => {
@@ -128,7 +136,7 @@ const TaskCategorySelector = () => {
         return;
       }
 
-      resetFormData();
+      resetStateFields();
       setPageRefresh();
     } catch (err) {
       console.error('Failed to delete:', err);
@@ -154,7 +162,7 @@ const TaskCategorySelector = () => {
       }
       const category = categ[0];
       if (category) setCategory(category);
-      resetFormData();
+      resetStateFields();
       setPageRefresh();
     } catch (err) {
       console.error('Failed to delete:', err);
@@ -163,7 +171,7 @@ const TaskCategorySelector = () => {
   useEffect(() => {
     fetch('http://localhost:5000/api/task_categories')
       .then((res) => res.json())
-      .then((data: Categ[]) => {
+      .then((data: CategoryData[]) => {
         setCateg(data);
       })
       .catch((err) => {
@@ -262,14 +270,14 @@ const TaskCategorySelector = () => {
         </button>
         <button
           className="transition-colors secondary rounded-md p-2 hover:bg-red-600! hover:cursor-pointer"
-          onClick={() => resetFormData()}
+          onClick={() => resetStateFields()}
         >
           Cancel
         </button>
       </span>
 
       <form
-        onSubmit={addTask}
+        onSubmit={addTaskFunction}
         className={`p-5 transition-all bg-white/10 gap-4 ${
           mode == ComponentMode.ADD_TASK || mode == ComponentMode.EDIT_TASK
             ? 'flex flex-col'
@@ -357,7 +365,7 @@ const TaskCategorySelector = () => {
           />
           <button
             className="transition-colors secondary rounded-md p-2 hover:bg-red-600! hover:cursor-pointer"
-            onClick={() => resetFormData()}
+            onClick={() => resetStateFields()}
           >
             Cancel
           </button>

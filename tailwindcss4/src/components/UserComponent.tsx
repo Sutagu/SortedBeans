@@ -28,7 +28,7 @@ const UserComponent = () => {
         <img
           src={portraits[portraitPath] || portraits['./defaultGuy.webp']}
           alt="Portrait"
-          fetchPriority="high"
+          fetchPriority="low"
           className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl h-auto my-[2%]"
         />
         <span className={`${settings ? 'flex' : 'hidden'}`}>
