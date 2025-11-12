@@ -3,8 +3,9 @@ import { CgMenu, CgPen, CgTrash, CgMore } from 'react-icons/cg';
 
 import { useEffect, useState } from 'react';
 import { useStateOrganiser } from '../utils/useStateOrganiser';
-
+import { useTaskStore } from '../hooks/taskStoreHook';
 import type { Task } from '../utils/types';
+
 const TaskList = () => {
   const SetEditId = useStateOrganiser((state) => state.setEditId);
   const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
@@ -17,6 +18,9 @@ const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
+
+  const { deleteTask } = useTaskStore();
+
   const assignTaskDate = (id: number, assigned_date: string | null) => {
     if (assigned_date != null || assigned_date != '') {
       fetch(`http://localhost:5000/api/tasks/${id}`, {
@@ -29,27 +33,6 @@ const TaskList = () => {
       setPageRefresh();
     }
   };
-  const deleteTask = async (id: number) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        console.error('Failed to delete:', error.error || res.statusText);
-        return;
-      }
-
-      setPageRefresh();
-    } catch (err) {
-      console.error('Failed to delete:', err);
-    }
-  };
-
   useEffect(() => {
     fetch('http://localhost:5000/api/tasks')
       .then((res) => res.json())
