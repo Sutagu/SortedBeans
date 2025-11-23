@@ -1,8 +1,12 @@
+//Icons
 import { CgChevronLeft, CgChevronRight } from 'react-icons/cg';
+//React
 import React, { useEffect, useState } from 'react';
+//Component
 import DayTasks from './DayTasks';
 
 const DayPlan: React.FC = () => {
+  //Dates arrays
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -25,8 +29,7 @@ const DayPlan: React.FC = () => {
     'Oct',
     'Nov',
     'Dec',
-  ];
-
+  ]; //Private states
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentDayIndex, setCurrentDayIndex] = useState<number>(
     currentDate.getDate()

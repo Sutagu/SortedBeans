@@ -86,7 +86,7 @@ export const useSetTaskField = () =>
 
 export const useGetEditId = () =>
   useStateOrganiser((state) => state.editTask.id);
-export const useSetEditId = () => useStateOrganiser((state) => state.editTask);
+export const useSetEditId = () => useStateOrganiser((state) => state.setEditId);
 
 export const useReset = () => useStateOrganiser((state) => state.reset);
 

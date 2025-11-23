@@ -2,47 +2,29 @@
 import { CgMenu, CgPen, CgTrash, CgMore } from 'react-icons/cg';
 
 import { useEffect, useState } from 'react';
-import { useStateOrganiser } from '../utils/useStateOrganiser';
 import { useTaskStore } from '../hooks/taskStoreHook';
-import type { Task } from '../utils/types';
+import {
+  useSetTaskFormData,
+  useSetEditId,
+  useGetPageRefresh,
+  useGetCategoryData,
+} from '../utils/useStateOrganiser';
 
 const TaskList = () => {
-  const SetEditId = useStateOrganiser((state) => state.setEditId);
-  const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
-  const refreshPage = useStateOrganiser((state) => state.refreshPage);
-  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
-  const categoryId = useStateOrganiser(
-    (state) => state.categoryData.category_id
-  );
-
-  const [tasks, setTasks] = useState<Task[]>([]);
+  //Public Use State Organiser Store
+  const SetEditId = useSetEditId();
+  const setTaskFormData = useSetTaskFormData();
+  const refreshPage = useGetPageRefresh();
+  const categoryId = useGetCategoryData().category_id;
+  //Api fetch
+  const { tasks, fetchTasks, deleteTask, editTaskDate } = useTaskStore();
+  //Private Variables
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
 
-  const { deleteTask } = useTaskStore();
-
-  const assignTaskDate = (id: number, assigned_date: string | null) => {
-    if (assigned_date != null || assigned_date != '') {
-      fetch(`http://localhost:5000/api/tasks/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ assigned_date }),
-      }).catch((err) => console.error('Failed to update assigned date:', err));
-      setPageRefresh();
-    }
-  };
   useEffect(() => {
-    fetch('http://localhost:5000/api/tasks')
-      .then((res) => res.json())
-      .then((data: Task[]) => {
-        setTasks(data);
-      })
-      .catch((err) => {
-        console.error('Error fetching tasks:', err);
-      });
-  }, [categoryId, refreshPage]);
+    fetchTasks();
+  }, [fetchTasks, refreshPage]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">
@@ -87,7 +69,7 @@ const TaskList = () => {
                 className="bg-accent-dark shrink w-1/2  rounded-lg p-2"
               />
               <button
-                onClick={() => assignTaskDate(task.id, input)}
+                onClick={() => editTaskDate(task.id, input)}
                 className="bg-white/20 rounded-lg p-2 hover:bg-[#76b6ce] transition-colors flex-none"
               >
                 Confirm

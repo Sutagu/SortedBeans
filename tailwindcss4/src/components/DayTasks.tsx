@@ -1,19 +1,29 @@
 //Icons
 import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
-
-import { useState, useEffect } from 'react';
-import { useStateOrganiser } from '../utils/useStateOrganiser';
-import type { Task, CategoryData } from '../utils/types';
+//React
+import { useEffect } from 'react';
+//Stores
+import {
+  useGetPageRefresh,
+  useSetEditId,
+  useSetTaskFormData,
+  useSetPageRefresh,
+} from '../utils/useStateOrganiser';
+import { useTaskStore } from '../hooks/taskStoreHook';
+import { useCategoryStore } from '../hooks/categoryStoreHook';
 interface Prop {
   currentDate: string;
 }
 const DayTasks = ({ currentDate }: Prop) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<CategoryData[]>([]);
-  const setEditId = useStateOrganiser((state) => state.setEditId);
-  const setTaskFormData = useStateOrganiser((state) => state.setTaskFormData);
-  const refreshPage = useStateOrganiser((state) => state.refreshPage);
-  const setPageRefresh = useStateOrganiser((state) => state.setPageRefresh);
+  //Public UseState Organiser Store
+  const setEditId = useSetEditId();
+  const setTaskFormData = useSetTaskFormData();
+  const usePageRefresh = useGetPageRefresh();
+  const setPageRefresh = useSetPageRefresh();
+  //API Hook
+  const { tasks, fetchTasks, editTaskCompleted, editTaskEstTime } =
+    useTaskStore();
+  const { categories, fetchCategories } = useCategoryStore();
 
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
@@ -27,58 +37,20 @@ const DayTasks = ({ currentDate }: Prop) => {
     };
   };
 
-  const toggleCompleted = (id: number) => {
-    const currentTask = tasks.find((t) => t.id == id);
-    if (!currentTask) return;
-
-    const updateCompleted = !currentTask.completed;
-
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: updateCompleted } : task
-      )
-    );
-    console.log('local update');
-    fetch(`http://localhost:5000/api/tasks/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ completed: updateCompleted }),
-    }).catch((err) => console.error('Failed to update task:', err));
+  const toggleCompleted = (id: number, completed: boolean) => {
+    editTaskCompleted(id, completed);
     setPageRefresh();
   };
 
   const handleEstTimeChange = (id: number, newEstTime: number) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, est_time: newEstTime } : task
-      )
-    );
-    fetch(`http://localhost:5000/api/tasks/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ est_time: newEstTime }),
-    }).catch((err) => console.error('Failed to update estimated time:', err));
+    editTaskEstTime(id, newEstTime);
     setPageRefresh();
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [taskRes, categoryRes] = await Promise.all([
-        fetch('http://localhost:5000/api/tasks'),
-        fetch('http://localhost:5000/api/task_categories'),
-      ]);
-      const taskData = await taskRes.json();
-      const categoryData: CategoryData[] = await categoryRes.json();
-      setTasks(taskData);
-      setCategories(categoryData);
-    };
-
-    fetchData();
-  }, [currentDate, refreshPage]);
+    fetchTasks();
+    fetchCategories();
+  }, [currentDate, usePageRefresh]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
@@ -147,7 +119,10 @@ const DayTasks = ({ currentDate }: Prop) => {
                   </span>
                   <span
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"
-                    onClick={() => toggleCompleted(task.id)}
+                    onClick={() => {
+                      toggleCompleted(task.id, !task.completed);
+                      fetchTasks();
+                    }}
                   >
                     {task.completed ? <CgCheckO /> : <CgRadioCheck />}
                   </span>
