@@ -3,89 +3,29 @@ import { CgRemove, CgAdd, CgPen } from 'react-icons/cg';
 import { useEffect, useState, useRef } from 'react';
 //Components
 import ModifyTask from './ModifyTask';
+import ModifyCategory from './ModifyCategory';
 //Hooks and utils
 import { ComponentMode } from '../utils/componentMode';
 import {
-  useReset,
   useGetCategoryData,
   useSetCategoryData,
   useGetPageRefresh,
-  useSetPageRefresh,
   useGetEditId,
 } from '../utils/useStateOrganiser';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
-//Types
 
 const TaskCategorySelector = () => {
   //API Hook
-  const { categories, fetchCategories } = useCategoryStore();
+  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
   //Private variables
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
-  const [input, setInput] = useState('');
   const selectRef = useRef<HTMLSelectElement>(null);
   //Public variables
-  const resetData = useReset();
   const category = useGetCategoryData();
   const setCategory = useSetCategoryData();
   const refreshPage = useGetPageRefresh();
-  const setPageRefresh = useSetPageRefresh();
   const EditId = useGetEditId();
 
-  //Helpers
-  const toggleMode = (targetMode: ComponentMode) => {
-    setMode((prev) =>
-      prev == targetMode ? ComponentMode.DEFAULT : targetMode
-    );
-  };
-  const resetStateFields = () => {
-    resetData();
-    toggleMode(ComponentMode.DEFAULT);
-    setInput('');
-  };
-
-  const addTaskCategory = async (name: string) => {
-    const payload = { name };
-    try {
-      const res = await fetch('http://localhost:5000/api/task_categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error('Failed to create category');
-      const newCategory = await res.json();
-      console.log('Created category:', newCategory);
-    } catch (err) {
-      console.error(err);
-    }
-    resetStateFields();
-    setPageRefresh();
-  };
-
-  const deleteCategory = async (id: number) => {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/task_categories/${id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (!res.ok) {
-        const error = await res.json();
-        console.error('Failed to delete:', error.error || res.statusText);
-        return;
-      }
-      const category = categories[0];
-      if (category) setCategory(category);
-      resetStateFields();
-      setPageRefresh();
-    } catch (err) {
-      console.error('Failed to delete:', err);
-    }
-  };
   useEffect(() => {
     fetchCategories();
     if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
@@ -128,7 +68,10 @@ const TaskCategorySelector = () => {
             className={`text-xs text-nowrap hover:text-red-400 cursor-pointer ${
               mode == ComponentMode.DELETE_CATEGORY ? 'block' : 'hidden'
             }`}
-            onClick={() => deleteCategory(category.category_id)}
+            onClick={() => {
+              deleteCategory(category.category_id);
+              setMode(ComponentMode.DEFAULT);
+            }}
           >
             Delete {category.name} ?
           </p>
@@ -163,33 +106,7 @@ const TaskCategorySelector = () => {
           />
         </div>
       </div>
-      <span
-        className={`p-5 transition-all bg-white/10 gap-4 
-          ${mode == ComponentMode.ADD_CATEGORY ? 'flex' : 'hidden'} `}
-      >
-        <input
-          type="text"
-          name="name"
-          placeholder="Add category name"
-          autoComplete="off"
-          maxLength={30}
-          className="w-7/10 border-b-1"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          className="w-3/10 text-sm accent rounded-md py-2 hover:font-semibold hover:cursor-pointer transition-colors "
-          onClick={() => addTaskCategory(input)}
-        >
-          Add Category
-        </button>
-        <button
-          className="transition-colors secondary rounded-md p-2 hover:bg-red-600! hover:cursor-pointer"
-          onClick={() => resetStateFields()}
-        >
-          Cancel
-        </button>
-      </span>
+      <ModifyCategory mode={mode} setMode={setMode} />
       <ModifyTask mode={mode} setMode={setMode} />
     </div>
   );

@@ -6,10 +6,8 @@ const API_URL = import.meta.env.VITE_CATEGORIES_API_URL;
 interface CategoryStore {
   categories: CategoryData[];
   fetchCategories: () => Promise<void>;
-  addCategories: (
-    categories: Omit<CategoryData, 'category_id'>
-  ) => Promise<void>;
-  deleteTask: (category_id: number) => Promise<void>;
+  addCategories: (name: string) => Promise<void>;
+  deleteCategory: (category_id: number) => Promise<void>;
 }
 export const useCategoryStore = create<CategoryStore>((set, get) => ({
   categories: [],
@@ -18,15 +16,16 @@ export const useCategoryStore = create<CategoryStore>((set, get) => ({
     const data = await apiRequest<CategoryData[]>(API_URL, { method: 'GET' });
     set({ categories: data });
   },
-  addCategories: async (categories) => {
+  addCategories: async (name) => {
+    const payload = { name };
     const newTask = await apiRequest<CategoryData>(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(categories),
+      body: JSON.stringify(payload),
     });
     set({ categories: [...get().categories, newTask] });
   },
-  deleteTask: async (category_id) => {
+  deleteCategory: async (category_id) => {
     await apiRequest<void>(`${API_URL}/${category_id}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
