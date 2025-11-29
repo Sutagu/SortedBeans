@@ -54,11 +54,12 @@ const DayPlan: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('Changed current date');
     setCurrentDayIndex(currentDate.getDay());
   }, [currentDate]);
   return (
     <div className="h-full">
-      <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1">
+      <div className="flex shadow-2xl shadow-accent-dark/50 justify-between items-center lg:my-[5%] p-[5%] border-y-1 sm:max-lg:border-1 sm:max-lg:rounded-lg">
         <CgChevronLeft
           onClick={handlePrevDay}
           className="cursor-pointer hover:text-accent transition-colors"

@@ -18,7 +18,6 @@ interface AppState {
   taskFormData: TaskFormData;
   editTask: EditingTask;
   categoryData: CategoryData;
-  refreshPage: number;
   uiTheme: string;
 
   //TaskFormData functons
@@ -34,9 +33,6 @@ interface AppState {
 
   //SetCategory functions
   setCategoryData: (data: CategoryData) => void;
-  //Refresh functions
-  setPageRefresh: () => void;
-
   //Theme functions
   setTheme: (newTheme: string) => void;
 }
@@ -44,7 +40,6 @@ interface AppState {
 export const useStateOrganiser = create<AppState>((set) => ({
   taskFormData: defaultTaskFormData,
   editTask: { id: 0 },
-  refreshPage: 0,
   uiTheme: 'default',
   categoryData: defaultCategory,
 
@@ -67,11 +62,6 @@ export const useStateOrganiser = create<AppState>((set) => ({
     set({ taskFormData: defaultTaskFormData });
     set({ editTask: { id: 0 } });
   },
-
-  //setPageRefresh functions
-  setPageRefresh: () =>
-    set((state) => ({ refreshPage: state.refreshPage + 1 })),
-
   //setUiTheme function
   setTheme: (newTheme) => set({ uiTheme: newTheme }),
 }));
@@ -94,10 +84,5 @@ export const useSetCategoryData = () =>
   useStateOrganiser((state) => state.setCategoryData);
 export const useGetCategoryData = () =>
   useStateOrganiser((state) => state.categoryData);
-
-export const useSetPageRefresh = () =>
-  useStateOrganiser((state) => state.setPageRefresh);
-export const useGetPageRefresh = () =>
-  useStateOrganiser((state) => state.refreshPage);
 
 export const useSetTheme = () => useStateOrganiser((state) => state.setTheme);

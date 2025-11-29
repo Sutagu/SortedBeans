@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStateOrganiser } from '../utils/useStateOrganiser';
+import { useSetTheme } from '../utils/useStateOrganiser';
 interface Prop {
   setCalendarTheme: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -72,7 +72,7 @@ const colours = [
 ];
 
 const ThemePallete = ({ setCalendarTheme }: Prop) => {
-  const setTheme = useStateOrganiser((state) => state.setTheme);
+  const setTheme = useSetTheme();
 
   const themeChange = (theme: string, calendar: string) => {
     setTheme(theme);

@@ -3,12 +3,7 @@ import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
 //React
 import { useEffect } from 'react';
 //Stores
-import {
-  useGetPageRefresh,
-  useSetEditId,
-  useSetTaskFormData,
-  useSetPageRefresh,
-} from '../utils/useStateOrganiser';
+import { useSetEditId, useSetTaskFormData } from '../utils/useStateOrganiser';
 import { useTaskStore } from '../hooks/taskStoreHook';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
 interface Prop {
@@ -18,8 +13,6 @@ const DayTasks = ({ currentDate }: Prop) => {
   //Public UseState Organiser Store
   const setEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
-  const usePageRefresh = useGetPageRefresh();
-  const setPageRefresh = useSetPageRefresh();
   //API Hook
   const { tasks, fetchTasks, editTaskCompleted, editTaskEstTime } =
     useTaskStore();
@@ -39,18 +32,17 @@ const DayTasks = ({ currentDate }: Prop) => {
 
   const toggleCompleted = (id: number, completed: boolean) => {
     editTaskCompleted(id, completed);
-    setPageRefresh();
   };
 
   const handleEstTimeChange = (id: number, newEstTime: number) => {
     editTaskEstTime(id, newEstTime);
-    setPageRefresh();
   };
 
   useEffect(() => {
+    console.log('Refreshing dayTasks');
     fetchTasks();
     fetchCategories();
-  }, [currentDate, usePageRefresh]);
+  }, [currentDate, fetchTasks, fetchCategories]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 

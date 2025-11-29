@@ -1,15 +1,14 @@
 //React and icons
 import { CgRemove, CgAdd, CgPen } from 'react-icons/cg';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, lazy } from 'react';
 //Components
-import ModifyTask from './ModifyTask';
-import ModifyCategory from './ModifyCategory';
+const ModifyTask = lazy(() => import('./ModifyTask'));
+const ModifyCategory = lazy(() => import('./ModifyCategory'));
 //Hooks and utils
 import { ComponentMode } from '../utils/componentMode';
 import {
   useGetCategoryData,
   useSetCategoryData,
-  useGetPageRefresh,
   useGetEditId,
 } from '../utils/useStateOrganiser';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
@@ -23,17 +22,16 @@ const TaskCategorySelector = () => {
   //Public variables
   const category = useGetCategoryData();
   const setCategory = useSetCategoryData();
-  const refreshPage = useGetPageRefresh();
   const EditId = useGetEditId();
 
   useEffect(() => {
-    fetchCategories();
-    if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
-    else {
-      setMode(ComponentMode.DEFAULT);
+    if (categories.length == 0) {
+      console.log('Fetching Categories');
+      fetchCategories();
     }
-    console.log(EditId);
-  }, [refreshPage, EditId]);
+    if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
+    else setMode(ComponentMode.DEFAULT);
+  }, [EditId, categories.length, fetchCategories]);
   return (
     <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">

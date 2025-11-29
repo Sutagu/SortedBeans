@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_TASK_API_URL;
 interface TaskStore {
   tasks: Task[];
   taskFormData: TaskFormData[];
+  refreshTaskContent: number;
   fetchTasks: () => Promise<void>;
   addTask: (task: Omit<TaskFormData, 'id'>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
@@ -17,14 +18,14 @@ interface TaskStore {
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
   taskFormData: [],
-
+  refreshTaskContent: 0,
   fetchTasks: async () => {
     const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
     set({ tasks: data });
   },
   editTaskEstTime: async (id, est_time) => {
     if (est_time < 1440) {
-      fetch(`${API_URL}/${id}`, {
+      await apiRequest<void>(`${API_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -32,15 +33,13 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         body: JSON.stringify({ est_time }),
       });
       set({
-        tasks: get().tasks.map((t) =>
-          t.id === id ? { ...t, est_time: t.est_time } : t
-        ),
+        tasks: get().tasks.map((t) => (t.id === id ? { ...t, est_time } : t)),
       });
     }
   },
   editTaskDate: async (id, assigned_date) => {
     if (assigned_date != null) {
-      fetch(`${API_URL}/${id}`, {
+      await apiRequest<void>(`${API_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -49,13 +48,13 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       });
       set({
         tasks: get().tasks.map((t) =>
-          t.id === id ? { ...t, assigned_date: t.assigned_date } : t
+          t.id === id ? { ...t, assigned_date } : t
         ),
       });
     }
   },
   editTaskCompleted: async (id, completed) => {
-    fetch(`${API_URL}/${id}`, {
+    await apiRequest<void>(`${API_URL}/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -63,9 +62,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       body: JSON.stringify({ completed }),
     });
     set({
-      tasks: get().tasks.map((t) =>
-        t.id === id ? { ...t, completed: t.completed } : t
-      ),
+      tasks: get().tasks.map((t) => (t.id === id ? { ...t, completed } : t)),
     });
   },
   addTask: async (task) => {
@@ -74,12 +71,15 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task),
     });
-    set({ taskFormData: [...get().taskFormData, newTask] });
+    set((state) => ({
+      taskFormData: [...get().taskFormData, newTask],
+      refreshTaskContent: state.refreshTaskContent + 1,
+    }));
   },
   updateTask: async (task, EditId) => {
     const editTask = await apiRequest<TaskFormData>(`${API_URL}/${EditId}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'applicaiton/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(task),
     });
     set({ taskFormData: [...get().taskFormData, editTask] });

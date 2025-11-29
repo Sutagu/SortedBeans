@@ -10,7 +10,7 @@ const Quotes = lazy(() => import('./components/Quotes'));
 //Middle
 import DayPlan from './components/DayPlan';
 //Right
-import TaskCategorySelector from './components/taskCategorySelector';
+import TaskCategorySelector from './components/CategoryFunctions';
 const TaskList = lazy(() => import('./components/TaskList'));
 //Footer icons (for mobile)
 import { CgMenu } from 'react-icons/cg';
@@ -28,7 +28,7 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="w-screen h-screen flex flex-col justify-evenly lg:grid lg:grid-cols-3 transition-colors">
+    <div className="main-container transition-colors">
       <div
         className={`responsive-container flex flex-col  lg:justify-between! select-none ${
           footerState == 'profile' ? 'items-center' : 'max-lg:hidden'
@@ -59,7 +59,7 @@ function App() {
       <div
         className={`responsive-container ${
           footerState == 'tasks'
-            ? 'max-lg:block max-lg:w-screen'
+            ? 'max-lg:block max-lg:w-full'
             : 'max-lg:hidden'
         }`}
       >

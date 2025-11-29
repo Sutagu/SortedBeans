@@ -57,7 +57,9 @@ const AddTask = ({ mode, setMode }: Props) => {
     if (mode == ComponentMode.ADD_TASK) addTask(payload);
     else if (mode == ComponentMode.EDIT_TASK) {
       updateTask(payload, EditId);
+      setEditId(0);
     }
+    setMode(ComponentMode.DEFAULT);
   };
   return (
     <form

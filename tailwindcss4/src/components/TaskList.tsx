@@ -6,7 +6,6 @@ import { useTaskStore } from '../hooks/taskStoreHook';
 import {
   useSetTaskFormData,
   useSetEditId,
-  useGetPageRefresh,
   useGetCategoryData,
 } from '../utils/useStateOrganiser';
 
@@ -14,17 +13,18 @@ const TaskList = () => {
   //Public Use State Organiser Store
   const SetEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
-  const refreshPage = useGetPageRefresh();
   const categoryId = useGetCategoryData().category_id;
   //Api fetch
-  const { tasks, fetchTasks, deleteTask, editTaskDate } = useTaskStore();
+  const { tasks, fetchTasks, deleteTask, editTaskDate, refreshTaskContent } =
+    useTaskStore();
   //Private Variables
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('Fetching TaskList');
     fetchTasks();
-  }, [fetchTasks, refreshPage]);
+  }, [fetchTasks, refreshTaskContent]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">
