@@ -10,6 +10,7 @@ router.get('/', async (req: Request, res: Response) => {
     res.json(result.rows);
     console.log('Server loaded in task_categories');
   } catch (error) {
+    console.error('Error encountered in Task_Category route:' + error);
     res.status(500).json({ error: 'Database error' });
   }
 });

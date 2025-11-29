@@ -1,6 +1,6 @@
 //React and icons
 import { CgRemove, CgAdd, CgPen } from 'react-icons/cg';
-import { useEffect, useState, useRef, lazy } from 'react';
+import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 //Components
 const ModifyTask = lazy(() => import('./ModifyTask'));
 const ModifyCategory = lazy(() => import('./ModifyCategory'));
@@ -104,8 +104,10 @@ const TaskCategorySelector = () => {
           />
         </div>
       </div>
-      <ModifyCategory mode={mode} setMode={setMode} />
-      <ModifyTask mode={mode} setMode={setMode} />
+      <Suspense>
+        <ModifyCategory mode={mode} setMode={setMode} />
+        <ModifyTask mode={mode} setMode={setMode} />
+      </Suspense>
     </div>
   );
 };

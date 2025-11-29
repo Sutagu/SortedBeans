@@ -3,11 +3,11 @@ import { useState, Suspense, lazy } from 'react';
 import { CgSupport } from 'react-icons/cg'; //Settings icon
 //Components In order
 import portraits from '../assets/images/portraits/portraits';
-import Clock from './Clock';
-import WeatherTemp from './WeatherTemp';
+const Clock = lazy(() => import('./Clock'));
+const GitHubCalendar = lazy(() => import('react-github-calendar'));
+const WeatherTemp = lazy(() => import('./WeatherTemp'));
 const PortraitMap = lazy(() => import('./UserPortraits'));
 const ThemePallete = lazy(() => import('./ThemePalette'));
-const GitHubCalendar = lazy(() => import('react-github-calendar'));
 
 const UserComponent = () => {
   const [settings, setSettings] = useState(false);
@@ -28,24 +28,30 @@ const UserComponent = () => {
         <img
           src={portraits[portraitPath] || portraits['./defaultGuy.webp']}
           alt="Portrait"
-          fetchPriority="low"
+          loading="lazy"
           className="inset-shadow-sm/40 inset-shadow-blend bg-accent rounded-2xl h-auto my-[2%]"
         />
         <span className={`${settings ? 'flex' : 'hidden'}`}>
-          <PortraitMap setPortraitPath={setPortraitPath} />
+          <Suspense fallback={<div>Loading Portrait Track...</div>}>
+            <PortraitMap setPortraitPath={setPortraitPath} />
+          </Suspense>
         </span>
         <div
           className={`flex-col sm:max-lg:flex-row w-1/2 sm:w-3/4 lg:w-full h-fit self-center ${
             settings ? 'hidden' : 'flex'
           }`}
         >
-          <Clock />
-          <WeatherTemp />
+          <Suspense fallback={<div>Loading Location Data...</div>}>
+            <Clock />
+            <WeatherTemp />
+          </Suspense>
         </div>
       </span>
 
       <span className={`${settings ? 'block text-left' : 'hidden'} mt-2`}>
-        <ThemePallete setCalendarTheme={setCalendarTheme} />
+        <Suspense fallback={<div>Loading Page Themes...</div>}>
+          <ThemePallete setCalendarTheme={setCalendarTheme} />
+        </Suspense>
       </span>
       <span
         className={`items-center gap-2 text-lg font-semibold h-1/10 shrink-0 ${

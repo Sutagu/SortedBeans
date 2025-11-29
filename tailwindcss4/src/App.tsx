@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 //States Tracker
 import { useStateOrganiser } from './utils/useStateOrganiser';
 //Top left
@@ -13,9 +13,7 @@ import DayPlan from './components/DayPlan';
 import TaskCategorySelector from './components/CategoryFunctions';
 const TaskList = lazy(() => import('./components/TaskList'));
 //Footer icons (for mobile)
-import { CgMenu } from 'react-icons/cg';
-import { CgHome } from 'react-icons/cg';
-import { CgProfile } from 'react-icons/cg';
+import { CgMenu, CgHome, CgProfile } from 'react-icons/cg';
 
 function App() {
   //UseEffects UseStates
@@ -34,7 +32,9 @@ function App() {
           footerState == 'profile' ? 'items-center' : 'max-lg:hidden'
         }`}
       >
-        <UserComponent />
+        <Suspense fallback={<div>Loading User Profile...</div>}>
+          <UserComponent />
+        </Suspense>
         <div className="innerContainer h-4/12! bg-linear-to-tr from-primary to-secondary relative">
           <img
             src={logo}
@@ -42,7 +42,9 @@ function App() {
             loading="lazy"
             className="w-1/10 absolute z-99 left-5 bottom-5"
           />
-          <Quotes />
+          <Suspense fallback={<div>Loading Quotes...</div>}>
+            <Quotes />
+          </Suspense>
         </div>
       </div>
       <div
@@ -68,7 +70,9 @@ function App() {
             Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector />
-          <TaskList />
+          <Suspense fallback={<div>Loading Tasks for Day...</div>}>
+            <TaskList />
+          </Suspense>
         </div>
       </div>
       <footer className="lg:hidden! self-center w-8/10 bg-secondary/30 rounded-2xl border-1 border-text flex justify-around py-4 z-auto">

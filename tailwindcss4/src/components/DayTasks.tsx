@@ -93,6 +93,7 @@ const DayTasks = ({ currentDate }: Prop) => {
                   <span className="bg-black/20 rounded-md self-start flex gap-1 p-1">
                     <input
                       type="number"
+                      aria-label="est minutes to complete task"
                       value={task.est_time}
                       onChange={(e) =>
                         handleEstTimeChange(task.id, Number(e.target.value))

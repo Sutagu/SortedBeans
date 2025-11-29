@@ -1,14 +1,9 @@
 import { Pool } from 'pg';
+import * as dotenv from 'dotenv';
 
 const envDirectory = '../';
 
-console.log(
-  'DOTENV IS: ',
-  require('dotenv').config({
-    path: envDirectory + '.env',
-  })
-);
-require('dotenv').config({
+dotenv.config({
   path: envDirectory + '.env',
 });
 

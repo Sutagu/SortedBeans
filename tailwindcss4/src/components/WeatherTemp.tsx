@@ -76,7 +76,7 @@ const WeatherTemp: React.FC = () => {
       {temperature !== null ? (
         <div className="text-sm lg:text-base text-left flex justify-center items-center gap-4">
           <div className="w-1/4 md:w-1/5">
-            <img src={iconPath} alt="Weather icon" />
+            <img src={iconPath} alt="Weather icon" loading="lazy" />
           </div>
           <div>
             <p> {temperature.toFixed()}°C</p>
