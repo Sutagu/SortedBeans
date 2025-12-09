@@ -9,6 +9,7 @@ export interface Task {
   description: string;
 }
 export interface TaskFormData {
+  id?: number;
   title: string;
   est_time: number;
   category_id: number;

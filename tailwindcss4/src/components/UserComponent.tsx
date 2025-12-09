@@ -37,7 +37,7 @@ const UserComponent = () => {
           </Suspense>
         </span>
         <div
-          className={`flex-col sm:max-lg:flex-row w-1/2 sm:w-3/4 lg:w-full h-fit self-center ${
+          className={`flex-col sm:max-lg:flex-row justify-evenly sm:w-3/4 lg:w-full h-fit self-center ${
             settings ? 'hidden' : 'flex'
           }`}
         >

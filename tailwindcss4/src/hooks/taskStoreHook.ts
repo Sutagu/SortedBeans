@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { queueWrite } from '../db/queueCache';
 import { apiRequest } from '../utils/api';
 import type { Task, TaskFormData } from '../utils/types';
 
@@ -20,75 +21,106 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   taskFormData: [],
   refreshTaskContent: 0,
   fetchTasks: async () => {
-    const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
-    set({ tasks: data });
+    try {
+      const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
+      set({ tasks: data });
+    } catch (error) {
+      console.error('Error when fetching tasks' + error);
+    }
   },
   editTaskEstTime: async (id, est_time) => {
     if (est_time < 1440) {
-      await apiRequest<void>(`${API_URL}/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ est_time }),
-      });
-      set({
-        tasks: get().tasks.map((t) => (t.id === id ? { ...t, est_time } : t)),
-      });
+      try {
+        await apiRequest<void>(`${API_URL}/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ est_time }),
+        });
+        set({
+          tasks: get().tasks.map((t) => (t.id === id ? { ...t, est_time } : t)),
+        });
+      } catch (error) {
+        console.log('Error when editing Task est_time' + error);
+      }
     }
   },
   editTaskDate: async (id, assigned_date) => {
     if (assigned_date != null) {
+      try {
+        await apiRequest<void>(`${API_URL}/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ assigned_date }),
+        });
+        set({
+          tasks: get().tasks.map((t) =>
+            t.id === id ? { ...t, assigned_date } : t
+          ),
+        });
+      } catch (error) {
+        console.error('Error when editing Task assigned_date' + error);
+      }
+    }
+  },
+  editTaskCompleted: async (id, completed) => {
+    try {
       await apiRequest<void>(`${API_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ assigned_date }),
+        body: JSON.stringify({ completed }),
       });
       set({
-        tasks: get().tasks.map((t) =>
-          t.id === id ? { ...t, assigned_date } : t
-        ),
+        tasks: get().tasks.map((t) => (t.id === id ? { ...t, completed } : t)),
       });
+    } catch (error) {
+      console.error('Error when editing Task completed' + error);
     }
   },
-  editTaskCompleted: async (id, completed) => {
-    await apiRequest<void>(`${API_URL}/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ completed }),
-    });
-    set({
-      tasks: get().tasks.map((t) => (t.id === id ? { ...t, completed } : t)),
-    });
-  },
   addTask: async (task) => {
-    const newTask = await apiRequest<TaskFormData>(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(task),
-    });
-    set((state) => ({
-      taskFormData: [...get().taskFormData, newTask],
-      refreshTaskContent: state.refreshTaskContent + 1,
-    }));
+    if (navigator.onLine) {
+      try {
+        const newTask = await apiRequest<TaskFormData>(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(task),
+        });
+        set((state) => ({
+          taskFormData: [...get().taskFormData, newTask],
+          refreshTaskContent: state.refreshTaskContent + 1,
+        }));
+      } catch (error) {
+        console.error('Error when adding Task to DB' + error);
+        await queueWrite(url, method);
+      }
+    }
   },
   updateTask: async (task, EditId) => {
-    const editTask = await apiRequest<TaskFormData>(`${API_URL}/${EditId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(task),
-    });
-    set({ taskFormData: [...get().taskFormData, editTask] });
+    try {
+      const editTask = await apiRequest<TaskFormData>(`${API_URL}/${EditId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task),
+      });
+      set({ taskFormData: [...get().taskFormData, editTask] });
+    } catch (error) {
+      console.error('Error when updating Task' + error);
+    }
   },
   deleteTask: async (id) => {
-    await apiRequest<void>(`${API_URL}/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    set({ tasks: get().tasks.filter((t) => t.id != id) });
+    try {
+      await apiRequest<void>(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      set({ tasks: get().tasks.filter((t) => t.id != id) });
+    } catch (error) {
+      console.error('Error when deleting Task' + error);
+    }
   },
 }));
