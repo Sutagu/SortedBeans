@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { queueWrite } from '../db/queueCache';
 import { apiRequest } from '../utils/api';
-import type { Task, TaskFormData } from '../utils/types';
+import type { NewTask, Task, TaskFormData } from '../utils/types';
 
 const API_URL = import.meta.env.VITE_TASK_API_URL;
 interface TaskStore {
@@ -82,7 +82,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       console.error('Error when editing Task completed' + error);
     }
   },
-  addTask: async (task) => {
+  addTask: async (task: NewTask) => {
     if (navigator.onLine) {
       try {
         const newTask = await apiRequest<TaskFormData>(API_URL, {
@@ -96,8 +96,18 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         }));
       } catch (error) {
         console.error('Error when adding Task to DB' + error);
-        await queueWrite(url, method);
+        await queueWrite(API_URL, 'POST', task);
       }
+    } else {
+      const optimisticTask: TaskFormData = {
+        ...task,
+        id: Date.now(),
+      };
+      set((state) => ({
+        taskFormData: [...get().taskFormData, optimisticTask],
+        refreshTaskContent: state.refreshTaskContent + 1,
+      }));
+      await queueWrite(API_URL, 'POST', task);
     }
   },
   updateTask: async (task, EditId) => {

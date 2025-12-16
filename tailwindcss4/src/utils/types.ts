@@ -16,6 +16,7 @@ export interface TaskFormData {
   assigned_date: string | null;
   description: string;
 }
+export type NewTask = Omit<TaskFormData, 'id'>;
 export interface EditingTask {
   id: number;
 }

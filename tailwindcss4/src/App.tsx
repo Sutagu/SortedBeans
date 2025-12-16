@@ -1,7 +1,11 @@
 import './App.css';
 import { useEffect, useState, lazy, Suspense } from 'react';
+//Footer icons (for mobile)
+import { CgMenu, CgHome, CgProfile } from 'react-icons/cg';
 //States Tracker
 import { useStateOrganiser } from './utils/useStateOrganiser';
+//Offline Cache sync
+import { enableOfflineSync } from './utils/enableOfflineSync';
 //Top left
 const UserComponent = lazy(() => import('./components/UserComponent'));
 //Bottom left
@@ -12,8 +16,8 @@ import DayPlan from './components/DayPlan';
 //Right
 import TaskCategorySelector from './components/CategoryFunctions';
 const TaskList = lazy(() => import('./components/TaskList'));
-//Footer icons (for mobile)
-import { CgMenu, CgHome, CgProfile } from 'react-icons/cg';
+
+enableOfflineSync();
 
 function App() {
   //UseEffects UseStates
