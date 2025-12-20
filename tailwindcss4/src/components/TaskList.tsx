@@ -15,7 +15,7 @@ const TaskList = () => {
   const setTaskFormData = useSetTaskFormData();
   const categoryId = useGetCategoryData().category_id;
   //Api fetch
-  const { tasks, fetchTasks, deleteTask, editTaskDate, refreshTaskContent } =
+  const { tasks, fetchTasks, deleteTask, editTask, refreshTaskContent } =
     useTaskStore();
   //Private Variables
   const [shownIndex, setShownIndex] = useState<number | null>(null);
@@ -69,7 +69,7 @@ const TaskList = () => {
                 className="bg-accent-dark shrink w-1/2  rounded-lg p-2"
               />
               <button
-                onClick={() => editTaskDate(task.id, input)}
+                onClick={() => editTask(task.id, 'assigned_date', input)}
                 className="bg-white/20 rounded-lg p-2 hover:bg-[#76b6ce] transition-colors flex-none"
               >
                 Confirm

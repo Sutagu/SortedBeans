@@ -14,8 +14,7 @@ const DayTasks = ({ currentDate }: Prop) => {
   const setEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
   //API Hook
-  const { tasks, fetchTasks, editTaskCompleted, editTaskEstTime } =
-    useTaskStore();
+  const { tasks, fetchTasks, editTask } = useTaskStore();
   const { categories, fetchCategories } = useCategoryStore();
 
   const convertTime = (date: string, estTime: number) => {
@@ -31,11 +30,11 @@ const DayTasks = ({ currentDate }: Prop) => {
   };
 
   const toggleCompleted = (id: number, completed: boolean) => {
-    editTaskCompleted(id, completed);
+    editTask(id, 'completed', completed.toString());
   };
 
   const handleEstTimeChange = (id: number, newEstTime: number) => {
-    editTaskEstTime(id, newEstTime);
+    editTask(id, 'est_time', newEstTime.toString());
   };
 
   useEffect(() => {

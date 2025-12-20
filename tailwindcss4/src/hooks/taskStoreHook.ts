@@ -12,76 +12,47 @@ interface TaskStore {
   addTask: (task: Omit<TaskFormData, 'id'>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
   updateTask: (task: Omit<TaskFormData, 'id'>, EditId: number) => Promise<void>;
-  editTaskDate: (id: number, assignedDate: string | null) => Promise<void>;
-  editTaskCompleted: (id: number, completed: boolean) => Promise<void>;
-  editTaskEstTime: (id: number, est_time: number) => Promise<void>;
+  editTask: (id: number, field: string, value: string | null) => Promise<void>;
 }
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
   taskFormData: [],
   refreshTaskContent: 0,
   fetchTasks: async () => {
-    try {
-      const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
-      set({ tasks: data });
-    } catch (error) {
-      console.error('Error when fetching tasks' + error);
-    }
-  },
-  editTaskEstTime: async (id, est_time) => {
-    if (est_time < 1440) {
+    if (navigator.onLine) {
       try {
-        await apiRequest<void>(`${API_URL}/${id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ est_time }),
-        });
-        set({
-          tasks: get().tasks.map((t) => (t.id === id ? { ...t, est_time } : t)),
-        });
+        const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
+        set({ tasks: data });
       } catch (error) {
-        console.log('Error when editing Task est_time' + error);
+        console.error('Error when fetching tasks' + error);
       }
+    } else {
+      console.log('User is offline');
     }
   },
-  editTaskDate: async (id, assigned_date) => {
-    if (assigned_date != null) {
-      try {
-        await apiRequest<void>(`${API_URL}/${id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ assigned_date }),
-        });
-        set({
-          tasks: get().tasks.map((t) =>
-            t.id === id ? { ...t, assigned_date } : t
-          ),
-        });
-      } catch (error) {
-        console.error('Error when editing Task assigned_date' + error);
-      }
+  editTask: async (id, field, value) => {
+    if (value === null) {
+      console.error(`Field ${field} has NULL value`);
+      return;
     }
-  },
-  editTaskCompleted: async (id, completed) => {
     try {
       await apiRequest<void>(`${API_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ completed }),
+        body: JSON.stringify({ field, value }),
       });
       set({
-        tasks: get().tasks.map((t) => (t.id === id ? { ...t, completed } : t)),
+        tasks: get().tasks.map((t) =>
+          t.id === id ? { ...t, [field]: value } : t
+        ),
       });
     } catch (error) {
-      console.error('Error when editing Task completed' + error);
+      console.error(`Error when updating Task ${field}: `, error);
     }
   },
+
   addTask: async (task: NewTask) => {
     if (navigator.onLine) {
       try {
@@ -99,15 +70,17 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
         await queueWrite(API_URL, 'POST', task);
       }
     } else {
-      const optimisticTask: TaskFormData = {
+      const optimisticTask: Task = {
         ...task,
         id: Date.now(),
+        completed: false,
+        created_at: new Date().toString(),
       };
+      await queueWrite(API_URL, 'POST', task);
       set((state) => ({
-        taskFormData: [...get().taskFormData, optimisticTask],
+        tasks: [...state.tasks, optimisticTask],
         refreshTaskContent: state.refreshTaskContent + 1,
       }));
-      await queueWrite(API_URL, 'POST', task);
     }
   },
   updateTask: async (task, EditId) => {
