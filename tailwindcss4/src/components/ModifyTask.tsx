@@ -52,7 +52,9 @@ const AddTask = ({ mode, setMode }: Props) => {
     const payload = {
       ...taskFormData,
       assigned_date:
-        taskFormData.assigned_date != '' ? taskFormData.assigned_date : null,
+        taskFormData.assigned_date != ''
+          ? toDatetimeLocalString(taskFormData.assigned_date!)
+          : null,
     };
     if (mode == ComponentMode.ADD_TASK) addTask(payload);
     else if (mode == ComponentMode.EDIT_TASK) {

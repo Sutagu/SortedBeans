@@ -22,7 +22,6 @@ const TaskList = () => {
   const [input, setInput] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Fetching TaskList');
     fetchTasks();
   }, [fetchTasks, refreshTaskContent]);
 
@@ -77,6 +76,7 @@ const TaskList = () => {
               <CgPen
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
+                  setShownIndex(null);
                   SetEditId(task.id);
                   setTaskFormData({
                     title: task.title,

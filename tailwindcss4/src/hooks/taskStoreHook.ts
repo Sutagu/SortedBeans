@@ -12,7 +12,11 @@ interface TaskStore {
   addTask: (task: Omit<TaskFormData, 'id'>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
   updateTask: (task: Omit<TaskFormData, 'id'>, EditId: number) => Promise<void>;
-  editTask: (id: number, field: string, value: string | null) => Promise<void>;
+  editTask: (
+    id: number,
+    field: string,
+    value: string | boolean | null
+  ) => Promise<void>;
 }
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
@@ -21,6 +25,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   fetchTasks: async () => {
     if (navigator.onLine) {
       try {
+        console.log('Fetching Tasks');
         const data = await apiRequest<Task[]>(API_URL, { method: 'GET' });
         set({ tasks: data });
       } catch (error) {
@@ -28,54 +33,68 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       }
     } else {
       console.log('User is offline');
+      set({ tasks: get().tasks });
     }
   },
   editTask: async (id, field, value) => {
+    const editUrl = `${API_URL}/${id}`;
+    const editTaskBody = { field, value };
+    console.log(editTaskBody);
+    set({
+      tasks: get().tasks.map((t) =>
+        t.id === id ? { ...t, [field]: value } : t
+      ),
+      refreshTaskContent: get().refreshTaskContent + 1,
+    });
     if (value === null) {
       console.error(`Field ${field} has NULL value`);
       return;
     }
+    if (!navigator.onLine) {
+      await queueWrite(editUrl, 'PATCH', editTaskBody);
+      return;
+    }
     try {
-      await apiRequest<void>(`${API_URL}/${id}`, {
+      await apiRequest<void>(editUrl, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ field, value }),
-      });
-      set({
-        tasks: get().tasks.map((t) =>
-          t.id === id ? { ...t, [field]: value } : t
-        ),
+        body: JSON.stringify(editTaskBody),
       });
     } catch (error) {
       console.error(`Error when updating Task ${field}: `, error);
+      await queueWrite(editUrl, 'PATCH', editTaskBody);
     }
   },
 
   addTask: async (task: NewTask) => {
-    if (navigator.onLine) {
-      try {
-        const newTask = await apiRequest<TaskFormData>(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(task),
-        });
-        set((state) => ({
-          taskFormData: [...get().taskFormData, newTask],
-          refreshTaskContent: state.refreshTaskContent + 1,
-        }));
-      } catch (error) {
-        console.error('Error when adding Task to DB' + error);
-        await queueWrite(API_URL, 'POST', task);
-      }
-    } else {
-      const optimisticTask: Task = {
-        ...task,
-        id: Date.now(),
-        completed: false,
-        created_at: new Date().toString(),
-      };
+    const optimisticTask: Task = {
+      ...task,
+      id: Date.now(),
+      completed: false,
+      created_at: new Date().toString(),
+    };
+    if (!navigator.onLine) {
+      await queueWrite(API_URL, 'POST', task);
+      set((state) => ({
+        tasks: [...state.tasks, optimisticTask],
+        refreshTaskContent: state.refreshTaskContent + 1,
+      }));
+      return;
+    }
+    try {
+      const newTask = await apiRequest<Task>(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task),
+      });
+      set((state) => ({
+        tasks: [...get().tasks, newTask],
+        refreshTaskContent: state.refreshTaskContent + 1,
+      }));
+    } catch (error) {
+      console.error('Error when adding Task to DB' + error);
       await queueWrite(API_URL, 'POST', task);
       set((state) => ({
         tasks: [...state.tasks, optimisticTask],
@@ -84,26 +103,44 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     }
   },
   updateTask: async (task, EditId) => {
+    const updateTaskUrl = `${API_URL}/update/${EditId}`;
+    set({
+      tasks: get().tasks.filter((t) => (t.id == EditId ? task : t)),
+      refreshTaskContent: get().refreshTaskContent + 1,
+    });
+    if (!navigator.onLine) {
+      //If user is not connected write to queue then prevent attempting to server
+      await queueWrite(updateTaskUrl, 'PATCH', task);
+      return;
+    }
     try {
-      const editTask = await apiRequest<TaskFormData>(`${API_URL}/${EditId}`, {
+      await apiRequest<Task>(updateTaskUrl, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task),
       });
-      set({ taskFormData: [...get().taskFormData, editTask] });
     } catch (error) {
       console.error('Error when updating Task' + error);
+      //Write to queue if server fails and optimistically update task
+      await queueWrite(updateTaskUrl, 'PATCH', task);
     }
   },
   deleteTask: async (id) => {
+    const deleteTaskUrl = `${API_URL}/${id}`;
+
+    set({ tasks: get().tasks.filter((t) => t.id != id) });
+    if (!navigator.onLine) {
+      await queueWrite(deleteTaskUrl, 'DELETE');
+      return;
+    }
     try {
-      await apiRequest<void>(`${API_URL}/${id}`, {
+      await apiRequest<void>(deleteTaskUrl, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-      set({ tasks: get().tasks.filter((t) => t.id != id) });
     } catch (error) {
-      console.error('Error when deleting Task' + error);
+      console.error('Error when deleting Task', error);
+      await queueWrite(deleteTaskUrl, 'DELETE');
     }
   },
 }));

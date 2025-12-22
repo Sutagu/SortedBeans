@@ -14,8 +14,8 @@ const DayTasks = ({ currentDate }: Prop) => {
   const setEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
   //API Hook
-  const { tasks, fetchTasks, editTask } = useTaskStore();
-  const { categories, fetchCategories } = useCategoryStore();
+  const { tasks, editTask, refreshTaskContent } = useTaskStore();
+  const { categories } = useCategoryStore();
 
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
@@ -30,7 +30,8 @@ const DayTasks = ({ currentDate }: Prop) => {
   };
 
   const toggleCompleted = (id: number, completed: boolean) => {
-    editTask(id, 'completed', completed.toString());
+    console.log('Toggle completed');
+    editTask(id, 'completed', completed);
   };
 
   const handleEstTimeChange = (id: number, newEstTime: number) => {
@@ -39,9 +40,7 @@ const DayTasks = ({ currentDate }: Prop) => {
 
   useEffect(() => {
     console.log('Refreshing dayTasks');
-    fetchTasks();
-    fetchCategories();
-  }, [currentDate, fetchTasks, fetchCategories]);
+  }, [currentDate, tasks, categories, refreshTaskContent]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
@@ -113,7 +112,6 @@ const DayTasks = ({ currentDate }: Prop) => {
                     className="cursor-pointer text-xl self-baseline-last hover:text-purple-500 transition-colors"
                     onClick={() => {
                       toggleCompleted(task.id, !task.completed);
-                      fetchTasks();
                     }}
                   >
                     {task.completed ? <CgCheckO /> : <CgRadioCheck />}
