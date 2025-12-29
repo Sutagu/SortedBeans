@@ -21,8 +21,8 @@ const TaskList = () => {
   const [input, setInput] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    if (tasks.length == 0) fetchTasks();
+  }, [fetchTasks, tasks]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">

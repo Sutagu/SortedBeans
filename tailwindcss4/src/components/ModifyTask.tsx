@@ -3,8 +3,8 @@ import { CgTrash } from 'react-icons/cg';
 //Hooks
 import {
   useGetTaskFormData,
-  useSetSpecificTaskField,
   useReset,
+  useSetSpecificTaskField,
 } from '../utils/useStateOrganiser';
 //API hook
 import { useTaskStore } from '../hooks/taskStoreHook';
@@ -18,14 +18,15 @@ interface Props {
 }
 const AddTask = ({ mode, setMode }: Props) => {
   //State organiser
-  const setTaskField = useSetSpecificTaskField();
   const taskFormData = useGetTaskFormData();
   const ResetFormData = useReset();
+  const setTaskField = useSetSpecificTaskField();
   //Api hooks
   const { deleteTask, addTask, updateTask } = useTaskStore();
   const { categories } = useCategoryStore();
 
   function toDatetimeLocalString(isoDate: string): string {
+    console.log('IsoData function ' + isoDate);
     const date = new Date(isoDate);
     const offsetDate = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000
@@ -44,22 +45,20 @@ const AddTask = ({ mode, setMode }: Props) => {
   };
 
   const ModifyTaskFunction = async (e: React.FormEvent) => {
+    console.log('Modify task function payload :' + taskFormData.assigned_date);
     e.preventDefault();
-    console.log('Checking before payload' + taskFormData.assigned_date);
+    const getDateFormat: string | null = taskFormData.assigned_date
+      ? toDatetimeLocalString(taskFormData.assigned_date)
+      : null;
+
     const payload = {
       ...taskFormData,
-      assigned_date:
-        taskFormData.assigned_date != ''
-          ? toDatetimeLocalString(taskFormData.assigned_date!)
-          : null,
+      assigned_date: getDateFormat,
     };
     if (mode == ComponentMode.ADD_TASK) addTask(payload);
     else if (mode == ComponentMode.EDIT_TASK) {
-      console.log('User pressed update task');
-      console.log(payload);
       updateTask(payload);
     }
-    ResetFormData();
     setMode(ComponentMode.DEFAULT);
   };
   return (
@@ -142,7 +141,6 @@ const AddTask = ({ mode, setMode }: Props) => {
           }`}
           onClick={() => {
             deleteTask(taskFormData.id);
-            ResetFormData();
           }}
         />
         <button

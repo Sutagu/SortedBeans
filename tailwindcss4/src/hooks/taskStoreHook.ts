@@ -85,13 +85,15 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       return;
     }
     try {
-      const newTask = await apiRequest<Task>(API_URL, {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task),
       });
+      const { id } = await response.json();
+      optimisticTask.id = id;
       set((state) => ({
-        tasks: [...get().tasks, newTask],
+        tasks: [...get().tasks, optimisticTask],
         refreshTaskContent: state.refreshTaskContent + 1,
       }));
     } catch (error) {
