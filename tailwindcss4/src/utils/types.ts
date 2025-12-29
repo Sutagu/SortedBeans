@@ -1,5 +1,6 @@
 export interface Task {
   id: number;
+  client_id: string;
   title: string;
   completed: boolean;
   created_at: string;
@@ -15,10 +16,6 @@ export interface TaskFormData {
   category_id: number;
   assigned_date: string | null;
   description: string;
-}
-export type NewTask = Omit<TaskFormData, 'id'>;
-export interface EditingTask {
-  id: number;
 }
 export interface CategoryData {
   category_id: number;

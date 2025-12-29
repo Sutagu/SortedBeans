@@ -1,26 +1,25 @@
 import { create } from 'zustand';
 import { queueWrite } from '../db/queueCache';
 import { apiRequest } from '../utils/api';
-import type { NewTask, Task, TaskFormData } from '../utils/types';
+import type { Task, TaskFormData } from '../utils/types';
 
 const API_URL = import.meta.env.VITE_TASK_API_URL;
 interface TaskStore {
   tasks: Task[];
-  taskFormData: TaskFormData[];
   refreshTaskContent: number;
   fetchTasks: () => Promise<void>;
   addTask: (task: Omit<TaskFormData, 'id'>) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
-  updateTask: (task: Omit<TaskFormData, 'id'>, EditId: number) => Promise<void>;
+  updateTask: (task: Task) => Promise<void>;
   editTask: (
     id: number,
     field: string,
     value: string | boolean | null
   ) => Promise<void>;
+  syncTaskId: (id: number, client_id: string) => Promise<void>;
 }
 export const useTaskStore = create<TaskStore>((set, get) => ({
   tasks: [],
-  taskFormData: [],
   refreshTaskContent: 0,
   fetchTasks: async () => {
     if (navigator.onLine) {
@@ -68,15 +67,17 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     }
   },
 
-  addTask: async (task: NewTask) => {
+  addTask: async (task) => {
+    const client_id = `client-${Date.now()}`;
     const optimisticTask: Task = {
       ...task,
       id: Date.now(),
+      client_id,
       completed: false,
       created_at: new Date().toString(),
     };
     if (!navigator.onLine) {
-      await queueWrite(API_URL, 'POST', task);
+      await queueWrite(API_URL, 'POST', optimisticTask);
       set((state) => ({
         tasks: [...state.tasks, optimisticTask],
         refreshTaskContent: state.refreshTaskContent + 1,
@@ -95,18 +96,18 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       }));
     } catch (error) {
       console.error('Error when adding Task to DB' + error);
-      await queueWrite(API_URL, 'POST', task);
+      await queueWrite(API_URL, 'POST', optimisticTask);
       set((state) => ({
         tasks: [...state.tasks, optimisticTask],
         refreshTaskContent: state.refreshTaskContent + 1,
       }));
     }
   },
-  updateTask: async (task, EditId) => {
-    const updateTaskUrl = `${API_URL}/update/${EditId}`;
+  updateTask: async (task) => {
+    const updateTaskUrl = `${API_URL}/update/${task.id}`;
+    console.log(task);
     set({
-      tasks: get().tasks.filter((t) => (t.id == EditId ? task : t)),
-      refreshTaskContent: get().refreshTaskContent + 1,
+      tasks: get().tasks.map((t) => (t.id == task.id ? task : t)),
     });
     if (!navigator.onLine) {
       //If user is not connected write to queue then prevent attempting to server
@@ -142,5 +143,12 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       console.error('Error when deleting Task', error);
       await queueWrite(deleteTaskUrl, 'DELETE');
     }
+  },
+  syncTaskId: async (newId, server_client_id) => {
+    set({
+      tasks: get().tasks.map((t) =>
+        t.client_id == server_client_id ? { ...t, id: newId } : t
+      ),
+    });
   },
 }));

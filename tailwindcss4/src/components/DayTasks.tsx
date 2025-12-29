@@ -3,7 +3,7 @@ import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
 //React
 import { useEffect } from 'react';
 //Stores
-import { useSetEditId, useSetTaskFormData } from '../utils/useStateOrganiser';
+import { useSetTaskFormData } from '../utils/useStateOrganiser';
 import { useTaskStore } from '../hooks/taskStoreHook';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
 interface Prop {
@@ -11,10 +11,9 @@ interface Prop {
 }
 const DayTasks = ({ currentDate }: Prop) => {
   //Public UseState Organiser Store
-  const setEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
   //API Hook
-  const { tasks, editTask, refreshTaskContent } = useTaskStore();
+  const { tasks, editTask } = useTaskStore();
   const { categories } = useCategoryStore();
 
   const convertTime = (date: string, estTime: number) => {
@@ -40,7 +39,7 @@ const DayTasks = ({ currentDate }: Prop) => {
 
   useEffect(() => {
     console.log('Refreshing dayTasks');
-  }, [currentDate, tasks, categories, refreshTaskContent]);
+  }, [currentDate, tasks]);
 
   const colours = ['#2196A8', '#D6453D', '#F5A623', '#3FA34D'];
 
@@ -65,14 +64,7 @@ const DayTasks = ({ currentDate }: Prop) => {
                 <CgPen
                   className="hover:text-accent hover:cursor-pointer text-xl"
                   onClick={() => {
-                    setEditId(task.id);
-                    setTaskFormData({
-                      title: task.title,
-                      est_time: task.est_time,
-                      category_id: task.category_id,
-                      assigned_date: task.assigned_date,
-                      description: task.description || '',
-                    });
+                    setTaskFormData(task);
                   }}
                 />
 
@@ -104,7 +96,7 @@ const DayTasks = ({ currentDate }: Prop) => {
                 <div className="flex justify-between pt-2">
                   <span className="font-light max-w-9/10 self-baseline-last">
                     {categories.find(
-                      (cat) => cat.category_id == task.category_id
+                      (cat) => cat.category_id === task.category_id
                     )?.name || 'Unassigned category'}{' '}
                     : {task.description || 'no description'}
                   </span>

@@ -3,9 +3,7 @@ import { CgTrash } from 'react-icons/cg';
 //Hooks
 import {
   useGetTaskFormData,
-  useSetTaskField,
-  useGetEditId,
-  useSetEditId,
+  useSetSpecificTaskField,
   useReset,
 } from '../utils/useStateOrganiser';
 //API hook
@@ -20,10 +18,8 @@ interface Props {
 }
 const AddTask = ({ mode, setMode }: Props) => {
   //State organiser
-  const setTaskField = useSetTaskField();
+  const setTaskField = useSetSpecificTaskField();
   const taskFormData = useGetTaskFormData();
-  const EditId = useGetEditId();
-  const setEditId = useSetEditId();
   const ResetFormData = useReset();
   //Api hooks
   const { deleteTask, addTask, updateTask } = useTaskStore();
@@ -49,6 +45,7 @@ const AddTask = ({ mode, setMode }: Props) => {
 
   const ModifyTaskFunction = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Checking before payload' + taskFormData.assigned_date);
     const payload = {
       ...taskFormData,
       assigned_date:
@@ -58,9 +55,11 @@ const AddTask = ({ mode, setMode }: Props) => {
     };
     if (mode == ComponentMode.ADD_TASK) addTask(payload);
     else if (mode == ComponentMode.EDIT_TASK) {
-      updateTask(payload, EditId);
-      setEditId(0);
+      console.log('User pressed update task');
+      console.log(payload);
+      updateTask(payload);
     }
+    ResetFormData();
     setMode(ComponentMode.DEFAULT);
   };
   return (
@@ -142,8 +141,8 @@ const AddTask = ({ mode, setMode }: Props) => {
             mode == ComponentMode.EDIT_TASK ? 'block' : 'hidden'
           }`}
           onClick={() => {
-            deleteTask(EditId);
-            setEditId(0);
+            deleteTask(taskFormData.id);
+            ResetFormData();
           }}
         />
         <button

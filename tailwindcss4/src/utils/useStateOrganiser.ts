@@ -1,12 +1,15 @@
 import { create } from 'zustand';
-import type { TaskFormData, EditingTask, CategoryData } from './types';
+import type { CategoryData, Task } from './types';
 //Default values
-const defaultTaskFormData: TaskFormData = {
+const defaultTaskFormData: Task = {
+  id: -1,
   title: '',
   est_time: 0,
   category_id: 1,
   assigned_date: '',
   description: '',
+  completed: false,
+  created_at: '',
 };
 const defaultCategory: CategoryData = {
   category_id: 0,
@@ -15,20 +18,17 @@ const defaultCategory: CategoryData = {
 
 interface AppState {
   //Interfaces
-  taskFormData: TaskFormData;
-  editTask: EditingTask;
+  taskFormData: Task;
   categoryData: CategoryData;
   uiTheme: string;
 
   //TaskFormData functons
-  setTaskFormData: (data: TaskFormData) => void;
-  setTaskField: <K extends keyof TaskFormData>(
+  setTaskFormData: (data: Task) => void;
+  setSpecificTaskField: <K extends keyof Task>(
     field: K,
-    value: TaskFormData[K]
+    value: Task[K]
   ) => void;
 
-  //editTask functions
-  setEditId: (newId: number) => void;
   reset: () => void;
 
   //SetCategory functions
@@ -39,28 +39,21 @@ interface AppState {
 
 export const useStateOrganiser = create<AppState>((set) => ({
   taskFormData: defaultTaskFormData,
-  editTask: { id: 0 },
   uiTheme: 'default',
   categoryData: defaultCategory,
 
   //TaskFormData functions
   setTaskFormData: (data) => set({ taskFormData: data }),
-  setTaskField: (field, value) =>
+  setSpecificTaskField: (field, value) =>
     set((state) => ({
       taskFormData: { ...state.taskFormData, [field]: value },
     })),
 
-  //Edit Task functions
-  setEditId: (newId) =>
-    set((state) => ({
-      editTask: { ...state.editTask, id: newId },
-    })),
   //Set category data
   setCategoryData: (data) => set({ categoryData: data }),
   //reset all
   reset: () => {
     set({ taskFormData: defaultTaskFormData });
-    set({ editTask: { id: 0 } });
   },
   //setUiTheme function
   setTheme: (newTheme) => set({ uiTheme: newTheme }),
@@ -71,12 +64,8 @@ export const useSetTaskFormData = () =>
 export const useGetTaskFormData = () =>
   useStateOrganiser((state) => state.taskFormData);
 
-export const useSetTaskField = () =>
-  useStateOrganiser((state) => state.setTaskField);
-
-export const useGetEditId = () =>
-  useStateOrganiser((state) => state.editTask.id);
-export const useSetEditId = () => useStateOrganiser((state) => state.setEditId);
+export const useSetSpecificTaskField = () =>
+  useStateOrganiser((state) => state.setSpecificTaskField);
 
 export const useReset = () => useStateOrganiser((state) => state.reset);
 

@@ -9,7 +9,8 @@ import { ComponentMode } from '../utils/componentMode';
 import {
   useGetCategoryData,
   useSetCategoryData,
-  useGetEditId,
+  useGetTaskFormData,
+  useReset,
 } from '../utils/useStateOrganiser';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
 
@@ -22,16 +23,16 @@ const TaskCategorySelector = () => {
   //Public variables
   const category = useGetCategoryData();
   const setCategory = useSetCategoryData();
-  const EditId = useGetEditId();
-
+  const taskFormData = useGetTaskFormData();
+  const resetFormData = useReset();
   useEffect(() => {
     if (categories.length == 0) {
       console.log('Fetching Categories');
       fetchCategories();
     }
-    if (EditId != 0) setMode(ComponentMode.EDIT_TASK);
+    if (taskFormData.id != -1) setMode(ComponentMode.EDIT_TASK);
     else setMode(ComponentMode.DEFAULT);
-  }, [EditId, categories.length, fetchCategories]);
+  }, [taskFormData.id, categories, fetchCategories]);
   return (
     <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -96,11 +97,12 @@ const TaskCategorySelector = () => {
             className={`cursor-pointer hover:text-accent transition-colors ${
               mode == ComponentMode.ADD_TASK ? 'text-accent' : ''
             }`}
-            onClick={() =>
-              mode != ComponentMode.ADD_TASK
-                ? setMode(ComponentMode.ADD_TASK)
-                : setMode(ComponentMode.DEFAULT)
-            }
+            onClick={() => {
+              if (mode != ComponentMode.ADD_TASK)
+                setMode(ComponentMode.ADD_TASK);
+              else setMode(ComponentMode.DEFAULT);
+              resetFormData();
+            }}
           />
         </div>
       </div>

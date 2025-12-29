@@ -75,18 +75,35 @@ router.patch(
 );
 
 router.post('/', async (req: Request, res: Response): Promise<any> => {
-  const { title, est_time, category_id, assigned_date, description } = req.body;
+  const {
+    title,
+    est_time,
+    category_id,
+    assigned_date,
+    description,
+    client_id,
+  } = req.body;
 
   if (!title) return res.status(400).json({ error: 'Title is required' });
-
+  const checkClientId = !client_id ? 'client-' : client_id;
+  console.log(checkClientId);
   try {
-    const result = await pool.query(
-      `INSERT INTO tasks (title, completed, est_time, category_id, assigned_date, description)
-      VALUES($1, $2, $3, $4, $5, $6)
-      RETURNING *`,
-      [title, false, est_time, category_id, assigned_date, description]
+    const { rows } = await pool.query(
+      `INSERT INTO tasks (title, completed, est_time, category_id, assigned_date, description, client_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id, client_id`,
+      [
+        title,
+        false,
+        est_time,
+        category_id,
+        assigned_date,
+        description,
+        checkClientId,
+      ]
     );
-    res.status(201).json(result.rows[0]);
+    const { id, client_id } = rows[0];
+    res.status(201).json({ id: id, client_id: client_id });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Database Error' });

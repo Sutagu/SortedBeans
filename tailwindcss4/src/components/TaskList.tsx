@@ -5,25 +5,24 @@ import { useEffect, useState } from 'react';
 import { useTaskStore } from '../hooks/taskStoreHook';
 import {
   useSetTaskFormData,
-  useSetEditId,
   useGetCategoryData,
+  useReset,
 } from '../utils/useStateOrganiser';
 
 const TaskList = () => {
   //Public Use State Organiser Store
-  const SetEditId = useSetEditId();
   const setTaskFormData = useSetTaskFormData();
   const categoryId = useGetCategoryData().category_id;
+  const resetFormData = useReset();
   //Api fetch
-  const { tasks, fetchTasks, deleteTask, editTask, refreshTaskContent } =
-    useTaskStore();
+  const { tasks, fetchTasks, deleteTask, editTask } = useTaskStore();
   //Private Variables
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks, refreshTaskContent]);
+  }, [fetchTasks]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">
@@ -68,7 +67,10 @@ const TaskList = () => {
                 className="bg-accent-dark shrink w-1/2  rounded-lg p-2"
               />
               <button
-                onClick={() => editTask(task.id, 'assigned_date', input)}
+                onClick={() => {
+                  editTask(task.id, 'assigned_date', input);
+                  resetFormData();
+                }}
                 className="bg-white/20 rounded-lg p-2 hover:bg-[#76b6ce] transition-colors flex-none"
               >
                 Confirm
@@ -76,15 +78,7 @@ const TaskList = () => {
               <CgPen
                 className="bg-white/20 rounded-lg text-4xl p-2 hover:bg-accent transition-colors flex-none"
                 onClick={() => {
-                  setShownIndex(null);
-                  SetEditId(task.id);
-                  setTaskFormData({
-                    title: task.title,
-                    est_time: task.est_time,
-                    category_id: task.category_id,
-                    assigned_date: task.assigned_date,
-                    description: task.description || '',
-                  });
+                  setTaskFormData(task);
                 }}
               />
               <CgTrash
