@@ -1,7 +1,8 @@
 //Icons
 import { CgRadioCheck, CgCheckO, CgPen } from 'react-icons/cg';
 //React
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import debounce from 'lodash/debounce';
 //Stores
 import { useSetTaskFormData } from '../utils/useStateOrganiser';
 import { useTaskStore } from '../hooks/taskStoreHook';
@@ -28,13 +29,24 @@ const DayTasks = ({ currentDate }: Prop) => {
     };
   };
 
+  const [localEstTime, setLocalEstTime] = useState<Record<number, string>>({});
   const toggleCompleted = (id: number, completed: boolean) => {
     console.log('Toggle completed');
     editTask(id, 'completed', completed);
   };
 
-  const handleEstTimeChange = (id: number, newEstTime: number) => {
-    editTask(id, 'est_time', newEstTime.toString());
+  const debouncedHandleEstTimeChange = debounce(
+    (id: number, newEstTime: string) => {
+      editTask(id, 'est_time', newEstTime);
+    },
+    1500
+  );
+
+  const handleInputEstTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value.toString();
+    const id = Number(e.target.id);
+    setLocalEstTime((prev) => ({ ...prev, [id]: newValue }));
+    debouncedHandleEstTimeChange(id, newValue);
   };
 
   useEffect(() => {
@@ -82,12 +94,13 @@ const DayTasks = ({ currentDate }: Prop) => {
                   </span>
                   <span className="bg-black/20 rounded-md self-start flex gap-1 p-1">
                     <input
+                      id={task.id.toString()}
                       type="number"
                       aria-label="est minutes to complete task"
-                      value={task.est_time}
-                      onChange={(e) =>
-                        handleEstTimeChange(task.id, Number(e.target.value))
-                      }
+                      value={localEstTime[task.id] ?? task.est_time}
+                      min={0}
+                      max={1440}
+                      onChange={handleInputEstTimeChange}
                       className="field-sizing-content hover:text-gray-light"
                     />
                     <p>Min</p>
