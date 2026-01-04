@@ -11,6 +11,7 @@ import { useTaskStore } from '../hooks/taskStoreHook';
 import { useCategoryStore } from '../hooks/categoryStoreHook';
 import { ComponentMode } from '../utils/componentMode';
 import type React from 'react';
+import { useState } from 'react';
 //Prop
 interface Props {
   mode: ComponentMode;
@@ -25,13 +26,20 @@ const AddTask = ({ mode, setMode }: Props) => {
   const { deleteTask, addTask, updateTask } = useTaskStore();
   const { categories } = useCategoryStore();
 
-  function toDatetimeLocalString(isoDate: string): string {
-    console.log('IsoData function ' + isoDate);
+  //Local dateString
+  const [localDate, setLocalDate] = useState<string>();
+  function toDatetimeLocalString(isoDate: string | null): string {
+    if (isoDate == null || isoDate == '') {
+      setLocalDate('');
+      return '';
+    }
     const date = new Date(isoDate);
     const offsetDate = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000
     );
-    return offsetDate.toISOString().slice(0, 16);
+    const result = offsetDate.toISOString().slice(0, 16);
+    setLocalDate(result);
+    return result;
   }
   const handleChange = (
     e: React.ChangeEvent<
@@ -39,13 +47,14 @@ const AddTask = ({ mode, setMode }: Props) => {
     >
   ) => {
     const { name, value } = e.target;
+    console.log(name + ' with the value of ' + value);
+    if (name === 'assigned_date') toDatetimeLocalString(value);
     const numericFields = new Set(['est_time', 'category_id']);
     const newValue = numericFields.has(name) ? Number(value) : value;
     setTaskField(name as keyof typeof taskFormData, newValue);
   };
 
   const ModifyTaskFunction = async (e: React.FormEvent) => {
-    console.log('Modify task function payload :' + taskFormData.assigned_date);
     e.preventDefault();
     const getDateFormat: string | null = taskFormData.assigned_date
       ? toDatetimeLocalString(taskFormData.assigned_date)
@@ -60,6 +69,7 @@ const AddTask = ({ mode, setMode }: Props) => {
       updateTask(payload);
     }
     setMode(ComponentMode.DEFAULT);
+    ResetFormData();
   };
   return (
     <form
@@ -84,11 +94,7 @@ const AddTask = ({ mode, setMode }: Props) => {
         <input
           type="datetime-local"
           name="assigned_date"
-          value={
-            taskFormData.assigned_date
-              ? toDatetimeLocalString(taskFormData.assigned_date)
-              : ''
-          }
+          value={localDate ?? toDatetimeLocalString(taskFormData.assigned_date)}
           onChange={handleChange}
           className="bg-black/20 w-4/10 rounded-lg p-2 text-gray-light"
         />

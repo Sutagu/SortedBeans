@@ -16,7 +16,8 @@ const DayTasks = ({ currentDate }: Prop) => {
   //API Hook
   const { tasks, editTask } = useTaskStore();
   const { categories } = useCategoryStore();
-
+  //Local variable
+  const [localEstTime, setLocalEstTime] = useState<Record<number, string>>({});
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
     const end = new Date(start.getTime() + estTime * 60000);
@@ -29,7 +30,6 @@ const DayTasks = ({ currentDate }: Prop) => {
     };
   };
 
-  const [localEstTime, setLocalEstTime] = useState<Record<number, string>>({});
   const toggleCompleted = (id: number, completed: boolean) => {
     console.log('Toggle completed');
     editTask(id, 'completed', completed);
