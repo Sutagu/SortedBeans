@@ -2,6 +2,7 @@ import { useState, Suspense, lazy } from 'react';
 //Icons
 import { CgSupport } from 'react-icons/cg'; //Settings icon
 //Components In order
+import { signInWithGithub } from '../utils/supabase';
 import portraits from '../assets/images/portraits/portraits';
 const Clock = lazy(() => import('./Clock'));
 const GitHubCalendar = lazy(() => import('react-github-calendar'));
@@ -10,6 +11,7 @@ const PortraitMap = lazy(() => import('./UserPortraits'));
 const ThemePallete = lazy(() => import('./ThemePalette'));
 
 const UserComponent = () => {
+  const [username, setUserName] = useState<string>('');
   const [settings, setSettings] = useState(false);
   const [calendarTheme, setCalendarTheme] = useState('dark');
   const [portraitPath, setPortraitPath] = useState<string>(
@@ -67,26 +69,30 @@ const UserComponent = () => {
         }`}
       >
         <Suspense fallback={<div>Loading Git Contribution Graph...</div>}>
-          <GitHubCalendar
-            username="Sutagu"
-            theme={{
-              dark: [
-                'var(--color-primary)',
-                'var(--color-blend)',
-                'var(--color-blend)',
-                'var(--color-blend)',
-                'var(--color-blend)',
-              ],
-              light: [
-                'var(--color-blend)',
-                'var(--color-accent)',
-                'var(--color-accent)',
-                'var(--color-accent)',
-                'var(--color-accent)',
-              ],
-            }}
-            colorScheme={calendarTheme as 'dark' | 'light' | undefined}
-          />
+          {username == '' ? (
+            <button onClick={signInWithGithub}>Sign in with Github</button>
+          ) : (
+            <GitHubCalendar
+              username={username!}
+              theme={{
+                dark: [
+                  'var(--color-primary)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                  'var(--color-blend)',
+                ],
+                light: [
+                  'var(--color-blend)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                  'var(--color-accent)',
+                ],
+              }}
+              colorScheme={calendarTheme as 'dark' | 'light' | undefined}
+            />
+          )}
         </Suspense>
       </span>
     </div>
