@@ -3,7 +3,8 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 //Footer icons (for mobile)
 import { CgMenu, CgHome, CgProfile } from 'react-icons/cg';
 //States Tracker
-import { useStateOrganiser } from './utils/useStateOrganiser';
+import { useGitHubUser, useStateOrganiser } from './utils/useStateOrganiser';
+import { supabase } from './utils/supabase';
 //Offline Cache sync
 import { enableOfflineSync } from './utils/enableOfflineSync';
 //Top left
@@ -21,13 +22,24 @@ enableOfflineSync();
 
 function App() {
   //UseEffects UseStates
+  const setGitHubUser = useGitHubUser();
   const theme = useStateOrganiser((state) => state.uiTheme);
   const [footerState, setFooterState] = useState('calendar');
 
   useEffect(() => {
+    async function initAuth() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setGitHubUser(session.user);
+        console.log(session.user);
+      }
+    }
+    initAuth();
     //Sets theme of the app, refreshes when theme is changed
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+  }, [theme, setGitHubUser]);
 
   return (
     <div className="main-container transition-colors">
@@ -70,7 +82,7 @@ function App() {
         }`}
       >
         <div className="innerContainer flex flex-col max-lg:w-full! lg:pb-[10%] lg:bg-primary/70!">
-          <p className="max-lg:hidden text-left bg-accent-dark lg:rounded-t-xl p-2 h-1/20 text-sm">
+          <p className="max-lg:hidden text-left bg-accent-dark lg:rounded-t-xl p-2 h-1/20 text-xs xl:text-sm">
             Create Delete Assign your Tasks!
           </p>
           <TaskCategorySelector />

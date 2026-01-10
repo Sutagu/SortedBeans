@@ -113,6 +113,7 @@
 .responsive-text{
   @apply text-sm md:text-base 2xl:text-[100%];
 }
+
 .responsive-container{
   @apply max-lg:h-8/10 lg:h-[85%] lg:max-h-[85%] overflow-hidden justify-items-center lg:items-center lg:self-center;
 }
@@ -127,9 +128,11 @@
   overflow: hidden !important;
   display: flex;
   justify-content: end;
-  
+  height: inherit;
 }
-
+.react-activity-calendar__calendar, .react-activity-calendar{
+  height: 100% !important;
+}
 .react-activity-calendar__legend-month{
   @apply text-xs sm:max-lg:text-sm 2xl:text-[110%];
 }

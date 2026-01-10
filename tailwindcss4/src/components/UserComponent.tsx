@@ -1,9 +1,12 @@
 import { useState, Suspense, lazy } from 'react';
 //Icons
 import { CgSupport } from 'react-icons/cg'; //Settings icon
-//Components In order
+//Components
 import { signInWithGithub } from '../utils/supabase';
+import { useGetUser } from '../utils/useStateOrganiser';
 import portraits from '../assets/images/portraits/portraits';
+import GitIcon from '../assets/images/logo/github-light.webp';
+
 const Clock = lazy(() => import('./Clock'));
 const GitHubCalendar = lazy(() => import('react-github-calendar'));
 const WeatherTemp = lazy(() => import('./WeatherTemp'));
@@ -11,14 +14,15 @@ const PortraitMap = lazy(() => import('./UserPortraits'));
 const ThemePallete = lazy(() => import('./ThemePalette'));
 
 const UserComponent = () => {
-  const [username, setUserName] = useState<string>('');
+  const user = useGetUser();
   const [settings, setSettings] = useState(false);
   const [calendarTheme, setCalendarTheme] = useState('dark');
   const [portraitPath, setPortraitPath] = useState<string>(
     portraits['./defaultGuy.webp']
   );
+
   return (
-    <div className="innerContainer h-7/12! lg:p-[5%] lg:bg-primary/70!">
+    <div className="innerContainer flex flex-col gap-2 h-7/12! lg:p-[5%] lg:bg-primary/70!">
       <span className="flex justify-between items-center shrink-0">
         <div className="responsive-text">SORTED BEANS</div>
         <CgSupport
@@ -64,16 +68,22 @@ const UserComponent = () => {
       </span>
 
       <span
-        className={`bg-accent-dark text-text grow p-2 rounded-xl shadow-xl ${
+        className={`text-text p-2 lg:grow lg:h-2 rounded-xl justify-center items-center ${
           settings ? 'hidden' : 'flex'
-        }`}
+        } ${user == null ? 'bg-none' : 'bg-accent-dark'}`}
       >
         <Suspense fallback={<div>Loading Git Contribution Graph...</div>}>
-          {username == '' ? (
-            <button onClick={signInWithGithub}>Sign in with Github</button>
+          {user == null ? (
+            <button
+              className="bg-accent w-full shadow-xl p-4 rounded-xl cursor-pointer flex justify-center items-center gap-2"
+              onClick={signInWithGithub}
+            >
+              Sign in with Github
+              <img className="size-5" src={GitIcon} alt="GitHub Icon" />
+            </button>
           ) : (
             <GitHubCalendar
-              username={username!}
+              username={user.user_metadata.user_name}
               theme={{
                 dark: [
                   'var(--color-primary)',

@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 import type { CategoryData, Task } from './types';
+import type { User } from '@supabase/supabase-js';
 //Default values
 const defaultTaskFormData: Task = {
   id: -1,
+  client_id: '',
   title: '',
   est_time: 0,
   category_id: 1,
@@ -21,7 +23,7 @@ interface AppState {
   taskFormData: Task;
   categoryData: CategoryData;
   uiTheme: string;
-
+  gitHubUser: User | null;
   //TaskFormData functons
   setTaskFormData: (data: Task) => void;
   setSpecificTaskField: <K extends keyof Task>(
@@ -35,13 +37,15 @@ interface AppState {
   setCategoryData: (data: CategoryData) => void;
   //Theme functions
   setTheme: (newTheme: string) => void;
+  //GithubUser
+  setGitHubUser: (user: User | null) => void;
 }
 
 export const useStateOrganiser = create<AppState>((set) => ({
   taskFormData: defaultTaskFormData,
   uiTheme: 'default',
   categoryData: defaultCategory,
-
+  gitHubUser: null,
   //TaskFormData functions
   setTaskFormData: (data) => set({ taskFormData: data }),
   setSpecificTaskField: (field, value) =>
@@ -57,6 +61,9 @@ export const useStateOrganiser = create<AppState>((set) => ({
   },
   //setUiTheme function
   setTheme: (newTheme) => set({ uiTheme: newTheme }),
+
+  //User auth
+  setGitHubUser: (user) => set({ gitHubUser: user }),
 }));
 
 export const useSetTaskFormData = () =>
@@ -75,3 +82,7 @@ export const useGetCategoryData = () =>
   useStateOrganiser((state) => state.categoryData);
 
 export const useSetTheme = () => useStateOrganiser((state) => state.setTheme);
+
+export const useGitHubUser = () =>
+  useStateOrganiser((state) => state.setGitHubUser);
+export const useGetUser = () => useStateOrganiser((state) => state.gitHubUser);
