@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 //Stores
 import { useSetTaskFormData } from '../utils/useStateOrganiser';
-import { useTaskStore } from '../hooks/taskStoreHook';
-import { useCategoryStore } from '../hooks/categoryStoreHook';
+import { useTaskStore } from '../postgresStore/taskStoreHook';
+import { useCategoryStore } from '../postgresStore/categoryStoreHook';
 interface Prop {
   currentDate: string;
 }

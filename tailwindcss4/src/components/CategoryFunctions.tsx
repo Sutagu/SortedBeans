@@ -11,12 +11,13 @@ import {
   useSetCategoryData,
   useGetTaskFormData,
   useReset,
+  useStateOrganiser,
 } from '../utils/useStateOrganiser';
-import { useCategoryStore } from '../hooks/categoryStoreHook';
-
+import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
 const TaskCategorySelector = () => {
   //API Hook
-  const { categories, fetchCategories, deleteCategory } = useCategoryStore();
+  const { categories, FetchCategories, DeleteCategory } =
+    UseSupabaseCategoryStore();
   //Private variables
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -25,14 +26,20 @@ const TaskCategorySelector = () => {
   const setCategory = useSetCategoryData();
   const taskFormData = useGetTaskFormData();
   const resetFormData = useReset();
+  const { gitHubUser } = useStateOrganiser();
   useEffect(() => {
     if (categories.length == 0) {
       console.log('Fetching Categories');
-      fetchCategories();
+      FetchCategories();
     }
     if (taskFormData.id != -1) setMode(ComponentMode.EDIT_TASK);
     else setMode(ComponentMode.DEFAULT);
-  }, [taskFormData.id, categories, fetchCategories]);
+  }, [
+    taskFormData.id,
+    categories,
+    FetchCategories,
+    gitHubUser?.user_metadata.user_name,
+  ]);
   return (
     <div className="flex-col flex justify-center text-text">
       <div className="p-2 w-full flex items-center justify-between text-lg">
@@ -68,7 +75,7 @@ const TaskCategorySelector = () => {
               mode == ComponentMode.DELETE_CATEGORY ? 'block' : 'hidden'
             }`}
             onClick={() => {
-              deleteCategory(category.category_id);
+              DeleteCategory(category.category_id);
               setMode(ComponentMode.DEFAULT);
             }}
           >

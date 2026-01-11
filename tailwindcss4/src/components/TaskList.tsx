@@ -2,7 +2,7 @@
 import { CgMenu, CgPen, CgTrash, CgMore } from 'react-icons/cg';
 
 import { useEffect, useState } from 'react';
-import { useTaskStore } from '../hooks/taskStoreHook';
+import { UseSupabaseTaskStore } from '../supabaseStore/taskApi';
 import {
   useSetTaskFormData,
   useGetCategoryData,
@@ -15,14 +15,14 @@ const TaskList = () => {
   const categoryId = useGetCategoryData().category_id;
   const resetFormData = useReset();
   //Api fetch
-  const { tasks, fetchTasks, deleteTask, editTask } = useTaskStore();
+  const { tasks, fetchTasks, deleteTask, editTask } = UseSupabaseTaskStore();
   //Private Variables
   const [shownIndex, setShownIndex] = useState<number | null>(null);
   const [input, setInput] = useState<string | null>(null);
 
   useEffect(() => {
-    if (tasks.length == 0) fetchTasks();
-  }, [fetchTasks, tasks]);
+    fetchTasks();
+  }, [fetchTasks]);
 
   return (
     <ul className="taskListContainer h-9/10 max-lg:bg-dark! bg-primary overflow-y-scroll shrink p-5">

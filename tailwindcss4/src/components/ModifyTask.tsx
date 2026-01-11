@@ -7,8 +7,8 @@ import {
   useSetSpecificTaskField,
 } from '../utils/useStateOrganiser';
 //API hook
-import { useTaskStore } from '../hooks/taskStoreHook';
-import { useCategoryStore } from '../hooks/categoryStoreHook';
+import { UseSupabaseTaskStore } from '../supabaseStore/taskApi';
+import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
 import { ComponentMode } from '../utils/componentMode';
 import type React from 'react';
 import { useState } from 'react';
@@ -23,8 +23,8 @@ const AddTask = ({ mode, setMode }: Props) => {
   const ResetFormData = useReset();
   const setTaskField = useSetSpecificTaskField();
   //Api hooks
-  const { deleteTask, addTask, updateTask } = useTaskStore();
-  const { categories } = useCategoryStore();
+  const { deleteTask, addTask, updateTask } = UseSupabaseTaskStore();
+  const { categories } = UseSupabaseCategoryStore();
 
   //Local dateString
   const [localDate, setLocalDate] = useState<string>();
@@ -62,7 +62,7 @@ const AddTask = ({ mode, setMode }: Props) => {
 
     const payload = {
       ...taskFormData,
-      assigned_date: getDateFormat,
+      assigned_date: getDateFormat == '' ? null : getDateFormat,
     };
     if (mode == ComponentMode.ADD_TASK) addTask(payload);
     else if (mode == ComponentMode.EDIT_TASK) {

@@ -1,5 +1,5 @@
 import { appCache } from '../db/dexieCache';
-import { useTaskStore } from '../hooks/taskStoreHook';
+import { useTaskStore } from '../postgresStore/taskStoreHook';
 export async function queueWrite(url: string, method: string, body?: unknown) {
   await appCache.pendingWrites.add({ url, method, body });
   console.log('Queued write: ', { url, method, body });
