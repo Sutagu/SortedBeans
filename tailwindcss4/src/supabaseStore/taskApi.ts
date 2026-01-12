@@ -7,13 +7,13 @@ interface SupabaseTaskStore {
   refreshTaskContent: number;
 
   fetchTasks: () => Promise<void>;
-  addTask: (task: Omit<TaskFormData, 'id'>) => Promise<void>;
+  addTask: (task: TaskFormData) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
   updateTask: (task: Task) => Promise<void>;
   editTask: (
     id: number,
     field: string,
-    value: string | boolean | null
+    value: string | boolean | null | number
   ) => Promise<void>;
   syncTaskId: (id: number, client_id: string) => Promise<void>;
 }
@@ -40,18 +40,22 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
   addTask: async (task) => {
     const client_id = crypto.randomUUID();
     const { id, ...stripData } = task;
-    const sanitizedData = Object.fromEntries(
-      Object.entries(stripData).map(([key, value]) => [
-        key,
-        value === '' ? null : value,
-      ])
-    );
-
+    const optimisticTask: Task = {
+      ...task,
+      id: Date.now(),
+      client_id,
+      completed: false,
+      created_at: new Date().toString(),
+    };
+    set((state) => ({
+      tasks: [...state.tasks, optimisticTask],
+    }));
     const { data, error } = await supabase
       .from('tasks')
       .insert({
-        ...sanitizedData,
+        ...stripData,
         client_id,
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -72,12 +76,13 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
     }
   },
   updateTask: async (task) => {
+    const { id, ...stripData } = task;
     set((state) => ({
       tasks: state.tasks.map((t) => (t.id === task.id ? task : t)),
     }));
     const { error } = await supabase
       .from('tasks')
-      .update(task)
+      .update(stripData)
       .eq('id', task.id);
 
     if (error) {

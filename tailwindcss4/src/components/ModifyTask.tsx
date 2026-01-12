@@ -47,7 +47,6 @@ const AddTask = ({ mode, setMode }: Props) => {
     >
   ) => {
     const { name, value } = e.target;
-    console.log(name + ' with the value of ' + value);
     if (name === 'assigned_date') toDatetimeLocalString(value);
     const numericFields = new Set(['est_time', 'category_id']);
     const newValue = numericFields.has(name) ? Number(value) : value;

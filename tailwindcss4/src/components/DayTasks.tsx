@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import debounce from 'lodash/debounce';
 //Stores
 import { useSetTaskFormData } from '../utils/useStateOrganiser';
-import { useTaskStore } from '../postgresStore/taskStoreHook';
-import { useCategoryStore } from '../postgresStore/categoryStoreHook';
+import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
+import { UseSupabaseTaskStore } from '../supabaseStore/taskApi';
 interface Prop {
   currentDate: string;
 }
@@ -14,10 +14,10 @@ const DayTasks = ({ currentDate }: Prop) => {
   //Public UseState Organiser Store
   const setTaskFormData = useSetTaskFormData();
   //API Hook
-  const { tasks, editTask } = useTaskStore();
-  const { categories } = useCategoryStore();
+  const { tasks, editTask } = UseSupabaseTaskStore();
+  const { categories } = UseSupabaseCategoryStore();
   //Local variable
-  const [localEstTime, setLocalEstTime] = useState<Record<number, string>>({});
+  const [localEstTime, setLocalEstTime] = useState<Record<number, number>>({});
   const convertTime = (date: string, estTime: number) => {
     const start = new Date(date);
     const end = new Date(start.getTime() + estTime * 60000);
@@ -31,19 +31,18 @@ const DayTasks = ({ currentDate }: Prop) => {
   };
 
   const toggleCompleted = (id: number, completed: boolean) => {
-    console.log('Toggle completed');
     editTask(id, 'completed', completed);
   };
 
   const debouncedHandleEstTimeChange = debounce(
-    (id: number, newEstTime: string) => {
+    (id: number, newEstTime: number) => {
       editTask(id, 'est_time', newEstTime);
     },
     1500
   );
 
   const handleInputEstTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value.toString();
+    const newValue = Number(e.target.value);
     const id = Number(e.target.id);
     setLocalEstTime((prev) => ({ ...prev, [id]: newValue }));
     debouncedHandleEstTimeChange(id, newValue);
