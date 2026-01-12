@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
+//import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
 import { ComponentMode } from '../utils/componentMode';
 interface Props {
   mode: ComponentMode;
@@ -7,7 +7,7 @@ interface Props {
 }
 const ModifyCategory = ({ mode, setMode }: Props) => {
   //API Hook
-  const { AddCategories } = UseSupabaseCategoryStore();
+  // const { AddCategories } = UseSupabaseCategoryStore();
   //Private variables
   const [input, setInput] = useState('');
   return (
@@ -28,7 +28,7 @@ const ModifyCategory = ({ mode, setMode }: Props) => {
       <button
         className="w-3/10 text-sm accent rounded-md py-2 hover:font-semibold hover:cursor-pointer transition-colors "
         onClick={() => {
-          AddCategories(input);
+          //AddCategories(input);
           setMode(ComponentMode.DEFAULT);
         }}
       >

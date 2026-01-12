@@ -3,7 +3,6 @@ import { CgRemove, CgAdd, CgPen } from 'react-icons/cg';
 import { useEffect, useState, useRef, lazy, Suspense } from 'react';
 //Components
 const ModifyTask = lazy(() => import('./ModifyTask'));
-const ModifyCategory = lazy(() => import('./ModifyCategory'));
 //Hooks and utils
 import { ComponentMode } from '../utils/componentMode';
 import {
@@ -16,8 +15,7 @@ import {
 import { UseSupabaseCategoryStore } from '../supabaseStore/categoryApi';
 const TaskCategorySelector = () => {
   //API Hook
-  const { categories, FetchCategories, DeleteCategory } =
-    UseSupabaseCategoryStore();
+  const { categories, FetchCategories } = UseSupabaseCategoryStore();
   //Private variables
   const [mode, setMode] = useState<ComponentMode>(ComponentMode.DEFAULT);
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -71,11 +69,9 @@ const TaskCategorySelector = () => {
         </select>
         <div className=" text-xl flex items-center justify-end-safe gap-1">
           <p
-            className={`text-xs text-nowrap hover:text-red-400 cursor-pointer ${
-              mode == ComponentMode.DELETE_CATEGORY ? 'block' : 'hidden'
-            }`}
+            className={`hidden text-xs text-nowrap hover:text-red-400 cursor-pointer`}
             onClick={() => {
-              DeleteCategory(category.category_id);
+              //DeleteCategory(category.category_id);
               setMode(ComponentMode.DEFAULT);
             }}
           >
@@ -83,18 +79,20 @@ const TaskCategorySelector = () => {
           </p>
           <CgRemove
             title="Delete Current Category"
-            className="cursor-pointer hover:text-accent transition-colors"
+            className="hidden cursor-pointer hover:text-accent transition-colors"
             onClick={() =>
+              //Remove functionality not in use, to keep coherent data and streamline cascading of data
               mode != ComponentMode.DELETE_CATEGORY
                 ? setMode(ComponentMode.DELETE_CATEGORY)
                 : setMode(ComponentMode.DEFAULT)
             }
           />
           <CgAdd
-            className={`cursor-pointer hover:text-accent transition-colors ${
+            className={`hidden cursor-pointer hover:text-accent transition-colors ${
               mode == ComponentMode.ADD_CATEGORY ? 'text-accent' : ''
             }`}
             onClick={() =>
+              //Add Category functionality not in use, to keep coherent data and streamline cascading of data
               mode != ComponentMode.ADD_CATEGORY
                 ? setMode(ComponentMode.ADD_CATEGORY)
                 : setMode(ComponentMode.DEFAULT)
@@ -114,7 +112,6 @@ const TaskCategorySelector = () => {
         </div>
       </div>
       <Suspense>
-        <ModifyCategory mode={mode} setMode={setMode} />
         <ModifyTask mode={mode} setMode={setMode} />
       </Suspense>
     </div>
