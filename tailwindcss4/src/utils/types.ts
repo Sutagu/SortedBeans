@@ -21,3 +21,8 @@ export interface CategoryData {
   category_id: number;
   name: string;
 }
+export interface EditPayload {
+  id: number;
+  field: string;
+  value: string | number | boolean | null;
+}

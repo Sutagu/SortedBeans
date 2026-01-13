@@ -4,9 +4,9 @@ import type { TaskFormData } from '../utils/types';
 
 export interface PendingWrite<T = unknown> {
   id?: number;
-  url: string;
-  method: string;
-  body: T;
+  table: string;
+  action: string;
+  payload: T;
 }
 
 export class AppCache extends Dexie {
