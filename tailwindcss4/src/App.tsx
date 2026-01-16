@@ -33,7 +33,6 @@ function App() {
       } = await supabase.auth.getSession();
       if (session?.user) {
         setGitHubUser(session.user);
-        console.log(session.user);
       }
     }
     initAuth();
