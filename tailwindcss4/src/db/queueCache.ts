@@ -1,5 +1,5 @@
 import { appCache } from '../db/dexieCache';
-import { useTaskStore } from '../postgresStore/taskStoreHook';
+import { UseSupabaseTaskStore } from '../supabaseStore/taskApi';
 import { supabase } from '../utils/supabase';
 import type { Task, EditPayload } from '../utils/types';
 export async function queueWrite(
@@ -35,7 +35,7 @@ export async function syncQueuedWrites() {
             return;
           }
           const { id, client_id } = data;
-          useTaskStore.getState().syncTaskId(id, client_id);
+          UseSupabaseTaskStore.getState().syncTaskId(id, client_id);
           break;
         }
         case 'update': {
