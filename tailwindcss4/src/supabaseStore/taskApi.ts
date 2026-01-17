@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Task, TaskFormData } from '../utils/types';
 import { supabase } from '../utils/supabase';
 import { queueWrite } from '../db/queueCache';
+import { useStateOrganiser } from '../utils/useStateOrganiser';
 
 interface SupabaseTaskStore {
   tasks: Task[];
@@ -24,7 +25,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
   refreshTaskContent: 0,
 
   fetchTasks: async () => {
-    if (!navigator.onLine) return;
+    if (!navigator.onLine || useStateOrganiser.getState().gitHubUser == null) return;
     const { data, error } = await supabase
       .from('tasks')
       .select('*')
@@ -49,7 +50,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
 
     const optimisticTask: Task = {
       ...task,
-      id: id ? id : Date.now(),
+      id: (id == null || -1) ? Date.now() : id,
       client_id,
       completed: false,
       created_at: new Date().toString(),
@@ -58,7 +59,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
       tasks: [...state.tasks, optimisticTask],
     }));
 
-    if (!navigator.onLine) {
+    if (!navigator.onLine || useStateOrganiser.getState().gitHubUser == null) {
       queueWrite('tasks', 'insert', payload);
       return;
     }
@@ -79,7 +80,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
   },
   deleteTask: async (id) => {
     set({ tasks: get().tasks.filter((t) => t.id !== id) });
-    if (!navigator.onLine) {
+    if (!navigator.onLine || useStateOrganiser.getState().gitHubUser == null) {
       queueWrite('tasks', 'delete', id);
       return;
     }
@@ -97,7 +98,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
       tasks: state.tasks.map((t) => (t.id === task.id ? task : t)),
     }));
 
-    if (!navigator.onLine) {
+    if (!navigator.onLine || useStateOrganiser.getState().gitHubUser == null) {
       queueWrite('tasks', 'update', task);
     }
     const { error } = await supabase
@@ -118,7 +119,7 @@ export const UseSupabaseTaskStore = create<SupabaseTaskStore>((set, get) => ({
       ),
     });
 
-    if (!navigator.onLine) {
+    if (!navigator.onLine || useStateOrganiser.getState().gitHubUser == null) {
       queueWrite('tasks', 'edit', { id, field, value });
       return;
     }

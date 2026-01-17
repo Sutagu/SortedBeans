@@ -23,6 +23,7 @@ enableOfflineSync();
 function App() {
   //UseEffects UseStates
   const setGitHubUser = useGitHubUser();
+  const gitHubUser = useStateOrganiser.getState().gitHubUser;
   const theme = useStateOrganiser((state) => state.uiTheme);
   const [footerState, setFooterState] = useState('calendar');
 
@@ -38,7 +39,7 @@ function App() {
     initAuth();
     //Sets theme of the app, refreshes when theme is changed
     document.documentElement.setAttribute('data-theme', theme);
-  }, [theme, setGitHubUser]);
+  }, [theme, setGitHubUser , gitHubUser]);
 
   return (
     <div className="main-container transition-colors">
