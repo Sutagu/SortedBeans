@@ -18,7 +18,7 @@ const UserPortraits = ({ setPortraitPath }: Prop) => {
   return (
     <div className=" pl-4 flex w-fit h-full relative">
       <CgChevronLeft
-        className="absolute z-99 h-full rounded-l-xl bg-accent-dark/20 text-text hover:bg-accent-dark/50 hover:cursor-pointer"
+        className="absolute z-99 h-full rounded-l-xl bg-accent text-text hover:bg-accent-dark/50 hover:cursor-pointer"
         onClick={() => {
           const container = sliderRef.current;
           if (container) container.scrollLeft -= scrollAmount;
@@ -58,7 +58,7 @@ const UserPortraits = ({ setPortraitPath }: Prop) => {
         />
       </span>
       <CgChevronRight
-        className="absolute right-0 z-99 h-full rounded-r-xl bg-accent-dark/20 text-text hover:bg-accent-dark/50 hover:cursor-pointer"
+        className="absolute right-0 z-99 h-full rounded-r-xl bg-accent text-text hover:bg-accent-dark/50 hover:cursor-pointer"
         onClick={() => {
           const container = sliderRef.current;
           if (container) container.scrollLeft += scrollAmount;
