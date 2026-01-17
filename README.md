@@ -1,54 +1,46 @@
-# React + TypeScript + Vite
+# Sorted Beans 🫘
+The Minimalist Day Planner for Focused Productivity
+Most calendar apps are great for seeing your month at a glance, but they often fail when it entails the granular "hour-by-hour" reality of a busy day. Sorted Beans is a minimalist day-planning application designed to bridge that gap, offering a clean, distraction-free interface specifically optimized for daily scheduling.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Key Features
+- Granular Day Planning: Track tasks with titles, descriptions, and specific durations (minutes).
+- Flexible Scheduling: Assign tasks to specific dates or keep them "dateless" to tackle whenever you're ready.
+- Time Travel: Easily navigate between previous accomplishments and future plans with a simple day-flipper UI.
 
-Currently, two official plugins are available:
+Personalization:
+- Custom Themes: Start with the cozy Coffee default or choose from a variety of selectable color palettes.
+- Cartoon Avatars: A unique profile picture to make your workspace feel like home.
+- Daily Inspiration: An integrated quote component to kickstart your morning.
+- Smart Weather: Grant location permissions to receive real-time weather updates to help plan your outdoor (or indoor) tasks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+Sorted Beans is built with a modern, type-safe stack for speed and reliability:
+- Frontend: React & TypeScript
+- State Management: Zustand (for lightweight, performant global state)
+- Database & Auth: Supabase
 
-## Expanding the ESLint configuration
+Note: The project originally utilized a local PostgreSQL setup; historical configurations can be found in earlier commits.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Styling: Custom CSS/Tailwind (Theme-aware)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Getting Started
+To keep your "beans" synced across devices, make sure to:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Sign In: Click the GitHub Login button on the main screen. This ensures your tasks are securely stored in the cloud and tied to your account.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Location Access: When prompted, allow location permissions. This enables the weather notification feature, helping you decide if today is a "work from the park" day or a "stay inside" day.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Installation (Local Development)
+Bash
+
+ Clone the repository
+git clone https://github.com/Sutagu/SortedBeans.git
+
+ Install dependencies
+npm install
+
+ Set up environment variables
+ Create a .env file with your Supabase URL and Anon Key (follow env.example)
+
+# Start the development server
+npm run dev
